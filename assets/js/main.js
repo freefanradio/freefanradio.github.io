@@ -45,9 +45,18 @@ class RadioPlayer {
                 const btn = e.target.closest('.play-station-btn');
                 const streamUrl = btn.dataset.stream;
                 const stationName = btn.dataset.name;
+                const fallbackStream = btn.dataset.fallbackStream;
+                const fallbackUrl = btn.dataset.fallback;
+                
+                console.log('Station button clicked:', {
+                    stationName,
+                    streamUrl,
+                    fallbackStream,
+                    fallbackUrl
+                });
                 
                 if (streamUrl && stationName) {
-                    this.loadStation(streamUrl, stationName);
+                    this.loadStation(streamUrl, stationName, fallbackStream, fallbackUrl);
                 }
             }
         });
@@ -67,27 +76,54 @@ class RadioPlayer {
         });
     }
     
-    loadStation(streamUrl, stationName) {
+    loadStation(streamUrl, stationName, fallbackStream = null, fallbackUrl = null) {
+        console.log('Loading station:', {
+            streamUrl,
+            stationName,
+            fallbackStream,
+            fallbackUrl
+        });
+        
         // Stop current audio if playing
         if (this.audio) {
             this.audio.pause();
             this.audio = null;
         }
         
+        // Reset fallback flags
+        this.triedFallback = false;
+        this.triedFallbackStream = false;
+        
+        // Check if this is a placeholder URL indicating stream unavailable
+        if (streamUrl.includes('stream-unavailable.local')) {
+            this.handleUnavailableStream(stationName, fallbackUrl);
+            return;
+        }
+        
+        // Try to load the stream
+        this.tryLoadStream(streamUrl, stationName, fallbackStream, fallbackUrl);
+    }
+    
+    tryLoadStream(streamUrl, stationName, fallbackStream, fallbackUrl) {
+        console.log('Trying to load stream:', streamUrl);
+        
         // Create new audio element
-        this.audio = new Audio(streamUrl);
+        this.audio = new Audio();
         this.audio.volume = this.volume;
         this.audio.preload = 'none';
+        this.audio.crossOrigin = 'anonymous';
         
         // Set current station
         this.currentStation = {
             url: streamUrl,
-            name: stationName
+            name: stationName,
+            fallbackStream: fallbackStream,
+            fallbackUrl: fallbackUrl
         };
         
         // Update UI
         this.stationNameEl.textContent = stationName;
-        this.nowPlayingEl.textContent = 'Loading...';
+        this.nowPlayingEl.textContent = 'Connecting...';
         this.playPauseBtn.disabled = false;
         
         // Show player
@@ -96,8 +132,42 @@ class RadioPlayer {
         // Bind audio events
         this.bindAudioEvents();
         
-        // Auto-play
-        this.play();
+        // Set the source and try to load
+        this.audio.src = streamUrl;
+        this.audio.load();
+        
+        // Don't auto-play - let user click play button
+        this.nowPlayingEl.textContent = 'Ready - Click play to start';
+    }
+    
+    handleUnavailableStream(stationName, fallbackUrl) {
+        // Set current station for UI purposes
+        this.currentStation = {
+            url: null,
+            name: stationName,
+            fallbackUrl: fallbackUrl
+        };
+        
+        // Update UI
+        this.stationNameEl.textContent = stationName;
+        this.playPauseBtn.disabled = true;
+        
+        // Show player
+        this.playerElement.classList.add('active');
+        
+        if (fallbackUrl) {
+            this.nowPlayingEl.innerHTML = `
+                <div style="text-align: center; padding: 10px;">
+                    <p>Direct streaming not available for this station.</p>
+                    <a href="${fallbackUrl}" target="_blank" 
+                       style="color: #007bff; text-decoration: underline; font-weight: bold;">
+                       🎧 Listen on Official Website
+                    </a>
+                </div>
+            `;
+        } else {
+            this.nowPlayingEl.textContent = 'Stream currently unavailable';
+        }
     }
     
     bindAudioEvents() {
@@ -125,7 +195,46 @@ class RadioPlayer {
         
         this.audio.addEventListener('error', (e) => {
             console.error('Audio error:', e);
-            this.nowPlayingEl.textContent = 'Error loading stream';
+            const errorType = this.audio.error ? this.audio.error.code : 'Unknown';
+            console.error('Error code:', errorType, 'Error details:', this.audio.error);
+            
+            // Try fallback stream first if available and not tried yet
+            if (this.currentStation && this.currentStation.fallbackStream && !this.triedFallbackStream) {
+                console.log('Trying fallback stream:', this.currentStation.fallbackStream);
+                this.triedFallbackStream = true;
+                this.nowPlayingEl.textContent = 'Trying alternative stream...';
+                
+                // Stop current audio
+                this.audio.pause();
+                this.audio = null;
+                
+                // Try fallback stream
+                setTimeout(() => {
+                    this.tryLoadStream(
+                        this.currentStation.fallbackStream, 
+                        this.currentStation.name, 
+                        null, 
+                        this.currentStation.fallbackUrl
+                    );
+                }, 1000);
+                return;
+            }
+            
+            // Try fallback URL if available
+            if (this.currentStation && this.currentStation.fallbackUrl && !this.triedFallback) {
+                this.triedFallback = true;
+                this.nowPlayingEl.innerHTML = `
+                    <div style="text-align: center; padding: 10px;">
+                        <p>Stream not available for direct play.</p>
+                        <a href="${this.currentStation.fallbackUrl}" target="_blank" 
+                           style="color: #007bff; text-decoration: underline; font-weight: bold;">
+                           🎧 Listen on Official Website
+                        </a>
+                    </div>
+                `;
+            } else {
+                this.nowPlayingEl.textContent = 'Stream temporarily unavailable';
+            }
             this.playPauseBtn.disabled = true;
         });
         
@@ -140,10 +249,31 @@ class RadioPlayer {
     
     play() {
         if (this.audio && this.currentStation) {
-            this.audio.play().catch(error => {
-                console.error('Play failed:', error);
-                this.nowPlayingEl.textContent = 'Failed to play';
-            });
+            console.log('Attempting to play:', this.currentStation.url);
+            
+            const playPromise = this.audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('Playback started successfully');
+                    })
+                    .catch(error => {
+                        console.error('Play failed:', error);
+                        this.nowPlayingEl.textContent = 'Click to start playback';
+                        
+                        // Some browsers require user interaction first
+                        if (error.name === 'NotAllowedError') {
+                            this.nowPlayingEl.textContent = 'Click play button to start';
+                        }
+                    });
+            }
+        }
+    }
+    
+    showStreamInfo() {
+        if (this.currentStation) {
+            this.nowPlayingEl.innerHTML = `<a href="${this.currentStation.fallbackUrl || this.currentStation.url}" target="_blank" style="color: #007bff; text-decoration: underline;">Listen on official website</a>`;
         }
     }
     

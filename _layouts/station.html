@@ -14,7 +14,11 @@ layout: default
             </div>
         </div>
         <div class="station-actions">
-            <button class="play-station-btn" data-stream="{{ page.stream_url }}" data-name="{{ page.title }}">
+            <button class="play-station-btn" 
+                    data-stream="{{ page.stream_url }}" 
+                    data-name="{{ page.title }}"
+                    {% if page.fallback_stream %}data-fallback-stream="{{ page.fallback_stream }}"{% endif %}
+                    {% if page.fallback_url %}data-fallback="{{ page.fallback_url }}"{% endif %}>
                 <i class="fas fa-play"></i>
                 Play Live
             </button>

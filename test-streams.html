@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Stream Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; margin: 5px; }
+        .status { margin: 10px 0; font-weight: bold; }
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Radio Stream Test</h1>
+    
+    <div class="test-section">
+        <h2>CKRM 620 Regina - M3U8 Stream</h2>
+        <button onclick="testStream1()">Test M3U8 Stream</button>
+        <button onclick="stopStream1()">Stop</button>
+        <div id="status1" class="status">Ready to test</div>
+        <audio id="audio1" controls style="width: 100%; margin-top: 10px;"></audio>
+    </div>
+    
+    <div class="test-section">
+        <h2>CKRM 620 Regina - Direct AAC Stream</h2>
+        <button onclick="testStream2()">Test Direct Stream</button>
+        <button onclick="stopStream2()">Stop</button>
+        <div id="status2" class="status">Ready to test</div>
+        <audio id="audio2" controls style="width: 100%; margin-top: 10px;"></audio>
+    </div>
+    
+    <div class="test-section">
+        <h2>Browser Compatibility</h2>
+        <div id="compatibility"></div>
+    </div>
+
+    <script>
+        // Test streams
+        const stream1 = 'https://ais-sa1.streamon.fm:443/7267_64k.aac/playlist.m3u8';
+        const stream2 = 'https://ais-sa1.streamon.fm:443/7267_64k.aac';
+        
+        // Check browser compatibility
+        function checkCompatibility() {
+            const audio = document.createElement('audio');
+            const compatibility = document.getElementById('compatibility');
+            
+            const formats = {
+                'MP3': audio.canPlayType('audio/mpeg'),
+                'AAC': audio.canPlayType('audio/aac'),
+                'M3U8/HLS': audio.canPlayType('application/vnd.apple.mpegurl'),
+                'AAC+': audio.canPlayType('audio/aacp')
+            };
+            
+            let html = '<h3>Supported Formats:</h3><ul>';
+            for (const [format, support] of Object.entries(formats)) {
+                const level = support === 'probably' ? 'success' : 
+                             support === 'maybe' ? 'info' : 'error';
+                html += `<li class="${level}">${format}: ${support || 'not supported'}</li>`;
+            }
+            html += '</ul>';
+            compatibility.innerHTML = html;
+        }
+        
+        function testStream1() {
+            const audio = document.getElementById('audio1');
+            const status = document.getElementById('status1');
+            
+            status.textContent = 'Loading M3U8 stream...';
+            status.className = 'status info';
+            
+            audio.src = stream1;
+            audio.crossOrigin = 'anonymous';
+            
+            audio.addEventListener('loadstart', () => {
+                status.textContent = 'Started loading...';
+            });
+            
+            audio.addEventListener('canplay', () => {
+                status.textContent = 'Ready to play - M3U8 stream loaded successfully!';
+                status.className = 'status success';
+                audio.play().catch(e => {
+                    status.textContent = 'Play failed: ' + e.message;
+                    status.className = 'status error';
+                });
+            });
+            
+            audio.addEventListener('error', (e) => {
+                status.textContent = 'M3U8 stream failed: ' + (audio.error ? audio.error.message : 'Unknown error');
+                status.className = 'status error';
+                console.error('M3U8 Error:', e, audio.error);
+            });
+            
+            audio.load();
+        }
+        
+        function testStream2() {
+            const audio = document.getElementById('audio2');
+            const status = document.getElementById('status2');
+            
+            status.textContent = 'Loading direct AAC stream...';
+            status.className = 'status info';
+            
+            audio.src = stream2;
+            audio.crossOrigin = 'anonymous';
+            
+            audio.addEventListener('loadstart', () => {
+                status.textContent = 'Started loading...';
+            });
+            
+            audio.addEventListener('canplay', () => {
+                status.textContent = 'Ready to play - Direct stream loaded successfully!';
+                status.className = 'status success';
+                audio.play().catch(e => {
+                    status.textContent = 'Play failed: ' + e.message;
+                    status.className = 'status error';
+                });
+            });
+            
+            audio.addEventListener('error', (e) => {
+                status.textContent = 'Direct stream failed: ' + (audio.error ? audio.error.message : 'Unknown error');
+                status.className = 'status error';
+                console.error('Direct Stream Error:', e, audio.error);
+            });
+            
+            audio.load();
+        }
+        
+        function stopStream1() {
+            const audio = document.getElementById('audio1');
+            const status = document.getElementById('status1');
+            audio.pause();
+            audio.src = '';
+            status.textContent = 'Stopped';
+            status.className = 'status';
+        }
+        
+        function stopStream2() {
+            const audio = document.getElementById('audio2');
+            const status = document.getElementById('status2');
+            audio.pause();
+            audio.src = '';
+            status.textContent = 'Stopped';
+            status.className = 'status';
+        }
+        
+        // Initialize
+        checkCompatibility();
+        
+        // Log all audio events for debugging
+        function addDebugListeners(audio, prefix) {
+            const events = ['loadstart', 'durationchange', 'loadedmetadata', 'loadeddata', 
+                          'progress', 'canplay', 'canplaythrough', 'play', 'pause', 
+                          'seeking', 'seeked', 'ended', 'error', 'timeupdate', 'stalled', 'waiting'];
+            
+            events.forEach(event => {
+                audio.addEventListener(event, (e) => {
+                    console.log(`${prefix} ${event}:`, e);
+                });
+            });
+        }
+        
+        addDebugListeners(document.getElementById('audio1'), 'M3U8');
+        addDebugListeners(document.getElementById('audio2'), 'Direct');
+    </script>
+</body>
+</html>
