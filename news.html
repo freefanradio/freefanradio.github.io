@@ -1,0 +1,77 @@
+---
+layout: page
+title: "News & Talk Radio Stations"
+description: "Complete listing of Canadian news and talk radio stations available for streaming on FreeFanRadio.ca"
+permalink: /news/
+---
+
+<div class="stations-grid">
+    {% assign news_stations = site.stations | where: "category", "news" %}
+    {% for station in news_stations %}
+    <div class="station-card">
+        <div class="station-header">
+            <div class="station-info">
+                <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
+                <p>{{ station.description }}</p>
+                <div class="station-meta">
+                    <span class="frequency">{{ station.frequency }}</span>
+                    <span class="location">{{ station.location }}</span>
+                    <span class="genre">{{ station.genre }}</span>
+                </div>
+            </div>
+            <div class="station-actions">
+                <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <i class="fas fa-play"></i>
+                    Play Live
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Google Ad -->
+<div class="ad-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="{{ site.google_adsense_id }}"
+         data-ad-slot="2222222222"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+## About News & Talk Radio in Canada
+
+Canadian news and talk radio provides comprehensive coverage of:
+
+- **Provincial Politics** - Complete coverage of all provincial governments and politics
+- **Federal Politics** - Coverage of Parliament Hill and federal government
+- **Municipal Affairs** - Local government and city council coverage  
+- **Economic News** - Business, finance, and economic analysis
+- **Current Events** - Breaking news and in-depth analysis
+- **Social Issues** - Discussion of important social and cultural topics
+- **Call-in Shows** - Interactive programming with listener participation
+
+### Quebec French-Language Radio
+
+Quebec's French-language talk radio scene is particularly vibrant, featuring:
+
+- **Morning Shows** - Influential morning programs that set the daily agenda
+- **Political Analysis** - In-depth coverage of Quebec politics and federalism
+- **Cultural Programming** - Discussion of Quebec culture and identity
+- **Economic Coverage** - Quebec business and economic news
+- **Social Commentary** - Analysis of Quebec society and social issues
+
+### Talk Radio Across Canada
+
+Major Canadian cities feature prominent talk radio stations that serve as:
+
+- **Information Sources** - Primary news and information for commuters
+- **Political Influence** - Platform for political debate and discussion
+- **Community Voice** - Local issues and community concerns
+- **Emergency Information** - Critical updates during emergencies and severe weather
+
+Talk radio remains a vital part of Canada's media landscape, providing real-time information, analysis, and community connection from coast to coast.
