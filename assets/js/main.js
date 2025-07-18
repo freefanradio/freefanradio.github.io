@@ -170,6 +170,7 @@ class Navigation {
     init() {
         this.navToggle = document.querySelector('.nav-toggle');
         this.navMenu = document.querySelector('.nav-menu');
+        this.body = document.body;
         
         if (this.navToggle && this.navMenu) {
             this.bindEvents();
@@ -177,7 +178,8 @@ class Navigation {
     }
     
     bindEvents() {
-        this.navToggle.addEventListener('click', () => {
+        this.navToggle.addEventListener('click', (e) => {
+            e.preventDefault();
             this.toggleMenu();
         });
         
@@ -201,16 +203,51 @@ class Navigation {
                 this.closeMenu();
             }
         });
+        
+        // Handle touch events for better mobile experience
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        this.navMenu.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+        
+        this.navMenu.addEventListener('touchmove', (e) => {
+            if (!this.navMenu.classList.contains('active')) return;
+            
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+            const deltaX = touchX - touchStartX;
+            const deltaY = touchY - touchStartY;
+            
+            // If swiping left significantly more than vertical, close menu
+            if (deltaX < -50 && Math.abs(deltaY) < 100) {
+                this.closeMenu();
+            }
+        });
     }
     
     toggleMenu() {
-        this.navMenu.classList.toggle('active');
-        this.navToggle.classList.toggle('active');
+        const isActive = this.navMenu.classList.contains('active');
+        
+        if (isActive) {
+            this.closeMenu();
+        } else {
+            this.openMenu();
+        }
+    }
+    
+    openMenu() {
+        this.navMenu.classList.add('active');
+        this.navToggle.classList.add('active');
+        this.body.style.overflow = 'hidden';
     }
     
     closeMenu() {
         this.navMenu.classList.remove('active');
         this.navToggle.classList.remove('active');
+        this.body.style.overflow = '';
     }
 }
 

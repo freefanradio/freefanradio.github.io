@@ -8,6 +8,7 @@
 html {
     font-size: 16px;
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -16,6 +17,10 @@ body {
     color: #333;
     background-color: #f8fafc;
     overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    width: 100%;
+    max-width: 100vw;
 }
 
 /* Header and Navigation */
@@ -86,6 +91,8 @@ body {
     border: none;
     cursor: pointer;
     padding: 0.5rem;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .nav-toggle span {
@@ -102,6 +109,8 @@ body {
     margin-top: 64px;
     min-height: calc(100vh - 64px - 200px);
     padding: 2rem 0;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Hero Section */
@@ -169,12 +178,65 @@ body {
 /* Station Grid */
 .stations-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     gap: 1.5rem;
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 1rem;
     width: 100%;
+    box-sizing: border-box;
+}
+
+/* Fallback for older browsers */
+@supports not (display: grid) {
+    .stations-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .station-card {
+        flex: 1 1 280px;
+        max-width: 400px;
+        margin: 0.75rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .stations-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 0 0.5rem;
+        width: calc(100% - 1rem);
+    }
+    
+    .nav-container {
+        padding: 0 0.5rem;
+    }
+    
+    .hero-container {
+        padding: 0 0.5rem;
+    }
+    
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+    
+    .station-card {
+        padding: 0.75rem;
+        margin: 0;
+        width: 100%;
+    }
+    
+    .nav-brand {
+        font-size: 1.1rem;
+    }
+    
+    .cta-button {
+        width: 100%;
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
 }
 
 .station-card {
@@ -184,6 +246,8 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     border: 1px solid #e2e8f0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .station-card:hover {
@@ -246,6 +310,8 @@ body {
     width: 100%;
     font-size: 1rem;
     min-height: 44px; /* Minimum touch target */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 .play-station-btn:hover {
@@ -279,6 +345,7 @@ body {
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .player-info {
@@ -312,6 +379,10 @@ body {
     font-size: 1.2rem;
     cursor: pointer;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-width: 44px;
+    min-height: 44px;
 }
 
 .play-btn:hover:not(:disabled) {
@@ -562,6 +633,17 @@ body {
     .hero h1 {
         font-size: 2rem;
         margin-bottom: 0.5rem;
+        line-height: 1.2;
+    }
+    
+    .hero-mission {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
     }
     
     .hero p {
@@ -581,6 +663,9 @@ body {
     .station-card {
         padding: 1rem;
         margin-bottom: 1rem;
+        width: 100%;
+        max-width: none;
+        min-width: 0;
     }
 
     .station-header {
@@ -596,6 +681,8 @@ body {
     .play-station-btn {
         padding: 0.875rem 1rem;
         font-size: 0.9rem;
+        width: 100%;
+        text-align: center;
     }
 
     .page-header h1,
@@ -607,6 +694,9 @@ body {
     .stations-grid {
         gap: 1rem;
         padding: 0 0.75rem;
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        width: 100%;
     }
     
     .hero {
@@ -620,6 +710,38 @@ body {
     .cta-button {
         padding: 0.875rem 1.5rem;
         font-size: 1rem;
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+    }
+    
+    .main-content {
+        margin-top: 56px;
+        padding: 1rem 0;
+    }
+    
+    .audio-player .player-container {
+        padding: 0.5rem;
+    }
+    
+    .nav-menu {
+        top: 56px;
+        height: calc(100vh - 56px);
+    }
+    
+    /* Override inline styles for mobile */
+    .stations-section div h2 {
+        font-size: 1.8rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .stations-section div p {
+        font-size: 1rem !important;
+    }
+    
+    /* Fix section padding */
+    .stations-section {
+        padding: 2rem 0 !important;
     }
 }
 
@@ -638,6 +760,7 @@ body {
         padding-top: 2rem;
         transition: left 0.3s ease;
         z-index: 999;
+        overflow-y: auto;
     }
 
     .nav-menu.active {
@@ -654,6 +777,7 @@ body {
         display: block;
         padding: 1rem 2rem;
         width: 100%;
+        font-size: 1.1rem;
     }
 
     .nav-toggle {
@@ -684,6 +808,14 @@ body {
         grid-template-columns: 1fr;
         gap: 1.5rem;
         padding: 0 1rem;
+    }
+
+    .main-content {
+        margin-top: 64px;
+    }
+
+    .audio-player {
+        padding: 0.75rem;
     }
 
     .player-container {
@@ -730,6 +862,11 @@ body {
     .page-content,
     .station-page {
         padding: 0 1rem;
+    }
+    
+    /* Override inline styles for tablet */
+    .stations-section div h2 {
+        font-size: 2rem !important;
     }
 }
 
@@ -820,5 +957,36 @@ input:focus {
     .nav-link:hover,
     .nav-link.active {
         background-color: rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Landscape orientation on mobile */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        padding: 2rem 0;
+    }
+    
+    .hero h1 {
+        font-size: 2rem;
+    }
+    
+    .nav-menu {
+        padding-top: 1rem;
+    }
+    
+    .audio-player {
+        padding: 0.5rem 1rem;
+    }
+    
+    .player-container {
+        gap: 0.5rem;
+    }
+}
+
+/* Fix for iOS Safari viewport units */
+@supports (-webkit-touch-callout: none) {
+    .nav-menu {
+        height: calc(100vh - 64px);
+        height: calc(100dvh - 64px);
     }
 }
