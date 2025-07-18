@@ -35,6 +35,15 @@ layout: default
     </div>
     
     <div class="station-content">
+        <!-- Stream Disclaimer -->
+        <div style="background: #f7fafc; border-left: 4px solid #4299e1; padding: 1rem; margin: 2rem 0; border-radius: 0 8px 8px 0;">
+            <p style="margin: 0; font-size: 0.9rem; color: #2d3748;">
+                <i class="fas fa-info-circle" style="color: #4299e1; margin-right: 0.5rem;"></i>
+                <strong>Official Stream:</strong> This stream is sourced directly from {{ page.title }}'s official website. 
+                All content is owned by {{ page.title }} and their respective content providers.
+            </p>
+        </div>
+        
         {{ content }}
         
         {% if page.schedule %}

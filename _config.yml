@@ -1,6 +1,6 @@
 # Site settings
 title: "FreeFanRadio.ca"
-description: "Stream Canadian Sports Radio Stations"
+description: "The Canadian hub for legal sports radio streams and podcasts."
 url: "https://cloudphenix.github.io"
 baseurl: "/freefanradio"
 
@@ -31,6 +31,8 @@ navigation:
     url: /football/
   - title: About
     url: /about/
+  - title: Terms
+    url: /terms/
 
 # Google AdSense
 google_adsense_id: "ca-pub-XXXXXXXXXXXXXXXXX"  # Replace with your AdSense ID

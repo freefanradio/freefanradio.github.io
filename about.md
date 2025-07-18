@@ -11,7 +11,9 @@ FreeFanRadio.ca is Canada's premier destination for streaming live sports radio.
 
 ### Our Mission
 
-To provide free, high-quality access to Canadian sports radio stations, connecting fans across the country with the teams, players, and sports they love most.
+**"The Canadian hub for legal sports radio streams and podcasts."**
+
+To provide free, high-quality access to Canadian sports radio stations, connecting fans across the country with the teams, players, and sports they love most. We are committed to maintaining a completely legal platform that respects copyright and supports Canadian sports broadcasting.
 
 ### What We Offer
 
@@ -146,6 +148,40 @@ Experiencing issues? Here are some quick troubleshooting tips:
 - Free for personal use
 - Commercial use requires permission
 - Content belongs to original broadcasters
+
+### Legal Disclaimer
+
+**Important Notice:** FreeFanRadio.ca operates as an aggregator and directory service that provides links to publicly available radio streams. We do not host, store, or control any audio content on our servers.
+
+**Content Ownership & Copyright**
+- All audio content, including music, commentary, and advertisements, belongs to their respective copyright holders
+- Radio station names, logos, and branding are trademarks of their respective owners
+- We do not claim ownership of any copyrighted material streamed through our platform
+
+**Stream Sources**
+- All streams are sourced from publicly available URLs provided by the radio stations themselves
+- We make every effort to ensure all streams are legitimate and authorized
+- If you believe a stream is being used without proper authorization, please contact us immediately
+
+**Liability Disclaimer**
+- FreeFanRadio.ca provides streams "as is" without warranties of any kind
+- We are not responsible for the content, quality, or availability of any streams
+- We are not liable for any damages resulting from the use of our service
+- Users access streams at their own risk and discretion
+
+**Copyright Compliance**
+- We respect intellectual property rights and respond promptly to valid copyright concerns
+- If you are a content owner and believe your rights are being infringed, please contact us
+- We will investigate and remove any unauthorized content upon verification
+
+**Regional Restrictions**
+- Some streams may have geographical licensing restrictions
+- Users are responsible for ensuring they comply with local broadcasting laws
+- We do not circumvent or encourage circumvention of any licensing restrictions
+
+**Contact for Legal Matters**
+For copyright concerns, DMCA takedown requests, or other legal matters:
+Email: legal@freefanradio.ca
 
 ### Supporting Canadian Sports
 
