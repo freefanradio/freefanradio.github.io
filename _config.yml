@@ -1,0 +1,44 @@
+# Site settings
+title: "FreeFanRadio.ca"
+description: "Stream Canadian Sports Radio Stations"
+url: "https://cloudphenix.github.io"
+baseurl: "/freefanradio"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Collections
+collections:
+  stations:
+    output: true
+    permalink: /:collection/:name/
+
+# Navigation
+navigation:
+  - title: Home
+    url: /
+  - title: Sports Radio
+    url: /sports/
+  - title: Hockey
+    url: /hockey/
+  - title: Football
+    url: /football/
+  - title: About
+    url: /about/
+
+# Google AdSense
+google_adsense_id: "ca-pub-XXXXXXXXXXXXXXXXX"  # Replace with your AdSense ID
+
+# Social Media
+social:
+  twitter: freefanradio
+  facebook: freefanradio
+
+# SEO
+google_analytics: G-NRZ1504M1K  # Your Google Analytics ID

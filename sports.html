@@ -1,0 +1,64 @@
+---
+layout: page
+title: "Sports Radio Stations"
+description: "Complete listing of Canadian sports radio stations available for streaming on FreeFanRadio.ca"
+permalink: /sports/
+---
+
+<div class="stations-grid">
+    {% assign sports_stations = site.stations | where: "category", "sports" %}
+    {% for station in sports_stations %}
+    <div class="station-card">
+        <div class="station-header">
+            <div class="station-info">
+                <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
+                <p>{{ station.description }}</p>
+                <div class="station-meta">
+                    <span class="frequency">{{ station.frequency }}</span>
+                    <span class="location">{{ station.location }}</span>
+                    <span class="genre">{{ station.genre }}</span>
+                </div>
+            </div>
+            <div class="station-actions">
+                <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <i class="fas fa-play"></i>
+                    Play Live
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Google Ad -->
+<div class="ad-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="{{ site.google_adsense_id }}"
+         data-ad-slot="1111111111"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+</div>
+
+## About Sports Radio in Canada
+
+Canadian sports radio offers comprehensive coverage of:
+
+- **NHL Hockey** - Complete coverage of all Canadian teams
+- **CFL Football** - From coast to coast coverage
+- **MLB Baseball** - Blue Jays and sports analysis
+- **NBA Basketball** - Raptors coverage and league news
+- **MLS Soccer** - Canadian teams and international coverage
+- **Olympics & International Sports** - Canadian athletes and teams
+
+### Popular Shows and Personalities
+
+Listen to Canada's top sports personalities and shows across different time zones:
+
+- **Morning Drive Shows** - Start your day with sports news
+- **Afternoon Drive** - Commute with the latest sports updates  
+- **Evening Shows** - In-depth analysis and call-in shows
+- **Weekend Programming** - Game coverage and special features

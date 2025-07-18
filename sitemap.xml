@@ -1,0 +1,31 @@
+---
+layout: null
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>{{ site.url }}{{ site.baseurl }}/</loc>
+        <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>1.0</priority>
+    </url>
+    {% for page in site.pages %}
+        {% if page.layout != null %}
+        <url>
+            <loc>{{ site.url }}{{ site.baseurl }}{{ page.url }}</loc>
+            <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.8</priority>
+        </url>
+        {% endif %}
+    {% endfor %}
+    {% for station in site.stations %}
+        <url>
+            <loc>{{ site.url }}{{ site.baseurl }}{{ station.url }}</loc>
+            <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.7</priority>
+        </url>
+    {% endfor %}
+</urlset>

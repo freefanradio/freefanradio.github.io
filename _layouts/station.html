@@ -1,0 +1,71 @@
+---
+layout: default
+---
+
+<article class="station-page">
+    <header class="station-header">
+        <div class="station-info">
+            <h1>{{ page.title }}</h1>
+            <p class="station-description">{{ page.description }}</p>
+            <div class="station-meta">
+                <span class="frequency">{{ page.frequency }}</span>
+                <span class="location">{{ page.location }}</span>
+                <span class="genre">{{ page.genre }}</span>
+            </div>
+        </div>
+        <div class="station-actions">
+            <button class="play-station-btn" data-stream="{{ page.stream_url }}" data-name="{{ page.title }}">
+                <i class="fas fa-play"></i>
+                Play Live
+            </button>
+        </div>
+    </header>
+    
+    <!-- Google Ad -->
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="{{ site.google_adsense_id }}"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    
+    <div class="station-content">
+        {{ content }}
+        
+        {% if page.schedule %}
+        <section class="schedule-section">
+            <h2>Programming Schedule</h2>
+            <div class="schedule-grid">
+                {% for slot in page.schedule %}
+                <div class="schedule-item">
+                    <span class="time">{{ slot.time }}</span>
+                    <span class="show">{{ slot.show }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+        
+        {% if page.contact %}
+        <section class="contact-section">
+            <h2>Contact Information</h2>
+            <div class="contact-info">
+                {% if page.contact.phone %}
+                <p><i class="fas fa-phone"></i> {{ page.contact.phone }}</p>
+                {% endif %}
+                {% if page.contact.email %}
+                <p><i class="fas fa-envelope"></i> {{ page.contact.email }}</p>
+                {% endif %}
+                {% if page.contact.website %}
+                <p><i class="fas fa-globe"></i> <a href="{{ page.contact.website }}" target="_blank">{{ page.contact.website }}</a></p>
+                {% endif %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+</article>
