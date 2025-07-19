@@ -2,7 +2,7 @@
 title: "FreeFanRadio.ca"
 description: "The Canadian hub for legal sports radio streams and podcasts."
 url: "https://cloudphenix.github.io"
-baseurl: "/freefanradio"
+baseurl: ""
 
 # Build settings
 markdown: kramdown

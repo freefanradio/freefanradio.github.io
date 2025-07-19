@@ -130,7 +130,7 @@ Your station content here...
 title: "FreeFanRadio.ca"
 description: "Stream Canadian Sports Radio Stations"
 url: "https://cloudphenix.github.io"
-baseurl: "/freefanradio"
+baseurl: ""
 
 # Google AdSense
 google_adsense_id: "ca-pub-XXXXXXXXXXXXXXXXX"
