@@ -38,7 +38,7 @@ FreeFanRadio.ca is a comprehensive GitHub Pages website that provides free strea
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/cloudphenix/freefanradio.git
+   git clone https://github.com/freefanradio/freefanradio.git
    cd freefanradio
    ```
 
@@ -129,7 +129,7 @@ Your station content here...
 # Site settings
 title: "FreeFanRadio.ca"
 description: "Stream Canadian Sports Radio Stations"
-url: "https://cloudphenix.github.io"
+url: "https://freefanradio.github.io"
 baseurl: ""
 
 # Google AdSense

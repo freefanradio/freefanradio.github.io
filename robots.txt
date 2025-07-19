@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://cloudphenix.github.io/freefanradio/sitemap.xml
+Sitemap: https://freefanradio.github.io/freefanradio/sitemap.xml
 
 # Disallow crawling of certain files
 Disallow: /assets/js/
