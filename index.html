@@ -44,145 +44,31 @@ description: "The Canadian hub for legal sports radio streams and podcasts. Stre
     
     <div class="stations-grid">
         <!-- TSN Radio Stations -->
+        {% assign featured_stations = "tsn-690-montreal,tsn-1050-toronto,sportsnet-960-calgary,cjob-680-winnipeg,ckrm-620-regina,985-fm-montreal,bpm-sport-montreal" | split: "," %}
+        {% for station_id in featured_stations %}
+            {% assign station = site.stations | where: "slug", station_id | first %}
+            {% if station %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
-                    <h3>TSN 690 Montreal</h3>
-                    <p>Montreal's premier sports radio station covering Habs, Impact, and more</p>
+                    <h3>{{ station.title }}</h3>
+                    <p>{{ station.description }}</p>
                     <div class="station-meta">
-                        <span class="frequency">690 AM</span>
-                        <span class="location">Montreal, QC</span>
-                        <span class="genre">Sports Talk</span>
+                        <span class="frequency">{{ station.frequency }}</span>
+                        <span class="location">{{ station.location }}</span>
+                        <span class="genre">{{ station.genre }}</span>
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3" data-name="TSN 690 Montreal">
+                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>
                 </div>
             </div>
         </div>
-
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3>TSN 1050 Toronto</h3>
-                    <p>Toronto's sports radio home for Leafs, Raptors, TFC and Blue Jays coverage</p>
-                    <div class="station-meta">
-                        <span class="frequency">1050 AM</span>
-                        <span class="location">Toronto, ON</span>
-                        <span class="genre">Sports Talk</span>
-                    </div>
-                </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="https://playerservices.streamtheworld.com/api/livestream-redirect/CHUMAM.mp3" data-name="TSN 1050 Toronto">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3>Sportsnet 960 Calgary</h3>
-                    <p>Calgary's home for Flames hockey and comprehensive sports coverage</p>
-                    <div class="station-meta">
-                        <span class="frequency">960 AM</span>
-                        <span class="location">Calgary, AB</span>
-                        <span class="genre">Sports Talk</span>
-                    </div>
-                </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="https://radio-dai.rogersdigitalmedia.com/hls/chi/rogers/cal960.stream/48k/iMi055c8urA-175297077-9984.aac" data-name="Sportsnet 960 Calgary">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3>CJOB 680 Winnipeg</h3>
-                    <p>Winnipeg's sports radio covering Jets hockey and local sports</p>
-                    <div class="station-meta">
-                        <span class="frequency">680 AM</span>
-                        <span class="location">Winnipeg, MB</span>
-                        <span class="genre">Sports/News</span>
-                    </div>
-                </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="https://live.leanstream.co/CJOBAM-MP3" data-name="CJOB 680 Winnipeg">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3>CKRM 620 Regina</h3>
-                    <p>Saskatchewan's sports radio home for Roughriders and local coverage</p>
-                    <div class="station-meta">
-                        <span class="frequency">620 AM</span>
-                        <span class="location">Regina, SK</span>
-                        <span class="genre">Sports Talk</span>
-                    </div>
-                </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="https://ais-sa1.streamon.fm/7267_64k.aac?listenerId=dc8683f8939dc0c64b04555eacbb0b35&aw_0_1st.playerid=esPlayer&aw_0_1st.skey=1752969632" data-name="CKRM 620 Regina">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3>98.5 FM Montréal</h3>
-                    <p>Montreal's premier French-language talk radio with Paul Arcand</p>
-                    <div class="station-meta">
-                        <span class="frequency">98.5 FM</span>
-                        <span class="location">Montreal, QC</span>
-                        <span class="genre">Talk Radio</span>
-                    </div>
-                </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="https://17993.live.streamtheworld.com/CHMPFM_SC" data-name="98.5 FM Montréal">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3>BPM Sport</h3>
-                    <p>Montreal's French-language sports radio featuring comprehensive sports coverage</p>
-                    <div class="station-meta">
-                        <span class="frequency">91.9 FM</span>
-                        <span class="location">Montreal, QC</span>
-                        <span class="genre">Sports Talk</span>
-                    </div>
-                </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="https://stream.bpmsports.ca/cklx.aac" data-name="BPM Sport">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
+            {% endif %}
+        {% endfor %}
     </div>
 </section>
 

@@ -61,25 +61,28 @@ permalink: /football/
         </div>
     </div>
 
+    {% assign roughrider_station = site.stations | where: "slug", "ckrm-620-regina" | first %}
+    {% if roughrider_station %}
     <div class="station-card">
         <div class="station-header">
             <div class="station-info">
                 <h3>Roughrider Radio Network</h3>
-                <p>Saskatchewan's pride with comprehensive Roughriders coverage</p>
+                <p>{{ roughrider_station.description }}</p>
                 <div class="station-meta">
-                    <span class="frequency">620 AM</span>
+                    <span class="frequency">{{ roughrider_station.frequency }}</span>
                     <span class="location">Saskatchewan</span>
                     <span class="genre">CFL</span>
                 </div>
             </div>
             <div class="station-actions">
-                <button class="play-station-btn" data-stream="https://live-audio01.mediavibez.com/CKRM-Riders" data-name="Roughrider Radio Network">
+                <button class="play-station-btn" data-stream="{{ roughrider_station.stream_url }}" data-name="Roughrider Radio Network">
                     <i class="fas fa-play"></i>
                     Play Live
                 </button>
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 
 ## CFL Season Schedule

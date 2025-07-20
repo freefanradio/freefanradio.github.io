@@ -1,0 +1,32 @@
+{% comment %}
+Usage: {% include station-card.html station_id="tsn-690-montreal" %}
+Or: {% include station-card.html station=site.stations[0] %}
+{% endcomment %}
+
+{% if include.station_id %}
+  {% assign station = site.stations | where: "slug", include.station_id | first %}
+{% elsif include.station %}
+  {% assign station = include.station %}
+{% endif %}
+
+{% if station %}
+<div class="station-card">
+    <div class="station-header">
+        <div class="station-info">
+            <h3>{% if include.title %}{{ include.title }}{% else %}{{ station.title }}{% endif %}</h3>
+            <p>{{ station.description }}</p>
+            <div class="station-meta">
+                <span class="frequency">{{ station.frequency }}</span>
+                <span class="location">{{ station.location }}</span>
+                <span class="genre">{{ station.genre }}</span>
+            </div>
+        </div>
+        <div class="station-actions">
+            <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{% if include.title %}{{ include.title }}{% else %}{{ station.title }}{% endif %}">
+                <i class="fas fa-play"></i>
+                Play Live
+            </button>
+        </div>
+    </div>
+</div>
+{% endif %}
