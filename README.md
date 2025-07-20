@@ -27,7 +27,6 @@ FreeFanRadio.ca is a comprehensive GitHub Pages website that provides free strea
 - TSN 690 Montreal
 - TSN 1050 Toronto  
 - Sportsnet 960 Calgary
-- Team 1040 Vancouver
 - CKRM 620 Regina
 - CJOB 680 Winnipeg
 - And many more...

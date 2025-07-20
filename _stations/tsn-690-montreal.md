@@ -6,7 +6,7 @@ frequency: "690 AM"
 location: "Montreal, QC"
 genre: "Sports Talk"
 category: "sports"
-stream_url: "https://live-audio01.mediavibez.com/TSN690"
+stream_url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3"
 website: "https://www.tsn.ca/radio/montreal-690"
 phone: "(514) 529-3200"
 schedule:

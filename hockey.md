@@ -31,7 +31,7 @@ permalink: /hockey/
 **Pacific Division**
 - **Calgary Flames** - Sportsnet 960 Calgary
 - **Edmonton Oilers** - 630 CHED
-- **Vancouver Canucks** - Team 1040
+- **Vancouver Canucks** - Sportsnet 650 Vancouver
 
 <!-- Google Ad -->
 <div class="ad-container">

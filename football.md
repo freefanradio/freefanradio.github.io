@@ -23,7 +23,7 @@ permalink: /football/
 - **Saskatchewan Roughriders** - CKRM 620 Regina
 - **Calgary Stampeders** - Sportsnet 960 Calgary
 - **Edmonton Elks** - 630 CHED
-- **BC Lions** - Team 1040 Vancouver
+- **BC Lions** - Sportsnet 650 Vancouver
 
 <!-- Google Ad -->
 <div class="ad-container">
