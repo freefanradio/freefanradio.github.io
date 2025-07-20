@@ -6,7 +6,7 @@ frequency: "620 AM"
 location: "Regina, SK"
 genre: "Sports Talk"
 category: "sports"
-stream_url: "https://live-audio01.mediavibez.com/CKRM"
+stream_url: "https://ais-sa1.streamon.fm/7267_64k.aac?listenerId=dc8683f8939dc0c64b04555eacbb0b35&aw_0_1st.playerid=esPlayer&aw_0_1st.skey=1752969632"
 website: "https://620ckrm.com"
 phone: "(306) 525-7700"
 schedule:
