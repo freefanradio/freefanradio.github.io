@@ -23,7 +23,7 @@ collections:
 navigation:
   - title: Home
     url: /
-  - title: Sports Radio
+  - title: Stations
     url: /sports/
   - title: Hockey
     url: /hockey/
