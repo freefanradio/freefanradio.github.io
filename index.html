@@ -47,7 +47,7 @@ description: "The Canadian hub for legal sports radio streams and podcasts. Stre
         {% assign featured_stations = "tsn-690-montreal,tsn-1050-toronto,sportsnet-960-calgary,cjob-680-winnipeg,ckrm-620-regina,985-fm-montreal,bpm-sport-montreal" | split: "," %}
         {% for station_id in featured_stations %}
             {% assign station = site.stations | where: "slug", station_id | first %}
-            {% if station %}
+            {% if station and station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">

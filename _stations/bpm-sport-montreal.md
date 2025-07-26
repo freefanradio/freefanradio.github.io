@@ -1,4 +1,5 @@
 ---
+hidden: false
 layout: station
 title: "BPM Sport"
 description: "Montreal's French-language sports radio station featuring comprehensive sports coverage and analysis"

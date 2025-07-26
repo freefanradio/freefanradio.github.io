@@ -1,4 +1,5 @@
 ---
+hidden: false
 layout: station
 title: "CJOB 680 Winnipeg"
 description: "Winnipeg's sports radio covering Jets hockey and local sports"

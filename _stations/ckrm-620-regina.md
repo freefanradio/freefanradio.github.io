@@ -1,4 +1,5 @@
 ---
+hidden: false
 layout: station
 title: "CKRM 620 Regina"
 description: "Saskatchewan's sports radio home covering Roughriders, junior hockey, and prairie sports"

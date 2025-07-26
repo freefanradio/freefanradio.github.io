@@ -26,25 +26,28 @@ permalink: /sports/
     <h2 class="province-header">Alberta</h2>
     <div class="stations-grid">
         {% for station in ab_stations %}
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
-                    <p>{{ station.description }}</p>
-                    <div class="station-meta">
-                        <span class="frequency">{{ station.frequency }}</span>
-                        <span class="location">{{ station.location }}</span>
-                        <span class="genre">{{ station.genre }}</span>
+            {% if station.hidden != true %}
+            {{station.hidden}}
+            <div class="station-card">
+                <div class="station-header">
+                    <div class="station-info">
+                        <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
+                        <p>{{ station.description }}</p>
+                        <div class="station-meta">
+                            <span class="frequency">{{ station.frequency }}</span>
+                            <span class="location">{{ station.location }}</span>
+                            <span class="genre">{{ station.genre }}</span>
+                        </div>
+                    </div>
+                    <div class="station-actions">
+                        <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                            <i class="fas fa-play"></i>
+                            Play Live
+                        </button>
                     </div>
                 </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
+            </div>        
+            {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -56,25 +59,27 @@ permalink: /sports/
     <h2 class="province-header">British Columbia</h2>
     <div class="stations-grid">
         {% for station in bc_stations %}
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
-                    <p>{{ station.description }}</p>
-                    <div class="station-meta">
-                        <span class="frequency">{{ station.frequency }}</span>
-                        <span class="location">{{ station.location }}</span>
-                        <span class="genre">{{ station.genre }}</span>
+            {% if station.hidden != true %}
+            <div class="station-card">
+                <div class="station-header">
+                    <div class="station-info">
+                        <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
+                        <p>{{ station.description }}</p>
+                        <div class="station-meta">
+                            <span class="frequency">{{ station.frequency }}</span>
+                            <span class="location">{{ station.location }}</span>
+                            <span class="genre">{{ station.genre }}</span>
+                        </div>
+                    </div>
+                    <div class="station-actions">
+                        <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                            <i class="fas fa-play"></i>
+                            Play Live
+                        </button>
                     </div>
                 </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
             </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -86,6 +91,7 @@ permalink: /sports/
     <h2 class="province-header">Manitoba</h2>
     <div class="stations-grid">
         {% for station in mb_stations %}
+        {% if station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
@@ -105,6 +111,7 @@ permalink: /sports/
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -116,25 +123,27 @@ permalink: /sports/
     <h2 class="province-header">New Brunswick</h2>
     <div class="stations-grid">
         {% for station in nb_stations %}
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
-                    <p>{{ station.description }}</p>
-                    <div class="station-meta">
-                        <span class="frequency">{{ station.frequency }}</span>
-                        <span class="location">{{ station.location }}</span>
-                        <span class="genre">{{ station.genre }}</span>
+            {% if station.hidden != true %}
+            <div class="station-card">
+                <div class="station-header">
+                    <div class="station-info">
+                        <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
+                        <p>{{ station.description }}</p>
+                        <div class="station-meta">
+                            <span class="frequency">{{ station.frequency }}</span>
+                            <span class="location">{{ station.location }}</span>
+                            <span class="genre">{{ station.genre }}</span>
+                        </div>
+                    </div>
+                    <div class="station-actions">
+                        <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                            <i class="fas fa-play"></i>
+                            Play Live
+                        </button>
                     </div>
                 </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
             </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -146,6 +155,7 @@ permalink: /sports/
     <h2 class="province-header">Newfoundland and Labrador</h2>
     <div class="stations-grid">
         {% for station in nl_stations %}
+        {% if station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
@@ -165,6 +175,7 @@ permalink: /sports/
                 </div>
             </div>
         </div>
+                {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -176,6 +187,7 @@ permalink: /sports/
     <h2 class="province-header">Nova Scotia</h2>
     <div class="stations-grid">
         {% for station in ns_stations %}
+        {% if station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
@@ -195,6 +207,7 @@ permalink: /sports/
                 </div>
             </div>
         </div>
+                {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -206,6 +219,7 @@ permalink: /sports/
     <h2 class="province-header">Ontario</h2>
     <div class="stations-grid">
         {% for station in on_stations %}
+        {% if station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
@@ -225,6 +239,7 @@ permalink: /sports/
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -236,6 +251,7 @@ permalink: /sports/
     <h2 class="province-header">Prince Edward Island</h2>
     <div class="stations-grid">
         {% for station in pe_stations %}
+        {% if station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
@@ -255,6 +271,7 @@ permalink: /sports/
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -266,6 +283,7 @@ permalink: /sports/
     <h2 class="province-header">Quebec</h2>
     <div class="stations-grid">
         {% for station in qc_stations %}
+        {% if station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
@@ -285,6 +303,7 @@ permalink: /sports/
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>
@@ -296,6 +315,7 @@ permalink: /sports/
     <h2 class="province-header">Saskatchewan</h2>
     <div class="stations-grid">
         {% for station in sk_stations %}
+        {% if station.hidden != true %}
         <div class="station-card">
             <div class="station-header">
                 <div class="station-info">
@@ -315,6 +335,7 @@ permalink: /sports/
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 </div>

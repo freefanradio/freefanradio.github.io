@@ -1,4 +1,5 @@
 ---
+hidden: true
 layout: station
 title: "Sportsnet 960 Calgary"
 description: "Calgary's home for Flames hockey and comprehensive sports coverage"
