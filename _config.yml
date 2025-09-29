@@ -44,6 +44,26 @@ social:
 
 # SEO
 google_analytics: G-NRZ1504M1K  # Your Google Analytics ID
+google_site_verification: # Add your Google Search Console verification code here
+author: FreeFanRadio.ca Team
+locale: en_CA
+timezone: America/Toronto
+
+# SEO defaults
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+      author: "FreeFanRadio.ca"
+  - scope:
+      path: ""
+      type: "stations"
+    values:
+      layout: "station"
+      author: "FreeFanRadio.ca"
+      category: "sports-radio"
 
 # Exclude from build (won't be deployed)
 exclude:

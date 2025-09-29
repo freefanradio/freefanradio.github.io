@@ -10,6 +10,8 @@ category: "sports"
 stream_url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3"
 website: "https://www.tsn.ca/radio/montreal-690"
 phone: "(514) 529-3200"
+keywords: "TSN 690, Montreal sports radio, Canadiens radio, Montreal Alouettes, sports talk, live sports radio"
+image: "/assets/logo/ffr.png"
 schedule:
   - time: "6:00 AM - 9:00 AM"
     show: "Melnick in the Morning"

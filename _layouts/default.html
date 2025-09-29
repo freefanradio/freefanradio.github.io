@@ -12,8 +12,42 @@
     <!-- SEO and Social Media -->
     {% seo %}
     
+    <!-- Enhanced Open Graph -->
+    <meta property="og:locale" content="en_CA">
+    <meta property="og:site_name" content="{{ site.title }}">
+    {% if page.layout == 'station' %}
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ page.title }} - Free Canadian Sports Radio">
+    <meta property="og:description" content="{{ page.description }}">
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+    {% else %}
+    <meta property="og:type" content="website">
+    {% endif %}
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@{{ site.social.twitter }}">
+    <meta name="twitter:creator" content="@{{ site.social.twitter }}">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="language" content="en-CA">
+    <meta name="author" content="{{ site.title }}">
+    <meta name="copyright" content="{{ site.title }}">
+    <meta name="category" content="Sports Radio">
+    <meta name="coverage" content="Worldwide">
+    <meta name="distribution" content="Global">
+    <meta name="rating" content="General">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="{{ site.title }}">
     
     <!-- CSS -->
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
@@ -39,6 +73,34 @@
         gtag('config', '{{ site.google_analytics }}');
     </script>
     {% endif %}
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ site.title }}",
+        "description": "{{ site.description }}",
+        "url": "{{ site.url }}",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "{{ site.url }}/search?q={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "{{ site.title }}",
+            "url": "{{ site.url }}",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "{{ site.url }}/assets/logo/ffr.png"
+            }
+        }
+    }
+    </script>
 </head>
 <body>
     <header class="site-header">

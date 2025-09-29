@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://freefanradio.github.io/freefanradio/sitemap.xml
+Sitemap: https://freefanradio.ca/sitemap.xml
 
 # Disallow crawling of certain files
 Disallow: /assets/js/

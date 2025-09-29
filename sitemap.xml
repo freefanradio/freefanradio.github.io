@@ -11,21 +11,25 @@ sitemap: false
         <priority>1.0</priority>
     </url>
     {% for page in site.pages %}
-        {% if page.layout != null %}
+        {% unless page.sitemap == false %}
+        {% if page.layout != null and page.url != '/404.html' %}
         <url>
             <loc>{{ site.url }}{{ site.baseurl }}{{ page.url }}</loc>
             <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
-            <changefreq>weekly</changefreq>
-            <priority>0.8</priority>
+            <changefreq>{% if page.url contains 'sports' or page.url contains 'hockey' or page.url contains 'football' %}daily{% else %}weekly{% endif %}</changefreq>
+            <priority>{% if page.url contains 'sports' %}0.9{% elsif page.url contains 'hockey' or page.url contains 'football' %}0.8{% else %}0.7{% endif %}</priority>
         </url>
         {% endif %}
+        {% endunless %}
     {% endfor %}
     {% for station in site.stations %}
+        {% unless station.hidden %}
         <url>
             <loc>{{ site.url }}{{ site.baseurl }}{{ station.url }}</loc>
             <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
             <changefreq>weekly</changefreq>
-            <priority>0.7</priority>
+            <priority>0.8</priority>
         </url>
+        {% endunless %}
     {% endfor %}
 </urlset>

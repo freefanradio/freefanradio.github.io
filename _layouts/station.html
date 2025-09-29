@@ -2,6 +2,54 @@
 layout: default
 ---
 
+<!-- Structured Data for Radio Station -->
+<script type="application/ld+json">
+[
+{
+    "@context": "https://schema.org",
+    "@type": "RadioStation",
+    "name": "{{ page.title }}",
+    "description": "{{ page.description }}",
+    "url": "{{ site.url }}{{ page.url }}",
+    "broadcastFrequency": "{{ page.frequency }}",
+    "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "{{ page.location | split: ', ' | first }}",
+        "addressRegion": "{{ page.location | split: ', ' | last }}",
+        "addressCountry": "CA"
+    },
+    "genre": "{{ page.genre }}",
+    "telephone": "{{ page.phone }}",
+    "sameAs": "{{ page.website }}",
+    "broadcastServiceTier": "{{ page.category }}"
+},
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "{{ site.url }}"
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Sports Radio Stations",
+            "item": "{{ site.url }}/sports/"
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "{{ page.title }}",
+            "item": "{{ site.url }}{{ page.url }}"
+        }
+    ]
+}
+]
+</script>
+
 <article class="station-page">
     <header class="station-header">
         <div class="station-info">
