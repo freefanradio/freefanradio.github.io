@@ -24,15 +24,9 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Google AdSense -->
+    <!-- Google AdSense Auto Ads -->
     {% if site.google_adsense_id %}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.google_adsense_id }}" crossorigin="anonymous"></script>
-    <script>
-        (adsbygoogle = window.adsbygoogle || []).push({
-            google_ad_client: "{{ site.google_adsense_id }}",
-            enable_page_level_ads: true
-        });
-    </script>
     {% endif %}
     
     <!-- Google Analytics -->

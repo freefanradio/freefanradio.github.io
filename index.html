@@ -287,13 +287,11 @@ html, body {
 </style>
 
 <div class="home-container">
-    <!-- Top Banner Ad -->
+    <!-- Top Banner Ad - Auto Ads will place ads here -->
     <div class="ad-container banner-ad">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-6728538010774960"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+        <div id="top-ad-space">
+            <!-- Auto Ads will automatically place ads here when enabled -->
+        </div>
     </div>
     
     <!-- Stations Container -->
@@ -302,13 +300,11 @@ html, body {
             <!-- 8 slots will be populated by JavaScript -->
         </div>
         
-        <!-- Bottom Ad -->
+        <!-- Bottom Ad - Auto Ads will place ads here -->
         <div class="ad-container bottom-ad">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-6728538010774960"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
+            <div id="bottom-ad-space">
+                <!-- Auto Ads will automatically place ads here when enabled -->
+            </div>
         </div>
     </div>
 </div>
@@ -556,31 +552,7 @@ function initializeRecentStationsView() {
         ];
     }
     
-    // Initialize AdSense ads
-    function initializeAds() {
-        try {
-            // Check if AdSense script is loaded
-            if (typeof adsbygoogle !== 'undefined') {
-                // Initialize each ad unit
-                const ads = document.querySelectorAll('.adsbygoogle');
-                ads.forEach((ad, index) => {
-                    try {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                        console.log(`AdSense ad ${index + 1} initialized`);
-                    } catch (e) {
-                        console.log(`AdSense ad ${index + 1} error:`, e);
-                    }
-                });
-            } else {
-                console.log('AdSense script not loaded yet, retrying...');
-                setTimeout(initializeAds, 1000);
-            }
-        } catch (e) {
-            console.log('AdSense initialization error:', e);
-        }
-    }
-    
-    // Initialize ads after a delay to ensure the page and AdSense script are loaded
-    setTimeout(initializeAds, 2000);
+    // Auto Ads - Google will automatically place ads when enabled in AdSense dashboard
+    console.log('AdSense Auto Ads enabled - ads will show when approved and Auto Ads is turned on');
 }
 </script>
