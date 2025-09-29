@@ -5,12 +5,12 @@ description: "The Canadian hub for legal sports radio streams and podcasts. Your
 ---
 
 <style>
-/* Mobile-first, full-screen layout with no scroll */
+/* Mobile-first, full-screen layout */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* Prevent all scrolling */
+    overflow: hidden; /* Keep body overflow hidden, but allow main-content to scroll */
 }
 
 /* Hide only footer on home page, keep header for navigation */
@@ -34,15 +34,16 @@ html, body {
     display: block !important;
 }
 
-/* Adjust main content to account for fixed header */
+/* Adjust main content to account for fixed header - override all default styling */
 .main-content {
     position: fixed;
     top: 64px; /* Start below fixed header */
     left: 0;
     right: 0;
     bottom: 0; /* Stretch to bottom of viewport */
-    overflow: hidden;
-    padding: 0;
+    overflow: hidden; /* Keep no scroll */
+    padding: 0 !important; /* Force no padding */
+    margin: 0 !important; /* Force no margin */
 }
 
 .home-container {
@@ -51,17 +52,20 @@ html, body {
     height: 100%;
     width: 100%;
     overflow: hidden;
+    padding: 0; /* Remove any default padding */
+    margin: 0; /* Remove any default margin */
 }
 
 .stations-container {
-    flex: 1;
+    flex: 1; /* Take remaining space after ads */
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding: 0.75rem;
+    padding: 0.5rem 0.75rem 0.5rem 0.75rem; /* Add top padding to separate from banner */
     background: #f8fafc;
     min-height: 0; /* Important for flex containers */
     transition: padding-bottom 0.3s ease; /* Smooth transition when player appears */
+    margin-top: 0.5rem; /* Add small gap between banner and stations */
 }
 
 /* Adjust container when audio player is active */
@@ -215,13 +219,96 @@ html, body {
     text-align: right;
 }
 
+/* Ad Container Styles */
+.ad-container {
+    width: 100%;
+    text-align: center;
+    margin: 0 !important; /* Force no margins */
+    padding: 0 0.75rem !important; /* Only horizontal padding, no vertical padding - forced */
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0 0 6px 6px; /* Only round bottom corners to touch header cleanly */
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    height: 60px; /* Fixed small height to fit in viewport */
+    border: 1px dashed #3b82f6;
+    border-top: none; /* Remove top border to eliminate any gap */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    flex-shrink: 0; /* Don't allow shrinking */
+}
+
+.ad-container::before {
+    content: "Ad";
+    position: absolute;
+    top: 4px;
+    left: 6px;
+    font-size: 0.6rem;
+    color: #3b82f6;
+    background: white;
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+.ad-container::after {
+    content: "AdSense will show here when live";
+    font-size: 0.7rem;
+    color: #666;
+    font-style: italic;
+    background: #f0f9ff;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.banner-ad {
+    margin: 0 !important; /* Force absolutely no margins */
+    padding: 0 !important; /* Force no padding on the banner container */
+    flex-shrink: 0; /* Don't allow banner to shrink */
+    position: relative;
+    top: 0; /* Force it to the very top */
+    line-height: 1; /* Eliminate any line-height spacing */
+}
+
+.bottom-ad {
+    margin-top: 0.5rem;
+    flex-shrink: 0; /* Don't allow bottom ad to shrink */
+}
+
+/* Responsive ad sizing */
+@media (max-width: 768px) {
+    .ad-container {
+        margin: 0.5rem 0;
+        padding: 0.25rem;
+    }
+}
+
 </style>
 
 <div class="home-container">
+    <!-- Top Banner Ad -->
+    <div class="ad-container banner-ad">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-6728538010774960"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+    
     <!-- Stations Container -->
     <div class="stations-container">
         <div class="stations-grid" id="stationsGrid">
             <!-- 8 slots will be populated by JavaScript -->
+        </div>
+        
+        <!-- Bottom Ad -->
+        <div class="ad-container bottom-ad">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-6728538010774960"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
         </div>
     </div>
 </div>
@@ -468,5 +555,32 @@ function initializeRecentStationsView() {
             }
         ];
     }
+    
+    // Initialize AdSense ads
+    function initializeAds() {
+        try {
+            // Check if AdSense script is loaded
+            if (typeof adsbygoogle !== 'undefined') {
+                // Initialize each ad unit
+                const ads = document.querySelectorAll('.adsbygoogle');
+                ads.forEach((ad, index) => {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        console.log(`AdSense ad ${index + 1} initialized`);
+                    } catch (e) {
+                        console.log(`AdSense ad ${index + 1} error:`, e);
+                    }
+                });
+            } else {
+                console.log('AdSense script not loaded yet, retrying...');
+                setTimeout(initializeAds, 1000);
+            }
+        } catch (e) {
+            console.log('AdSense initialization error:', e);
+        }
+    }
+    
+    // Initialize ads after a delay to ensure the page and AdSense script are loaded
+    setTimeout(initializeAds, 2000);
 }
 </script>

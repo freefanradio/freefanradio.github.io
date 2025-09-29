@@ -6,6 +6,9 @@
     <title>{% if page.title %}{{ page.title }} - {% endif %}{{ site.title }}</title>
     <meta name="description" content="{{ page.description | default: site.description }}">
     
+    <!-- Google AdSense Account Verification -->
+    <meta name="google-adsense-account" content="ca-pub-6728538010774960">
+    
     <!-- SEO and Social Media -->
     {% seo %}
     
@@ -24,6 +27,12 @@
     <!-- Google AdSense -->
     {% if site.google_adsense_id %}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.google_adsense_id }}" crossorigin="anonymous"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "{{ site.google_adsense_id }}",
+            enable_page_level_ads: true
+        });
+    </script>
     {% endif %}
     
     <!-- Google Analytics -->
