@@ -1,0 +1,155 @@
+---
+layout: default
+title: "Audio Test"
+description: "Simple audio test page"
+---
+
+<div style="padding: 2rem;">
+    <h1>Audio Player Test</h1>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Test Controls</h2>
+        <button onclick="testDirectAudio()" style="margin: 0.5rem; padding: 1rem 2rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+            Test Direct Audio Element
+        </button>
+        
+        <button onclick="testRadioPlayer()" style="margin: 0.5rem; padding: 1rem 2rem; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+            Test Radio Player Class
+        </button>
+        
+        <button onclick="testStreamURL()" style="margin: 0.5rem; padding: 1rem 2rem; background: #f59e0b; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+            Test Stream URL Direct
+        </button>
+    </div>
+    
+    <div id="testResults" style="margin: 2rem 0; padding: 1rem; background: #f7fafc; border-radius: 8px;">
+        <h3>Test Results:</h3>
+        <div id="testOutput">Click a test button above...</div>
+    </div>
+    
+    <div style="margin: 2rem 0;">
+        <h3>Debug Info:</h3>
+        <div id="debugInfo">
+            <p><strong>Radio Player Available:</strong> <span id="radioPlayerStatus">Checking...</span></p>
+            <p><strong>Audio Player Element:</strong> <span id="audioPlayerStatus">Checking...</span></p>
+            <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    updateDebugInfo();
+    
+    // Check radio player availability every second for 10 seconds
+    let checkCount = 0;
+    const checkInterval = setInterval(() => {
+        updateDebugInfo();
+        checkCount++;
+        if (checkCount > 10 || window.radioPlayer) {
+            clearInterval(checkInterval);
+        }
+    }, 1000);
+});
+
+function updateDebugInfo() {
+    document.getElementById('radioPlayerStatus').textContent = window.radioPlayer ? 'Available ✅' : 'Not Available ❌';
+    document.getElementById('audioPlayerStatus').textContent = document.getElementById('audioPlayer') ? 'Found ✅' : 'Not Found ❌';
+    document.getElementById('userAgent').textContent = navigator.userAgent;
+}
+
+function log(message) {
+    const output = document.getElementById('testOutput');
+    const timestamp = new Date().toLocaleTimeString();
+    output.innerHTML += `<div style="margin: 0.25rem 0; font-family: monospace; font-size: 0.9rem;">[${timestamp}] ${message}</div>`;
+    output.scrollTop = output.scrollHeight;
+    console.log(message);
+}
+
+function testDirectAudio() {
+    log('🔵 Testing direct HTML5 Audio element...');
+    
+    const streamUrl = 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3';
+    const audio = new Audio();
+    
+    audio.addEventListener('loadstart', () => log('Audio: Load started'));
+    audio.addEventListener('canplay', () => log('Audio: Can play'));
+    audio.addEventListener('play', () => log('Audio: Playing ✅'));
+    audio.addEventListener('error', (e) => log(`Audio: Error ❌ - ${e.target.error ? e.target.error.message : 'Unknown error'}`));
+    audio.addEventListener('stalled', () => log('Audio: Stalled'));
+    audio.addEventListener('waiting', () => log('Audio: Waiting/buffering'));
+    
+    audio.src = streamUrl;
+    audio.volume = 0.5;
+    
+    log(`Stream URL: ${streamUrl}`);
+    
+    audio.play().then(() => {
+        log('Audio: Play promise resolved ✅');
+        setTimeout(() => {
+            audio.pause();
+            log('Audio: Stopped after 3 seconds');
+        }, 3000);
+    }).catch(error => {
+        log(`Audio: Play promise rejected ❌ - ${error.message}`);
+    });
+}
+
+function testRadioPlayer() {
+    log('🟢 Testing RadioPlayer class...');
+    
+    if (!window.radioPlayer) {
+        log('RadioPlayer not available ❌');
+        return;
+    }
+    
+    const stationData = {
+        name: "TSN 690 Montreal",
+        url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3",
+        frequency: "690 AM",
+        location: "Montreal, QC",
+        genre: "Sports Talk",
+        description: "Montreal's premier sports radio station"
+    };
+    
+    log(`Loading station: ${stationData.name}`);
+    log(`Stream URL: ${stationData.url}`);
+    
+    try {
+        window.radioPlayer.loadStation(stationData.url, stationData.name, stationData);
+        log('RadioPlayer.loadStation() called successfully ✅');
+        
+        setTimeout(() => {
+            if (window.radioPlayer.isPlaying) {
+                log('RadioPlayer: Station is playing ✅');
+                window.radioPlayer.pause();
+                log('RadioPlayer: Paused');
+            } else {
+                log('RadioPlayer: Station is not playing ❌');
+            }
+        }, 3000);
+    } catch (error) {
+        log(`RadioPlayer error ❌: ${error.message}`);
+    }
+}
+
+function testStreamURL() {
+    log('🟡 Testing stream URL accessibility...');
+    
+    const streamUrl = 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3';
+    
+    fetch(streamUrl, { method: 'HEAD' })
+        .then(response => {
+            log(`Stream URL response: ${response.status} ${response.statusText}`);
+            log(`Content-Type: ${response.headers.get('content-type') || 'Unknown'}`);
+            if (response.ok) {
+                log('Stream URL is accessible ✅');
+            } else {
+                log('Stream URL returned error ❌');
+            }
+        })
+        .catch(error => {
+            log(`Stream URL fetch error ❌: ${error.message}`);
+        });
+}
+</script>

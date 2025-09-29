@@ -1,121 +1,472 @@
 ---
 layout: default
 title: "Home"
-description: "The Canadian hub for legal sports radio streams and podcasts. Stream live Canadian sports radio stations - Hockey, Football, Basketball and more."
+description: "The Canadian hub for legal sports radio streams and podcasts. Your recent radio stations at your fingertips."
 ---
 
-<section class="hero">
-    <div class="hero-container">
-        <h1><i class="fas fa-radio"></i> FreeFanRadio.ca</h1>
-        <p class="hero-mission">The Canadian hub for legal sports radio streams and podcasts.</p>
-        <p class="hero-subtitle">Your ultimate destination for Canadian sports radio streaming</p>
-        
-        <!-- Disclaimer Notice -->
-        <div style="background: rgba(255, 243, 205, 0.9); border: 1px solid #f6ad55; border-radius: 8px; padding: 1rem; margin: 1.5rem auto; max-width: 600px; font-size: 0.9rem; color: #744210;">
-            <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
-            <strong>Notice:</strong> All streams are publicly available and sourced from official radio station websites. We respect copyright and will promptly remove any unauthorized content upon request.
-        </div>
-        
-        <a href="#stations" class="cta-button">
-            <i class="fas fa-play"></i>
-            Start Listening
-        </a>
-    </div>
-</section>
+<style>
+/* Mobile-first, full-screen layout with no scroll */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden; /* Prevent all scrolling */
+}
 
-<!-- Google Ad - Top Banner -->
-<div class="ad-container" style="margin: 2rem auto; max-width: 1200px; text-align: center;">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="{{ site.google_adsense_id }}"
-         data-ad-slot="REPLACE_WITH_YOUR_AD_SLOT_ID"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
+/* Hide only footer on home page, keep header for navigation */
+.site-footer {
+    display: none;
+}
+
+/* Ensure header is visible and properly positioned */
+.site-header {
+    position: relative;
+    z-index: 100;
+}
+
+/* Ensure audio player is accessible but positioned properly */
+#audioPlayer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: block !important;
+}
+
+/* Adjust main content to account for fixed header */
+.main-content {
+    position: fixed;
+    top: 64px; /* Start below fixed header */
+    left: 0;
+    right: 0;
+    bottom: 0; /* Stretch to bottom of viewport */
+    overflow: hidden;
+    padding: 0;
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.stations-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0.75rem;
+    background: #f8fafc;
+    min-height: 0; /* Important for flex containers */
+    transition: padding-bottom 0.3s ease; /* Smooth transition when player appears */
+}
+
+/* Adjust container when audio player is active */
+.stations-container.player-active {
+    padding-bottom: 100px; /* Make room for audio player - increased for safety */
+}
+
+/* On larger screens, less padding needed since grid is shorter */
+@media (min-width: 768px) {
+    .stations-container.player-active {
+        padding-bottom: 90px; /* Less padding needed for horizontal layout */
+    }
+}
+
+.stations-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    overflow: hidden;
+    min-height: 0; /* Important for grid in flex container */
+}
+
+/* For larger screens, use 4 columns */
+@media (min-width: 768px) {
+    .stations-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        padding: 0 1rem;
+    }
+}
+
+.station-slot {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+    color: white;
+    cursor: pointer;
+}
+
+.station-slot:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+}
+
+.station-slot:active {
+    transform: scale(0.98);
+}
+
+.station-slot.empty {
+    background: #f1f5f9;
+    border: 2px dashed #cbd5e0;
+    color: #94a3b8;
+    cursor: default;
+}
+
+.station-slot.empty:hover {
+    transform: none;
+    background: #f1f5f9;
+}
+
+.station-slot.playing {
+    border-color: #10b981;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.station-slot.loading {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    position: relative;
+}
+
+.station-slot.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.station-info {
+    width: 100%;
+}
+
+.station-name {
+    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+    font-weight: 600;
+    color: white;
+    margin: 0;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.empty-slot-content {
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align to top */
+    height: 100%;
+    width: 100%;
+    padding-top: 1rem; /* Push button away from very top edge */
+}
+
+.browse-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    font-size: clamp(0.65rem, 1.5vw, 0.7rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: auto; /* Push to top, icon to bottom */
+}
+
+.browse-btn:hover {
+    background: #5a67d8;
+}
+
+.last-played {
+    font-size: 0.6rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+    text-align: right;
+}
+
+</style>
+
+<div class="home-container">
+    <!-- Stations Container -->
+    <div class="stations-container">
+        <div class="stations-grid" id="stationsGrid">
+            <!-- 8 slots will be populated by JavaScript -->
+        </div>
+    </div>
 </div>
 
-<section id="stations" class="stations-section" style="padding: 4rem 0;">
-    <div style="text-align: center; margin-bottom: 3rem;">
-        <h2 style="font-size: 2.5rem; color: #2d3748; margin-bottom: 1rem;">Featured Radio Stations</h2>
-        <p style="font-size: 1.2rem; color: #718096;">Listen to live Canadian sports and news radio from coast to coast</p>
-    </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Home page DOM loaded, initializing...');
+    initializeRecentStationsView();
+});
+
+function initializeRecentStationsView() {
+    console.log('Initializing recent stations view...');
+    const stationsGrid = document.getElementById('stationsGrid');
     
-    <div class="stations-grid">
-        <!-- TSN Radio Stations -->
-        {% assign featured_stations = "tsn-690-montreal,tsn-1050-toronto,sportsnet-960-calgary,cjob-680-winnipeg,ckrm-620-regina,985-fm-montreal,bpm-sport-montreal" | split: "," %}
-        {% for station_id in featured_stations %}
-            {% assign station = site.stations | where: "slug", station_id | first %}
-            {% if station and station.hidden != true %}
-        <div class="station-card">
-            <div class="station-header">
-                <div class="station-info">
-                    <h3>{{ station.title }}</h3>
-                    <p>{{ station.description }}</p>
-                    <div class="station-meta">
-                        <span class="frequency">{{ station.frequency }}</span>
-                        <span class="location">{{ station.location }}</span>
-                        <span class="genre">{{ station.genre }}</span>
-                    </div>
-                </div>
-                <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
-                        <i class="fas fa-play"></i>
-                        Play Live
-                    </button>
-                </div>
-            </div>
-        </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-</section>
-
-<!-- Google Ad - Bottom Banner -->
-<div class="ad-container" style="margin: 2rem auto; max-width: 1200px; text-align: center;">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="{{ site.google_adsense_id }}"
-         data-ad-slot="REPLACE_WITH_YOUR_AD_SLOT_ID_2"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-
-<section class="features-section" style="padding: 4rem 0; background-color: white;">
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 1rem;">
-        <div style="text-align: center; margin-bottom: 3rem;">
-            <h2 style="font-size: 2.5rem; color: #2d3748; margin-bottom: 1rem;">Why Choose FreeFanRadio.ca?</h2>
-            <p style="font-size: 1.2rem; color: #718096;">The best Canadian sports radio streaming experience</p>
-        </div>
+    // Wait for radioPlayer to be available
+    const checkRadioPlayer = () => {
+        if (window.radioPlayer) {
+            console.log('Radio player found, updating stations grid');
+            updateStationsGrid();
+            updateLayoutForPlayer(); // Check if player is already active
+        } else {
+            console.log('Radio player not ready yet, checking again...');
+            setTimeout(checkRadioPlayer, 100);
+        }
+    };
+    checkRadioPlayer();
+    
+    function updateStationsGrid() {
+        let recentStations = window.radioPlayer ? window.radioPlayer.getRecentStationsForDisplay() : [];
         
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-            <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 3rem; color: #667eea; margin-bottom: 1rem;">
-                    <i class="fas fa-broadcast-tower"></i>
-                </div>
-                <h3 style="color: #2d3748; margin-bottom: 1rem;">Live Streaming</h3>
-                <p style="color: #718096;">Real-time streaming of your favorite Canadian sports radio stations with high-quality audio.</p>
-            </div>
+        // If no recent stations, show some featured stations as fallback
+        if (recentStations.length === 0) {
+            recentStations = getDefaultStations();
+        }
+        
+        // Sort stations alphabetically by name for consistent UI positioning
+        recentStations.sort((a, b) => a.name.localeCompare(b.name));
+        
+        const maxSlots = 8;
+        
+        stationsGrid.innerHTML = '';
+        
+        // No subtitle to update anymore - just the grid
+        
+        // Create all 8 slots
+        for (let i = 0; i < maxSlots; i++) {
+            const slot = document.createElement('div');
+            slot.className = 'station-slot';
             
-            <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">
-                    <i class="fas fa-mobile-alt"></i>
-                </div>
-                <h3 style="color: #2d3748; margin-bottom: 1rem;">Mobile Friendly</h3>
-                <p style="color: #718096;">Optimized for all devices - listen on your phone, tablet, or desktop anywhere you go.</p>
-            </div>
+            if (i < recentStations.length) {
+                // Populated slot
+                const station = recentStations[i];
+                slot.innerHTML = `
+                    <div class="station-info">
+                        <h3 class="station-name">${station.name}</h3>
+                    </div>
+                `;
+                
+                // Store station data directly on the slot element and make entire card clickable
+                slot.stationData = station;
+                slot.style.cursor = 'pointer';
+                
+                // Add click handler for the entire station slot
+                slot.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log('🎵 Play button clicked for:', this.dataset.name);
+                    
+                    try {
+                        const stationData = this.stationData;
+                        console.log('📻 Station data:', stationData);
+                        
+                        if (!window.radioPlayer) {
+                            console.error('❌ Radio player not available!');
+                            alert('Radio player not ready. Please refresh the page and try again.');
+                            return;
+                        }
+                        
+                        console.log('🚀 Loading station:', stationData.name);
+                        console.log('🔗 Stream URL:', stationData.url);
+                        
+                        // Add loading state to the station slot
+                        this.classList.add('loading');
+                        
+                        // Test if we can create an audio element first
+                        const testAudio = new Audio();
+                        testAudio.src = stationData.url;
+                        testAudio.load();
+                        
+                        console.log('✅ Audio element created successfully');
+                        
+                        // Now use the radio player
+                        window.radioPlayer.loadStation(stationData.url, stationData.name, stationData);
+                        
+                        // Reset loading state after a delay
+                        setTimeout(() => {
+                            this.classList.remove('loading');
+                            updatePlayingStates();
+                        }, 2000);
+                        
+                    } catch (error) {
+                        console.error('❌ Error in play button handler:', error);
+                        alert(`Error playing station: ${error.message}`);
+                    }
+                });
+                
+            } else {
+                // Empty slot
+                slot.classList.add('empty');
+                slot.innerHTML = `
+                    <div class="empty-slot-content">
+                        <button class="browse-btn" onclick="window.location.href='/sports/'">
+                            Browse All
+                        </button>
+                        <div style="font-size: 1.2rem; margin-top: 0.5rem; opacity: 0.4;">
+                            <i class="fas fa-radio"></i>
+                        </div>
+                    </div>
+                `;
+            }
             
-            <div style="text-align: center; padding: 2rem;">
-                <div style="font-size: 3rem; color: #f59e0b; margin-bottom: 1rem;">
-                    <i class="fas fa-heart"></i>
-                </div>
-                <h3 style="color: #2d3748; margin-bottom: 1rem;">Free to Use</h3>
-                <p style="color: #718096;">Completely free access to all Canadian sports radio stations. No subscriptions required.</p>
-            </div>
-        </div>
-    </div>
-</section>
+            stationsGrid.appendChild(slot);
+        }
+        
+        updatePlayingStates();
+    }
+    
+    function updatePlayingStates() {
+        // Remove all playing states
+        document.querySelectorAll('.station-slot').forEach(slot => {
+            slot.classList.remove('playing');
+        });
+        
+        // Add playing state to current station
+        if (window.radioPlayer && window.radioPlayer.currentStation) {
+            const currentUrl = window.radioPlayer.currentStation.url;
+            // Find the slot with matching station data
+            document.querySelectorAll('.station-slot').forEach(slot => {
+                if (slot.stationData && slot.stationData.url === currentUrl) {
+                    slot.classList.add('playing');
+                }
+            });
+        }
+    }
+    
+    // Listen for radio player events to update states
+    setInterval(() => {
+        if (window.radioPlayer) {
+            updatePlayingStates();
+            updateLayoutForPlayer();
+        }
+    }, 1000);
+    
+    function updateLayoutForPlayer() {
+        const stationsContainer = document.querySelector('.stations-container');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const isVertical = window.innerWidth < 768;
+        
+        if (audioPlayer && audioPlayer.classList.contains('active')) {
+            stationsContainer.classList.add('player-active');
+            console.log(`🎵 Audio player active - adjusting layout (${isVertical ? 'vertical' : 'horizontal'} mode)`);
+        } else {
+            stationsContainer.classList.remove('player-active');
+            console.log('🔇 Audio player inactive - normal layout');
+        }
+    }
+    
+    // Watch for audio player changes with MutationObserver (more reliable)
+    function setupAudioPlayerWatcher() {
+        const audioPlayer = document.getElementById('audioPlayer');
+        if (audioPlayer) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        updateLayoutForPlayer();
+                    }
+                });
+            });
+            
+            observer.observe(audioPlayer, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+            
+            // Initial check
+            updateLayoutForPlayer();
+            console.log('👀 Audio player watcher set up');
+        } else {
+            // If audio player doesn't exist yet, try again later
+            setTimeout(setupAudioPlayerWatcher, 500);
+        }
+    }
+    
+    // Start watching for audio player changes
+    setupAudioPlayerWatcher();
+    
+    // Update layout on window resize (orientation change)
+    window.addEventListener('resize', () => {
+        updateLayoutForPlayer();
+    });
+    
+    // Listen for recent stations updates
+    window.addEventListener('recentStationsUpdated', function(event) {
+        setTimeout(updateStationsGrid, 100);
+    });
+    
+    function getDefaultStations() {
+        // Default featured stations for first-time users (sorted alphabetically)
+        return [
+            {
+                name: "CJOB 680 Winnipeg",
+                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CJOBAM.mp3",
+                frequency: "680 AM",
+                location: "Winnipeg, MB",
+                genre: "News/Sports",
+                description: "Winnipeg's news and sports radio",
+                timeAgo: "Featured"
+            },
+            {
+                name: "Sportsnet 960 Calgary",
+                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CFACAM.mp3",
+                frequency: "960 AM",
+                location: "Calgary, AB",
+                genre: "Sports Talk",
+                description: "Calgary's sports radio station",
+                timeAgo: "Featured"
+            },
+            {
+                name: "TSN 1050 Toronto",
+                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CJCL.mp3",
+                frequency: "1050 AM",
+                location: "Toronto, ON",
+                genre: "Sports Talk",
+                description: "Toronto's sports radio leader",
+                timeAgo: "Featured"
+            },
+            {
+                name: "TSN 690 Montreal",
+                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3",
+                frequency: "690 AM",
+                location: "Montreal, QC",
+                genre: "Sports Talk",
+                description: "Montreal's premier sports radio station",
+                timeAgo: "Featured"
+            }
+        ];
+    }
+}
+</script>

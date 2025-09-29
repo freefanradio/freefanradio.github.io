@@ -29,8 +29,8 @@ navigation:
     url: /hockey/
   - title: Football
     url: /football/
-  - title: About
-    url: /about/
+  - title: Info
+    url: /info/
   - title: Terms
     url: /terms/
 
@@ -44,3 +44,15 @@ social:
 
 # SEO
 google_analytics: G-NRZ1504M1K  # Your Google Analytics ID
+
+# Exclude from build (won't be deployed)
+exclude:
+  - docs/
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules/
+  - vendor/
+  - .sass-cache/
+  - .jekyll-cache/
+  - gemfiles/

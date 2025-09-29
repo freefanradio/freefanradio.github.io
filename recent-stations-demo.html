@@ -1,0 +1,128 @@
+---
+layout: default
+title: "Recent Stations Demo"
+description: "Demo page for testing recent stations functionality"
+---
+
+<div style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <h1>Recent Stations Demo</h1>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Test Controls</h2>
+        <button onclick="displayRecentStations()" style="margin: 0.5rem; padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Show Recent Stations (Console)
+        </button>
+        <button onclick="showRecentStationsUI()" style="margin: 0.5rem; padding: 0.5rem 1rem; background: #10b981; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Show Recent Stations (UI)
+        </button>
+        <button onclick="clearRecentStations()" style="margin: 0.5rem; padding: 0.5rem 1rem; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Clear Recent Stations
+        </button>
+        <button onclick="exportRecentStations()" style="margin: 0.5rem; padding: 0.5rem 1rem; background: #8b5cf6; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Export Data
+        </button>
+        <input type="file" id="importFile" accept=".json" style="display: none;" onchange="handleImportFile(event)">
+        <button onclick="document.getElementById('importFile').click()" style="margin: 0.5rem; padding: 0.5rem 1rem; background: #f59e0b; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Import Data
+        </button>
+    </div>
+    
+    <div id="recentStationsDisplay" style="margin: 2rem 0;"></div>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Instructions</h2>
+        <ol>
+            <li>Go back to the <a href="{{ site.baseurl }}/">home page</a> and play some radio stations</li>
+            <li>Return here and click "Show Recent Stations" to see your listening history</li>
+            <li>The system will remember your last 8 played stations</li>
+            <li>Open the browser console (F12) to see detailed logs</li>
+        </ol>
+    </div>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Recent Stations Data Structure</h2>
+        <p>Each recent station entry contains:</p>
+        <ul>
+            <li><strong>name</strong>: Station name (e.g., "TSN 690 Montreal")</li>
+            <li><strong>url</strong>: Stream URL</li>
+            <li><strong>frequency</strong>: Radio frequency (e.g., "690 AM")</li>
+            <li><strong>location</strong>: City/province (e.g., "Montreal, QC")</li>
+            <li><strong>genre</strong>: Station type (e.g., "Sports Talk")</li>
+            <li><strong>description</strong>: Brief description</li>
+            <li><strong>lastPlayed</strong>: ISO timestamp of when it was last selected</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+function showRecentStationsUI() {
+    if (!window.radioPlayer) {
+        alert('Radio player not initialized yet. Please wait a moment and try again.');
+        return;
+    }
+    
+    const recentStations = window.radioPlayer.getRecentStationsForDisplay();
+    const display = document.getElementById('recentStationsDisplay');
+    
+    if (recentStations.length === 0) {
+        display.innerHTML = '<p style="padding: 1rem; background: #f7fafc; border-radius: 8px; color: #718096;">No recent stations found. Play some radio stations first!</p>';
+        return;
+    }
+    
+    let html = '<h3>Your Recent Stations</h3>';
+    html += '<div style="display: grid; gap: 1rem;">';
+    
+    recentStations.forEach((station, index) => {
+        html += `
+            <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; background: white;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h4 style="margin: 0 0 0.5rem 0; color: #2d3748;">${station.name}</h4>
+                        <p style="margin: 0 0 0.5rem 0; color: #718096; font-size: 0.9rem;">${station.description}</p>
+                        <div style="display: flex; gap: 1rem; font-size: 0.8rem; color: #4a5568;">
+                            <span><strong>Frequency:</strong> ${station.frequency}</span>
+                            <span><strong>Location:</strong> ${station.location}</span>
+                            <span><strong>Genre:</strong> ${station.genre}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; font-size: 0.8rem; color: #718096;">
+                        <div>#${index + 1}</div>
+                        <div>${station.timeAgo}</div>
+                    </div>
+                </div>
+                <button onclick="playStation('${station.url}', '${station.name}')" 
+                        style="margin-top: 0.75rem; padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                    <i class="fas fa-play"></i> Play Again
+                </button>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    display.innerHTML = html;
+}
+
+function playStation(streamUrl, stationName) {
+    if (window.radioPlayer) {
+        window.radioPlayer.loadStation(streamUrl, stationName);
+    }
+}
+
+function handleImportFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const jsonData = JSON.parse(e.target.result);
+            const imported = importRecentStations(jsonData);
+            alert(`Successfully imported ${imported} recent stations!`);
+            showRecentStationsUI(); // Refresh the display
+        } catch (error) {
+            alert(`Import failed: ${error.message}`);
+        }
+    };
+    reader.readAsText(file);
+}
+</script>

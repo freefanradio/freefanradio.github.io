@@ -5,6 +5,7 @@ class RadioPlayer {
         this.isPlaying = false;
         this.currentStation = null;
         this.volume = 0.5;
+        this.maxRecentStations = 8;
         
         this.init();
     }
@@ -17,27 +18,42 @@ class RadioPlayer {
         this.stationNameEl = document.getElementById('stationName');
         this.nowPlayingEl = document.getElementById('nowPlaying');
         
+        // Debug logging
+        console.log('RadioPlayer init - Elements found:', {
+            playerElement: !!this.playerElement,
+            playPauseBtn: !!this.playPauseBtn,
+            volumeSlider: !!this.volumeSlider,
+            stationNameEl: !!this.stationNameEl,
+            nowPlayingEl: !!this.nowPlayingEl
+        });
+        
         // Bind events
         this.bindEvents();
         
-        // Initialize volume
-        this.volumeSlider.value = this.volume * 100;
+        // Initialize volume if slider exists
+        if (this.volumeSlider) {
+            this.volumeSlider.value = this.volume * 100;
+        }
     }
     
     bindEvents() {
         // Play/Pause button
-        this.playPauseBtn.addEventListener('click', () => {
-            if (this.isPlaying) {
-                this.pause();
-            } else {
-                this.play();
-            }
-        });
+        if (this.playPauseBtn) {
+            this.playPauseBtn.addEventListener('click', () => {
+                if (this.isPlaying) {
+                    this.pause();
+                } else {
+                    this.play();
+                }
+            });
+        }
         
         // Volume slider
-        this.volumeSlider.addEventListener('input', (e) => {
-            this.setVolume(e.target.value / 100);
-        });
+        if (this.volumeSlider) {
+            this.volumeSlider.addEventListener('input', (e) => {
+                this.setVolume(e.target.value / 100);
+            });
+        }
         
         // Station play buttons
         document.addEventListener('click', (e) => {
@@ -46,8 +62,24 @@ class RadioPlayer {
                 const streamUrl = btn.dataset.stream;
                 const stationName = btn.dataset.name;
                 
+                // Collect additional station data from the card
+                const stationCard = btn.closest('.station-card');
+                const stationData = {};
+                
+                if (stationCard) {
+                    const frequencyEl = stationCard.querySelector('.frequency');
+                    const locationEl = stationCard.querySelector('.location');
+                    const genreEl = stationCard.querySelector('.genre');
+                    const descriptionEl = stationCard.querySelector('.station-info p');
+                    
+                    if (frequencyEl) stationData.frequency = frequencyEl.textContent.trim();
+                    if (locationEl) stationData.location = locationEl.textContent.trim();
+                    if (genreEl) stationData.genre = genreEl.textContent.trim();
+                    if (descriptionEl) stationData.description = descriptionEl.textContent.trim();
+                }
+                
                 if (streamUrl && stationName) {
-                    this.loadStation(streamUrl, stationName);
+                    this.loadStation(streamUrl, stationName, stationData);
                 }
             }
         });
@@ -67,7 +99,7 @@ class RadioPlayer {
         });
     }
     
-    loadStation(streamUrl, stationName) {
+    loadStation(streamUrl, stationName, stationData = {}) {
         // Stop current audio if playing
         if (this.audio) {
             this.audio.pause();
@@ -82,21 +114,33 @@ class RadioPlayer {
         // Set current station
         this.currentStation = {
             url: streamUrl,
-            name: stationName
+            name: stationName,
+            ...stationData
         };
         
-        // Update UI
-        this.stationNameEl.textContent = stationName;
-        this.nowPlayingEl.textContent = 'Loading...';
-        this.playPauseBtn.disabled = false;
+        // Save to recent stations
+        this.saveToRecentStations(this.currentStation);
         
-        // Show player
-        this.playerElement.classList.add('active');
+        // Update UI if elements exist
+        if (this.stationNameEl) {
+            this.stationNameEl.textContent = stationName;
+        }
+        if (this.nowPlayingEl) {
+            this.nowPlayingEl.textContent = 'Loading...';
+        }
+        if (this.playPauseBtn) {
+            this.playPauseBtn.disabled = false;
+        }
+        
+        // Show player if element exists
+        if (this.playerElement) {
+            this.playerElement.classList.add('active');
+        }
         
         // Bind audio events
         this.bindAudioEvents();
         
-        // Auto-play
+        // Try to auto-play (may fail due to browser autoplay policy)
         this.play();
     }
     
@@ -104,47 +148,145 @@ class RadioPlayer {
         if (!this.audio) return;
         
         this.audio.addEventListener('loadstart', () => {
-            this.nowPlayingEl.textContent = 'Loading...';
+            if (this.nowPlayingEl) {
+                this.nowPlayingEl.textContent = 'Loading...';
+            }
         });
         
         this.audio.addEventListener('canplay', () => {
-            this.nowPlayingEl.textContent = 'Ready to play';
+            if (this.nowPlayingEl) {
+                this.nowPlayingEl.textContent = 'Ready to play';
+            }
         });
         
         this.audio.addEventListener('play', () => {
             this.isPlaying = true;
-            this.playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            this.nowPlayingEl.textContent = 'Now playing live';
+            if (this.playPauseBtn) {
+                this.playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            if (this.nowPlayingEl) {
+                this.nowPlayingEl.textContent = 'Now playing live';
+            }
         });
         
         this.audio.addEventListener('pause', () => {
             this.isPlaying = false;
-            this.playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            this.nowPlayingEl.textContent = 'Paused';
+            if (this.playPauseBtn) {
+                this.playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+            if (this.nowPlayingEl) {
+                this.nowPlayingEl.textContent = 'Paused';
+            }
         });
         
         this.audio.addEventListener('error', (e) => {
             console.error('Audio error:', e);
-            this.nowPlayingEl.textContent = 'Error loading stream';
-            this.playPauseBtn.disabled = true;
+            if (this.nowPlayingEl) {
+                this.nowPlayingEl.textContent = 'Error loading stream';
+            }
+            if (this.playPauseBtn) {
+                this.playPauseBtn.disabled = true;
+            }
         });
         
         this.audio.addEventListener('stalled', () => {
-            this.nowPlayingEl.textContent = 'Buffering...';
+            if (this.nowPlayingEl) {
+                this.nowPlayingEl.textContent = 'Buffering...';
+            }
         });
         
         this.audio.addEventListener('waiting', () => {
-            this.nowPlayingEl.textContent = 'Buffering...';
+            if (this.nowPlayingEl) {
+                this.nowPlayingEl.textContent = 'Buffering...';
+            }
         });
     }
     
     play() {
         if (this.audio && this.currentStation) {
-            this.audio.play().catch(error => {
-                console.error('Play failed:', error);
-                this.nowPlayingEl.textContent = 'Failed to play';
+            console.log('🎵 Attempting to play:', this.currentStation.name);
+            console.log('🔗 Audio src:', this.audio.src);
+            
+            // Check if audio is ready
+            if (this.audio.readyState < 2) {
+                console.log('📡 Audio not ready, loading first...');
+                this.audio.load();
+            }
+            
+            const playPromise = this.audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        console.log('✅ Audio play promise resolved - playing successfully');
+                    })
+                    .catch(error => {
+                        console.error('❌ Play failed:', error);
+                        
+                        // Handle different types of errors
+                        if (error.name === 'NotAllowedError') {
+                            console.error('🚫 Autoplay blocked by browser. User interaction required.');
+                            if (this.nowPlayingEl) {
+                                this.nowPlayingEl.textContent = 'Click to play (autoplay blocked)';
+                            }
+                            // Show a user-friendly message
+                            this.showAutoplayBlockedMessage();
+                        } else if (error.name === 'AbortError') {
+                            console.error('🛑 Play was aborted');
+                            if (this.nowPlayingEl) {
+                                this.nowPlayingEl.textContent = 'Play was interrupted';
+                            }
+                        } else if (error.name === 'NetworkError') {
+                            console.error('🌐 Network error loading audio');
+                            if (this.nowPlayingEl) {
+                                this.nowPlayingEl.textContent = 'Network error - check connection';
+                            }
+                        } else {
+                            console.error('🔥 Unknown audio error:', error);
+                            if (this.nowPlayingEl) {
+                                this.nowPlayingEl.textContent = 'Error loading stream';
+                            }
+                        }
+                    });
+            }
+        } else {
+            console.error('❌ Cannot play - no audio or station:', {
+                hasAudio: !!this.audio,
+                hasStation: !!this.currentStation
             });
         }
+    }
+    
+    showAutoplayBlockedMessage() {
+        // Create a temporary notification
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #f59e0b;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            z-index: 10000;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 90%;
+        `;
+        notification.innerHTML = `
+            <div style="margin-bottom: 0.5rem;">🔊 Audio Blocked</div>
+            <div style="font-size: 0.9rem;">Your browser blocked autoplay. Click the play button again to start.</div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 3000);
     }
     
     pause() {
@@ -159,7 +301,181 @@ class RadioPlayer {
             this.audio.volume = this.volume;
         }
     }
+    
+    // Recent Stations Management
+    saveToRecentStations(stationData) {
+        try {
+            // Get existing recent stations from localStorage
+            let recentStations = this.getRecentStations();
+            
+            // Create station object with timestamp
+            const stationEntry = {
+                name: stationData.name || 'Unknown Station',
+                url: stationData.url,
+                frequency: stationData.frequency || 'Unknown',
+                location: stationData.location || 'Unknown',
+                genre: stationData.genre || 'Radio',
+                description: stationData.description || 'Radio station',
+                lastPlayed: new Date().toISOString()
+            };
+            
+            // Remove existing entry for this station if it exists
+            recentStations = recentStations.filter(station => 
+                station.url !== stationEntry.url
+            );
+            
+            // Add to beginning of array (most recent first)
+            recentStations.unshift(stationEntry);
+            
+            // Keep only the last 8 stations
+            recentStations = recentStations.slice(0, this.maxRecentStations);
+            
+            // Save back to localStorage
+            localStorage.setItem('freefanradio_recent_stations', JSON.stringify(recentStations));
+            
+            // Dispatch custom event for UI updates
+            window.dispatchEvent(new CustomEvent('recentStationsUpdated', {
+                detail: { station: stationEntry, recentStations }
+            }));
+            
+            console.log('Saved station to recent:', stationEntry.name);
+        } catch (error) {
+            console.error('Error saving to recent stations:', error);
+        }
+    }
+    
+    getRecentStations() {
+        try {
+            const stored = localStorage.getItem('freefanradio_recent_stations');
+            return stored ? JSON.parse(stored) : [];
+        } catch (error) {
+            console.error('Error retrieving recent stations:', error);
+            return [];
+        }
+    }
+    
+    clearRecentStations() {
+        try {
+            localStorage.removeItem('freefanradio_recent_stations');
+            console.log('Cleared recent stations');
+        } catch (error) {
+            console.error('Error clearing recent stations:', error);
+        }
+    }
+    
+    // Get recent stations formatted for display
+    getRecentStationsForDisplay() {
+        const recentStations = this.getRecentStations();
+        return recentStations.map(station => ({
+            ...station,
+            timeAgo: this.formatTimeAgo(new Date(station.lastPlayed))
+        }));
+    }
+    
+    formatTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}m ago`;
+        if (diffHours < 24) return `${diffHours}h ago`;
+        if (diffDays < 7) return `${diffDays}d ago`;
+        return date.toLocaleDateString();
+    }
+    
+    // Export/Import functionality
+    exportRecentStations() {
+        try {
+            const recentStations = this.getRecentStations();
+            const exportData = {
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                stations: recentStations
+            };
+            
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `freefanradio-recent-stations-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            console.log('Recent stations exported successfully');
+            return exportData;
+        } catch (error) {
+            console.error('Error exporting recent stations:', error);
+            throw error;
+        }
+    }
+    
+    importRecentStations(jsonData) {
+        try {
+            const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+            
+            if (!data.stations || !Array.isArray(data.stations)) {
+                throw new Error('Invalid data format');
+            }
+            
+            // Validate station objects
+            const validStations = data.stations.filter(station => 
+                station.name && station.url && station.lastPlayed
+            );
+            
+            if (validStations.length > 0) {
+                localStorage.setItem('freefanradio_recent_stations', JSON.stringify(validStations));
+                console.log(`Imported ${validStations.length} recent stations`);
+                return validStations.length;
+            } else {
+                throw new Error('No valid stations found in import data');
+            }
+        } catch (error) {
+            console.error('Error importing recent stations:', error);
+            throw error;
+        }
+    }
 }
+
+// Recent Stations Display Utility
+function displayRecentStations() {
+    if (!window.radioPlayer) return;
+    
+    const recentStations = window.radioPlayer.getRecentStationsForDisplay();
+    
+    if (recentStations.length === 0) {
+        console.log('No recent stations found.');
+        return;
+    }
+    
+    console.log('Recent Stations (Last 8):');
+    console.table(recentStations.map(station => ({
+        Name: station.name,
+        Location: station.location,
+        Frequency: station.frequency,
+        'Last Played': station.timeAgo
+    })));
+}
+
+// Make utility functions available globally
+window.displayRecentStations = displayRecentStations;
+window.clearRecentStations = () => {
+    if (window.radioPlayer) {
+        window.radioPlayer.clearRecentStations();
+    }
+};
+window.exportRecentStations = () => {
+    if (window.radioPlayer) {
+        return window.radioPlayer.exportRecentStations();
+    }
+};
+window.importRecentStations = (jsonData) => {
+    if (window.radioPlayer) {
+        return window.radioPlayer.importRecentStations(jsonData);
+    }
+};
 
 // Navigation Management
 class Navigation {
@@ -376,7 +692,7 @@ function initPerformanceMonitoring() {
 // Initialize everything when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize components
-    new RadioPlayer();
+    window.radioPlayer = new RadioPlayer();
     new Navigation();
     
     // Initialize features
