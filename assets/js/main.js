@@ -17,6 +17,7 @@ class RadioPlayer {
         this.volumeSlider = document.getElementById('volumeSlider');
         this.stationNameEl = document.getElementById('stationName');
         this.nowPlayingEl = document.getElementById('nowPlaying');
+        this.shareBtn = document.getElementById('shareBtn');
         
         // Debug logging
         console.log('RadioPlayer init - Elements found:', {
@@ -24,7 +25,8 @@ class RadioPlayer {
             playPauseBtn: !!this.playPauseBtn,
             volumeSlider: !!this.volumeSlider,
             stationNameEl: !!this.stationNameEl,
-            nowPlayingEl: !!this.nowPlayingEl
+            nowPlayingEl: !!this.nowPlayingEl,
+            shareBtn: !!this.shareBtn
         });
         
         // Bind events
@@ -131,6 +133,9 @@ class RadioPlayer {
         if (this.playPauseBtn) {
             this.playPauseBtn.disabled = false;
         }
+        if (this.shareBtn) {
+            this.shareBtn.disabled = false;
+        }
         
         // Show player if element exists
         if (this.playerElement) {
@@ -188,6 +193,9 @@ class RadioPlayer {
             }
             if (this.playPauseBtn) {
                 this.playPauseBtn.disabled = true;
+            }
+            if (this.shareBtn) {
+                this.shareBtn.disabled = true;
             }
         });
         
@@ -950,6 +958,17 @@ function copyStationLink(stationId) {
         });
     } else {
         fallbackCopyTextToClipboard(shareUrl);
+    }
+}
+
+// Function to share the currently playing station
+function shareCurrentStation() {
+    if (window.radioPlayer && window.radioPlayer.currentStation) {
+        const station = window.radioPlayer.currentStation;
+        const stationId = station.id || station.name.toLowerCase().replace(/\s+/g, '-');
+        copyStationLink(stationId);
+    } else {
+        showToast('No station currently playing');
     }
 }
 

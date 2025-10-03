@@ -389,11 +389,13 @@ body {
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap; /* Don't wrap on desktop */
+    overflow: hidden; /* Prevent any overflow */
 }
 
 .player-info {
     flex: 1;
+    position: relative; /* Allow positioning of share button */
 }
 
 .player-info #stationName {
@@ -407,10 +409,45 @@ body {
     font-size: 0.9rem;
 }
 
+/* Player Share Button - now in player-info */
+.player-info .share-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.3rem;
+    border-radius: 4px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.player-info .share-btn:hover:not(:disabled) {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+.player-info .share-btn:disabled {
+    color: rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+    background: none;
+}
+
+.player-info .share-btn:disabled:hover {
+    transform: none;
+    background: none;
+}
+
 .player-controls {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .play-btn {
@@ -443,6 +480,7 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-right: 0; /* Ensure no extra margin that could affect share button positioning */
 }
 
 .volume-control i {
@@ -476,6 +514,102 @@ body {
     border-radius: 50%;
     cursor: pointer;
     border: none;
+}
+
+/* Player Ad Container */
+.player-ad-container {
+    flex: 2; /* Take twice as much space as other elements */
+    height: 50px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+    margin: 0 1rem; /* Add some margin from the surrounding elements */
+    min-width: 200px; /* Ensure minimum width */
+}
+
+.player-ad-container::before {
+    content: "Ad";
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+.player-ad-container::after {
+    content: "AdSense ad";
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+/* Adjust flex ratios for desktop to achieve ~50% ad space */
+@media (min-width: 768px) {
+    .player-info {
+        flex: 1; /* Standard flex */
+        min-width: 200px; /* Minimum width for station info */
+    }
+    
+    .player-controls {
+        flex: 1; /* Standard flex */
+        min-width: 150px; /* Minimum width for controls */
+        display: flex; /* Ensure flex display on desktop */
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .player-ad-container {
+        flex: 2; /* Reduced from 3 to 2 - smaller ad width */
+        margin: 0 1rem; /* Reduced margin */
+        max-width: none; /* Remove max-width restriction */
+    }
+}
+
+@media (max-width: 768px) {
+    .player-ad-container {
+        height: 80px; /* Increased height for mobile/vertical mode */
+        font-size: 0.6rem;
+        margin: 0; /* Remove all margins for cleaner mobile layout */
+        flex: 1; /* Reset to normal flex on mobile */
+    }
+    
+    .player-container {
+        flex-direction: column;
+        gap: 0.75rem; /* Increased gap for better spacing */
+        align-items: stretch;
+        flex-wrap: wrap; /* Allow wrapping on mobile */
+        overflow-x: visible; /* Reset overflow on mobile */
+    }
+    
+    .player-info {
+        text-align: center;
+    }
+    
+    .player-controls {
+        justify-content: center;
+        flex-wrap: nowrap; /* Ensure controls stay on same line */
+        gap: 0.5rem; /* Reduce gap slightly for mobile */
+        align-items: center;
+    }
+    
+    .player-ad-container {
+        align-self: stretch; /* Take full width on mobile */
+        margin: 0; /* No margins - clean edge-to-edge on mobile */
+    }
+    
+    .player-ad-container::after {
+        content: "AdSense ad - mobile format";
+        font-size: 0.8rem; /* Slightly larger text for taller container */
+    }
 }
 
 /* Page Content */
