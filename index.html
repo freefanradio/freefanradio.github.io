@@ -303,9 +303,22 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeRecentStationsView();
 });
 
+// Make this function globally accessible for SPA navigation
+window.initializeHomePageStations = function() {
+    console.log('🔄 SPA - Re-initializing home page stations...');
+    if (document.getElementById('stationsGrid')) {
+        initializeRecentStationsView();
+    }
+};
+
 function initializeRecentStationsView() {
     console.log('Initializing recent stations view...');
     const stationsGrid = document.getElementById('stationsGrid');
+    
+    if (!stationsGrid) {
+        console.log('⚠️ Stations grid not found, skipping initialization');
+        return;
+    }
     
     // Wait for radioPlayer to be available
     const checkRadioPlayer = () => {
@@ -403,7 +416,7 @@ function initializeRecentStationsView() {
                 slot.classList.add('empty');
                 slot.innerHTML = `
                     <div class="empty-slot-content">
-                        <button class="browse-btn" onclick="window.location.href='/sports/'">
+                        <button class="browse-btn" data-spa-navigate="/sports/">
                             Browse All
                         </button>
                         <div style="font-size: 1.2rem; margin-top: 0.5rem; opacity: 0.4;">

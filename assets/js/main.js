@@ -32,6 +32,11 @@ class RadioPlayer {
         // Bind events
         this.bindEvents();
         
+        // Clean up any existing duplicates on initialization
+        setTimeout(() => {
+            this.cleanupDuplicateStations();
+        }, 1000);
+        
         // Initialize volume if slider exists
         if (this.volumeSlider) {
             this.volumeSlider.value = this.volume * 100;
@@ -350,12 +355,8 @@ class RadioPlayer {
             // Get existing recent stations from localStorage
             let recentStations = this.getRecentStations();
             
-            // Find station ID from database if available
-            let stationId = stationData.id;
-            if (!stationId) {
-                // Try to find ID by matching URL or name
-                stationId = this.findStationId(stationData);
-            }
+            // Generate a unique station ID
+            let stationId = this.generateStationId(stationData);
             
             // Create station object with timestamp
             const stationEntry = {
@@ -368,11 +369,26 @@ class RadioPlayer {
                 description: stationData.description || 'Radio station',
                 lastPlayed: new Date().toISOString()
             };
+
+            console.log('💾 Saving station with ID:', stationId, 'Name:', stationEntry.name);
             
-            // Remove existing entry for this station if it exists
-            recentStations = recentStations.filter(station => 
-                station.url !== stationEntry.url
-            );
+            // Remove ALL existing entries for this station (by ID, URL, AND name)
+            const originalLength = recentStations.length;
+            recentStations = recentStations.filter(station => {
+                const isDuplicate = (
+                    station.id === stationEntry.id ||
+                    station.url === stationEntry.url ||
+                    station.name === stationEntry.name
+                );
+                
+                if (isDuplicate) {
+                    console.log('🗑️ Removing duplicate station:', station.name, 'ID:', station.id);
+                }
+                
+                return !isDuplicate;
+            });
+            
+            console.log(`📊 Removed ${originalLength - recentStations.length} duplicates`);
             
             // Add to beginning of array (most recent first)
             recentStations.unshift(stationEntry);
@@ -394,6 +410,42 @@ class RadioPlayer {
         }
     }
     
+    // Generate a consistent, unique station ID
+    generateStationId(stationData) {
+        // First try to use existing ID if provided
+        if (stationData.id) {
+            return stationData.id;
+        }
+        
+        // Try to find ID from station database
+        const dbId = this.findStationId(stationData);
+        if (dbId) {
+            return dbId;
+        }
+        
+        // Generate a consistent ID based on station name
+        // This ensures the same station always gets the same ID
+        const name = (stationData.name || 'unknown').toLowerCase();
+        
+        // Create a simple hash from the name for consistency
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            const char = name.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        
+        // Create readable ID: first word + hash + frequency if available
+        const firstWord = name.split(' ')[0].replace(/[^a-z0-9]/g, '');
+        const frequency = stationData.frequency ? stationData.frequency.replace(/[^0-9]/g, '') : '';
+        const hashSuffix = Math.abs(hash).toString(36).substring(0, 4);
+        
+        const generatedId = `${firstWord}${frequency ? '-' + frequency : ''}-${hashSuffix}`;
+        
+        console.log('🆔 Generated station ID:', generatedId, 'for:', stationData.name);
+        return generatedId;
+    }
+
     // Helper function to find station ID
     findStationId(stationData) {
         // Access the global stationDatabase from the main script
@@ -430,7 +482,31 @@ class RadioPlayer {
     // Get recent stations formatted for display
     getRecentStationsForDisplay() {
         const recentStations = this.getRecentStations();
-        return recentStations.map(station => ({
+        
+        // Additional deduplication layer - remove any duplicates that might exist
+        const seen = new Set();
+        const deduplicated = recentStations.filter(station => {
+            // Create a unique key combining ID, name, and URL
+            const key = `${station.id}|${station.name}|${station.url}`;
+            
+            if (seen.has(key) || 
+                seen.has(station.id) || 
+                seen.has(station.name) || 
+                seen.has(station.url)) {
+                console.log('🔍 Filtered duplicate in display:', station.name);
+                return false;
+            }
+            
+            seen.add(key);
+            seen.add(station.id);
+            seen.add(station.name);
+            seen.add(station.url);
+            return true;
+        });
+        
+        console.log(`📺 Displaying ${deduplicated.length} unique stations (filtered from ${recentStations.length})`);
+        
+        return deduplicated.map(station => ({
             ...station,
             timeAgo: this.formatTimeAgo(new Date(station.lastPlayed))
         }));
@@ -450,6 +526,50 @@ class RadioPlayer {
         return date.toLocaleDateString();
     }
     
+    // Clean up any existing duplicates in localStorage
+    cleanupDuplicateStations() {
+        try {
+            const recentStations = this.getRecentStations();
+            const originalLength = recentStations.length;
+            
+            const seen = new Set();
+            const cleaned = recentStations.filter(station => {
+                // Create consistent ID if missing
+                if (!station.id) {
+                    station.id = this.generateStationId(station);
+                }
+                
+                const key = `${station.id}|${station.name}|${station.url}`;
+                
+                if (seen.has(key) || 
+                    seen.has(station.id) || 
+                    seen.has(station.name) || 
+                    seen.has(station.url)) {
+                    console.log('🧹 Cleaning duplicate:', station.name);
+                    return false;
+                }
+                
+                seen.add(key);
+                seen.add(station.id);
+                seen.add(station.name);
+                seen.add(station.url);
+                return true;
+            });
+            
+            if (cleaned.length !== originalLength) {
+                console.log(`🧹 Cleaned ${originalLength - cleaned.length} duplicates from localStorage`);
+                localStorage.setItem('freefanradio_recent_stations', JSON.stringify(cleaned));
+                return true;
+            }
+            
+            console.log('✨ No duplicates found in localStorage');
+            return false;
+        } catch (error) {
+            console.error('Error cleaning duplicate stations:', error);
+            return false;
+        }
+    }
+
     // Export/Import functionality
     exportRecentStations() {
         try {
@@ -538,6 +658,15 @@ window.exportRecentStations = () => {
 window.importRecentStations = (jsonData) => {
     if (window.radioPlayer) {
         return window.radioPlayer.importRecentStations(jsonData);
+    }
+};
+window.cleanupDuplicateStations = () => {
+    if (window.radioPlayer) {
+        const cleaned = window.radioPlayer.cleanupDuplicateStations();
+        if (cleaned) {
+            console.log('✨ Duplicates cleaned! Refresh the page to see changes.');
+        }
+        return cleaned;
     }
 };
 
@@ -759,6 +888,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.radioPlayer = new RadioPlayer();
     new Navigation();
     
+    // Initialize SPA router for persistent audio
+    window.spaRouter = new SPARouter();
+    
     // Initialize features
     initSmoothScrolling();
     initLazyLoading();
@@ -771,6 +903,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add body class for JavaScript enabled
     document.body.classList.add('js-enabled');
+    
+    console.log('🎵 SPA Router initialized - Audio will persist during navigation!');
 });
 
 // URL Parameter Handling for Direct Station Linking
@@ -1070,7 +1204,262 @@ window.addEventListener('online', () => {
     }
 });
 
+// SPA Router Class for Persistent Audio
+class SPARouter {
+    constructor() {
+        this.currentPath = window.location.pathname;
+        this.isNavigating = false;
+        this.init();
+    }
+
+    init() {
+        // Handle all link clicks and navigation buttons
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            const button = e.target.closest('[data-spa-navigate]');
+            
+            if (link && this.shouldInterceptLink(link)) {
+                e.preventDefault();
+                this.navigateTo(link.pathname);
+            } else if (button) {
+                e.preventDefault();
+                const path = button.dataset.spaNavigate;
+                console.log('🔄 SPA - Button navigation to:', path);
+                this.navigateTo(path);
+            }
+        });
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', (e) => {
+            this.loadContent(window.location.pathname);
+        });
+
+        // Add loading styles
+        this.addLoadingStyles();
+    }
+
+    shouldInterceptLink(link) {
+        // Only intercept internal links
+        return link.hostname === window.location.hostname && 
+               !link.hasAttribute('download') &&
+               !link.href.includes('#') &&
+               !link.href.includes('mailto:') &&
+               !link.href.includes('tel:') &&
+               !link.target;
+    }
+
+    async navigateTo(path) {
+        if (path === this.currentPath || this.isNavigating) return;
+        
+        this.isNavigating = true;
+        
+        // Update URL without reload
+        window.history.pushState({}, '', path);
+        await this.loadContent(path);
+        this.currentPath = path;
+        
+        this.isNavigating = false;
+    }
+
+    async loadContent(path) {
+        try {
+            // Show loading indicator
+            document.body.classList.add('spa-loading');
+            
+            // Fetch the new page
+            const response = await fetch(path);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            const html = await response.text();
+            
+            // Parse the response
+            const parser = new DOMParser();
+            const newDoc = parser.parseFromString(html, 'text/html');
+            
+            // Update page title
+            document.title = newDoc.title;
+            
+            // Update main content
+            const mainContent = document.querySelector('.main-content');
+            const newContent = newDoc.querySelector('.main-content');
+            
+            if (mainContent && newContent) {
+                // Smooth transition
+                mainContent.style.opacity = '0';
+                
+                setTimeout(() => {
+                    mainContent.innerHTML = newContent.innerHTML;
+                    mainContent.style.opacity = '1';
+                    
+                    // Re-initialize page scripts
+                    this.initPageScripts();
+                    
+                    // Update navigation active state
+                    this.updateNavigation(path);
+                    
+                    // Remove loading indicator
+                    document.body.classList.remove('spa-loading');
+                }, 150);
+            }
+            
+        } catch (error) {
+            console.error('SPA Navigation error:', error);
+            document.body.classList.remove('spa-loading');
+            // Fallback to normal navigation
+            window.location.href = path;
+        }
+    }
+
+    initPageScripts() {
+        console.log('🔄 SPA - Initializing page scripts...');
+        
+        // Re-initialize radio station buttons (for regular pages)
+        const stationButtons = document.querySelectorAll('[data-station]');
+        console.log(`📻 Found ${stationButtons.length} data-station buttons`);
+        
+        stationButtons.forEach(button => {
+            // Remove existing listeners to prevent duplicates
+            const newButton = button.cloneNode(true);
+            button.parentNode.replaceChild(newButton, button);
+            
+            newButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                const stationName = newButton.dataset.station;
+                const streamUrl = newButton.dataset.url;
+                const logoUrl = newButton.dataset.logo;
+                
+                console.log('🎵 SPA - Regular station button clicked:', stationName);
+                
+                if (stationName && streamUrl && window.radioPlayer) {
+                    const stationData = {
+                        name: stationName,
+                        url: streamUrl,
+                        logo: logoUrl
+                    };
+                    window.radioPlayer.loadStation(streamUrl, stationName, stationData);
+                }
+            });
+        });
+
+        // Re-initialize home page station slots (special handling)
+        const stationSlots = document.querySelectorAll('.station-slot');
+        console.log(`🏠 Found ${stationSlots.length} station slots`);
+        
+        stationSlots.forEach(slot => {
+            // Only handle slots that have station data and aren't already bound
+            if (slot.stationData && !slot.dataset.spaInitialized) {
+                slot.dataset.spaInitialized = 'true';
+                console.log('🔄 Re-binding station slot:', slot.stationData.name);
+                
+                // Remove existing listeners and clone to prevent duplicates
+                const newSlot = slot.cloneNode(true);
+                slot.parentNode.replaceChild(newSlot, slot);
+                
+                // Re-attach station data
+                newSlot.stationData = slot.stationData;
+                
+                newSlot.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    console.log('🎵 SPA - Station slot clicked for:', this.stationData?.name);
+                    
+                    try {
+                        const stationData = this.stationData;
+                        console.log('📻 SPA - Station data:', stationData);
+                        
+                        if (!window.radioPlayer) {
+                            console.error('❌ Radio player not available!');
+                            return;
+                        }
+                        
+                        console.log('🚀 SPA - Loading station:', stationData.name);
+                        
+                        // Add loading state
+                        this.classList.add('loading');
+                        
+                        // Load station via radio player
+                        window.radioPlayer.loadStation(stationData.url, stationData.name, stationData);
+                        
+                        // Reset loading state after a delay
+                        setTimeout(() => {
+                            this.classList.remove('loading');
+                        }, 2000);
+                        
+                    } catch (error) {
+                        console.error('❌ Error playing station:', error);
+                        this.classList.remove('loading');
+                    }
+                });
+            }
+        });
+
+        // Re-run any home page initialization scripts
+        if (typeof window.initializeHomePageStations === 'function') {
+            console.log('🏠 Calling home page station initializer...');
+            window.initializeHomePageStations();
+        }
+
+        // Debug: Check for navigation buttons
+        const navButtons = document.querySelectorAll('[data-spa-navigate]');
+        console.log(`🔍 Found ${navButtons.length} SPA navigation buttons`);
+
+        // Re-initialize any other components
+        if (window.radioPlayer) {
+            window.radioPlayer.init();
+        }
+
+        // Scroll to top for new page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        console.log('✅ SPA - Page scripts initialized');
+    }
+
+    updateNavigation(path) {
+        // Update active navigation state
+        const navLinks = document.querySelectorAll('.nav-menu a');
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.pathname === path) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    addLoadingStyles() {
+        // Add CSS for loading states
+        const style = document.createElement('style');
+        style.textContent = `
+            .spa-loading .main-content {
+                opacity: 0.7;
+                pointer-events: none;
+            }
+            
+            .spa-loading::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                background: linear-gradient(90deg, #667eea, #764ba2);
+                z-index: 9999;
+                animation: loadingBar 1s ease-in-out infinite;
+            }
+            
+            @keyframes loadingBar {
+                0% { transform: translateX(-100%); }
+                50% { transform: translateX(0%); }
+                100% { transform: translateX(100%); }
+            }
+            
+            .main-content {
+                transition: opacity 0.15s ease-in-out;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
 // Export for potential module use
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { RadioPlayer, Navigation };
+    module.exports = { RadioPlayer, Navigation, SPARouter };
 }
