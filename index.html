@@ -300,18 +300,29 @@ html, body {
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Home page DOM loaded, initializing...');
-    initializeRecentStationsView();
+    initializeRecentStationsView(); // No callback needed for initial load
 });
 
 // Make this function globally accessible for SPA navigation
 window.initializeHomePageStations = function() {
     console.log('🔄 SPA - Re-initializing home page stations...');
-    if (document.getElementById('stationsGrid')) {
-        initializeRecentStationsView();
+    const stationsGrid = document.getElementById('stationsGrid');
+    
+    // Only run if we're actually on the home page
+    if (stationsGrid) {
+        initializeRecentStationsView(() => {
+            // Callback when initialization is complete
+            console.log('🎯 Home page stations ready for SPA binding');
+            if (window.spaRouter && window.spaRouter.initializeHomePageSlots) {
+                window.spaRouter.initializeHomePageSlots();
+            }
+        });
+    } else {
+        console.log('⚠️ Not on home page, skipping station initialization');
     }
 };
 
-function initializeRecentStationsView() {
+function initializeRecentStationsView(callback) {
     console.log('Initializing recent stations view...');
     const stationsGrid = document.getElementById('stationsGrid');
     
@@ -325,7 +336,16 @@ function initializeRecentStationsView() {
         if (window.radioPlayer) {
             console.log('Radio player found, updating stations grid');
             updateStationsGrid();
-            updateLayoutForPlayer(); // Check if player is already active
+            
+            // Delay layout update to ensure DOM is ready
+            setTimeout(() => {
+                updateLayoutForPlayer(); // Check if player is already active
+                
+                // Call callback when everything is ready
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
+            }, 100);
         } else {
             console.log('Radio player not ready yet, checking again...');
             setTimeout(checkRadioPlayer, 100);
@@ -334,6 +354,12 @@ function initializeRecentStationsView() {
     checkRadioPlayer();
     
     function updateStationsGrid() {
+        const stationsGrid = document.getElementById('stationsGrid');
+        if (!stationsGrid) {
+            console.log('⚠️ Stations grid not found, skipping update');
+            return;
+        }
+        
         let recentStations = window.radioPlayer ? window.radioPlayer.getRecentStationsForDisplay() : [];
         
         // If no recent stations, show some featured stations as fallback
@@ -459,16 +485,26 @@ function initializeRecentStationsView() {
     }, 1000);
     
     function updateLayoutForPlayer() {
-        const stationsContainer = document.querySelector('.stations-container');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const isVertical = window.innerWidth < 768;
-        
-        if (audioPlayer && audioPlayer.classList.contains('active')) {
-            stationsContainer.classList.add('player-active');
-            console.log(`🎵 Audio player active - adjusting layout (${isVertical ? 'vertical' : 'horizontal'} mode)`);
-        } else {
-            stationsContainer.classList.remove('player-active');
-            console.log('🔇 Audio player inactive - normal layout');
+        try {
+            const stationsContainer = document.querySelector('.stations-container');
+            const audioPlayer = document.getElementById('audioPlayer');
+            const isVertical = window.innerWidth < 768;
+            
+            // Guard against null elements (during SPA navigation)
+            if (!stationsContainer) {
+                console.log('⚠️ Stations container not found, skipping layout update');
+                return;
+            }
+            
+            if (audioPlayer && audioPlayer.classList.contains('active')) {
+                stationsContainer.classList.add('player-active');
+                console.log(`🎵 Audio player active - adjusting layout (${isVertical ? 'vertical' : 'horizontal'} mode)`);
+            } else {
+                stationsContainer.classList.remove('player-active');
+                console.log('🔇 Audio player inactive - normal layout');
+            }
+        } catch (error) {
+            console.error('Error in updateLayoutForPlayer:', error);
         }
     }
     

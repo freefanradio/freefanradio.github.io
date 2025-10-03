@@ -1341,6 +1341,31 @@ class SPARouter {
             });
         });
 
+        // Re-run any home page initialization scripts
+        if (typeof window.initializeHomePageStations === 'function') {
+            console.log('🏠 Calling home page station initializer...');
+            window.initializeHomePageStations();
+        } else {
+            // For non-home pages, initialize immediately
+            this.initializeHomePageSlots();
+        }
+
+        // Debug: Check for navigation buttons
+        const navButtons = document.querySelectorAll('[data-spa-navigate]');
+        console.log(`🔍 Found ${navButtons.length} SPA navigation buttons`);
+
+        // Re-initialize any other components
+        if (window.radioPlayer) {
+            window.radioPlayer.init();
+        }
+
+        // Scroll to top for new page
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        console.log('✅ SPA - Page scripts initialized');
+    }
+
+    initializeHomePageSlots() {
         // Re-initialize home page station slots (special handling)
         const stationSlots = document.querySelectorAll('.station-slot');
         console.log(`🏠 Found ${stationSlots.length} station slots`);
@@ -1391,26 +1416,6 @@ class SPARouter {
                 });
             }
         });
-
-        // Re-run any home page initialization scripts
-        if (typeof window.initializeHomePageStations === 'function') {
-            console.log('🏠 Calling home page station initializer...');
-            window.initializeHomePageStations();
-        }
-
-        // Debug: Check for navigation buttons
-        const navButtons = document.querySelectorAll('[data-spa-navigate]');
-        console.log(`🔍 Found ${navButtons.length} SPA navigation buttons`);
-
-        // Re-initialize any other components
-        if (window.radioPlayer) {
-            window.radioPlayer.init();
-        }
-
-        // Scroll to top for new page
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        console.log('✅ SPA - Page scripts initialized');
     }
 
     updateNavigation(path) {
