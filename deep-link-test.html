@@ -1,0 +1,114 @@
+---
+layout: default
+title: "Deep Link Test"
+description: "Test page for radio station deep linking"
+---
+
+<div class="container" style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <h1>Radio Station Deep Link Test</h1>
+    
+    <p>Click the links below to test direct linking to specific radio stations:</p>
+    
+    <div style="margin: 2rem 0;">
+        <h2>Test Links:</h2>
+        <ul style="list-style: none; padding: 0;">
+            <li style="margin: 1rem 0;">
+                <a href="/?radioId=985fm" style="display: inline-block; background: #3b82f6; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; margin-right: 1rem;">
+                    🎵 98.5 FM Montréal
+                </a>
+                <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px;">?radioId=985fm</code>
+            </li>
+            <li style="margin: 1rem 0;">
+                <a href="/?radioId=bpm" style="display: inline-block; background: #10b981; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; margin-right: 1rem;">
+                    🏒 BPM Sport
+                </a>
+                <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px;">?radioId=bpm</code>
+            </li>
+            <li style="margin: 1rem 0;">
+                <a href="/?radioId=tsn690" style="display: inline-block; background: #f59e0b; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; margin-right: 1rem;">
+                    🏈 TSN 690 Montreal
+                </a>
+                <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px;">?radioId=tsn690</code>
+            </li>
+            <li style="margin: 1rem 0;">
+                <a href="/?radioId=tsn1050" style="display: inline-block; background: #8b5cf6; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 8px; margin-right: 1rem;">
+                    🏀 TSN 1050 Toronto
+                </a>
+                <code style="background: #f1f5f9; padding: 0.25rem 0.5rem; border-radius: 4px;">?radioId=tsn1050</code>
+            </li>
+        </ul>
+    </div>
+    
+    <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+        <h3>How it works:</h3>
+        <ol>
+            <li><strong>URL Parameters:</strong> Each link includes a <code>radioId</code> parameter</li>
+            <li><strong>Auto-Load:</strong> The JavaScript detects the parameter and automatically loads the station</li>
+            <li><strong>Share URLs:</strong> Users can share these direct links to specific stations</li>
+            <li><strong>Mobile Ready:</strong> Works on all devices and can be bookmarked</li>
+        </ol>
+    </div>
+    
+    <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #f59e0b; margin-top: 1rem;">
+        <h3>About Browser Autoplay Protection:</h3>
+        <p style="margin: 0 0 1rem 0;">
+            <strong>Why you might see "autoplay blocked":</strong> Modern browsers prevent websites from automatically playing audio to protect users from unwanted sounds. This is normal and expected behavior.
+        </p>
+        <p style="margin: 0 0 1rem 0;">
+            <strong>When direct links are used:</strong> The system will load the station and show a friendly notification, but won't auto-play until you click the play button.
+        </p>
+        <p style="margin: 0;">
+            <strong>What to do:</strong> Simply click the play button in the audio player at the bottom of the screen to start listening!
+        </p>
+    </div>
+    
+    <div style="margin-top: 2rem;">
+        <h3>All Available Station IDs:</h3>
+        <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+            <thead>
+                <tr style="background: #f1f5f9;">
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #e2e8f0;">Station</th>
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #e2e8f0;">ID</th>
+                    <th style="padding: 0.75rem; text-align: left; border: 1px solid #e2e8f0;">Example URL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">98.5 FM Montréal</td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>985fm</code></td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>?radioId=985fm</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">BPM Sport</td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>bpm</code></td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>?radioId=bpm</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">CJOB 680 Winnipeg</td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>cjob680</code></td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>?radioId=cjob680</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">CKRM 620 Regina</td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>ckrm620</code></td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>?radioId=ckrm620</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">Sportsnet 960 Calgary</td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>sn960</code></td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>?radioId=sn960</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">TSN 1050 Toronto</td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>tsn1050</code></td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>?radioId=tsn1050</code></td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;">TSN 690 Montreal</td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>tsn690</code></td>
+                    <td style="padding: 0.75rem; border: 1px solid #e2e8f0;"><code>?radioId=tsn690</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

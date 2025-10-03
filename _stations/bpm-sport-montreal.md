@@ -1,6 +1,7 @@
 ---
 hidden: false
 layout: station
+id: "bpm"
 title: "BPM Sport"
 description: "Montreal's French-language sports radio station featuring comprehensive sports coverage and analysis"
 frequency: "91.9 FM"

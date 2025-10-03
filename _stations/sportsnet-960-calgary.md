@@ -1,6 +1,7 @@
 ---
-hidden: true
+hidden: false
 layout: station
+id: "sn960"
 title: "Sportsnet 960 Calgary"
 description: "Calgary's home for Flames hockey and comprehensive sports coverage"
 frequency: "960 AM"

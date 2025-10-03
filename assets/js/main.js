@@ -99,7 +99,7 @@ class RadioPlayer {
         });
     }
     
-    loadStation(streamUrl, stationName, stationData = {}) {
+    loadStation(streamUrl, stationName, stationData = {}, autoPlay = true) {
         // Stop current audio if playing
         if (this.audio) {
             this.audio.pause();
@@ -126,7 +126,7 @@ class RadioPlayer {
             this.stationNameEl.textContent = stationName;
         }
         if (this.nowPlayingEl) {
-            this.nowPlayingEl.textContent = 'Loading...';
+            this.nowPlayingEl.textContent = autoPlay ? 'Loading...' : 'Ready to play';
         }
         if (this.playPauseBtn) {
             this.playPauseBtn.disabled = false;
@@ -140,8 +140,10 @@ class RadioPlayer {
         // Bind audio events
         this.bindAudioEvents();
         
-        // Try to auto-play (may fail due to browser autoplay policy)
-        this.play();
+        // Only auto-play if requested (and user interaction allows it)
+        if (autoPlay) {
+            this.play();
+        }
     }
     
     bindAudioEvents() {
@@ -258,35 +260,67 @@ class RadioPlayer {
     }
     
     showAutoplayBlockedMessage() {
-        // Create a temporary notification
+        // Remove any existing autoplay notifications first
+        const existingNotification = document.getElementById('autoplay-blocked-msg');
+        if (existingNotification) {
+            document.body.removeChild(existingNotification);
+        }
+        
+        // Create a friendly notification
         const notification = document.createElement('div');
+        notification.id = 'autoplay-blocked-msg';
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-volume-mute" style="color: #f59e0b; font-size: 1.2rem;"></i>
+                <div style="flex: 1;">
+                    <strong>Browser Protection Active</strong>
+                    <br>
+                    <small>Click the play button below to start listening</small>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.2rem; padding: 4px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `;
         notification.style.cssText = `
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #f59e0b;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 8px;
+            top: 80px;
+            left: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 1rem;
+            border-radius: 12px;
             z-index: 10000;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            max-width: 90%;
-        `;
-        notification.innerHTML = `
-            <div style="margin-bottom: 0.5rem;">🔊 Audio Blocked</div>
-            <div style="font-size: 0.9rem;">Your browser blocked autoplay. Click the play button again to start.</div>
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            max-width: 500px;
+            margin: 0 auto;
         `;
         
         document.body.appendChild(notification);
         
-        // Remove after 3 seconds
+        // Animate in
+        setTimeout(() => {
+            notification.style.opacity = '1';
+            notification.style.transform = 'translateY(0)';
+        }, 10);
+        
+        // Auto-remove after 4 seconds
         setTimeout(() => {
             if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
             }
-        }, 3000);
+        }, 4000);
     }
     
     pause() {
@@ -308,8 +342,16 @@ class RadioPlayer {
             // Get existing recent stations from localStorage
             let recentStations = this.getRecentStations();
             
+            // Find station ID from database if available
+            let stationId = stationData.id;
+            if (!stationId) {
+                // Try to find ID by matching URL or name
+                stationId = this.findStationId(stationData);
+            }
+            
             // Create station object with timestamp
             const stationEntry = {
+                id: stationId,
                 name: stationData.name || 'Unknown Station',
                 url: stationData.url,
                 frequency: stationData.frequency || 'Unknown',
@@ -342,6 +384,20 @@ class RadioPlayer {
         } catch (error) {
             console.error('Error saving to recent stations:', error);
         }
+    }
+    
+    // Helper function to find station ID
+    findStationId(stationData) {
+        // Access the global stationDatabase from the main script
+        if (typeof stationDatabase !== 'undefined') {
+            for (const [id, dbStation] of Object.entries(stationDatabase)) {
+                if (dbStation.url === stationData.url || 
+                    dbStation.name === stationData.name) {
+                    return id;
+                }
+            }
+        }
+        return null;
     }
     
     getRecentStations() {
@@ -702,9 +758,270 @@ document.addEventListener('DOMContentLoaded', () => {
     initServiceWorker();
     initPerformanceMonitoring();
     
+    // Handle URL parameters for direct station linking
+    handleUrlParameters();
+    
     // Add body class for JavaScript enabled
     document.body.classList.add('js-enabled');
 });
+
+// URL Parameter Handling for Direct Station Linking
+function handleUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const radioId = urlParams.get('radioId');
+    
+    if (radioId) {
+        console.log('🔗 Direct link detected for station ID:', radioId);
+        
+        // Try to load the station after a short delay to ensure player is ready
+        setTimeout(() => {
+            loadStationById(radioId);
+        }, 500);
+    }
+}
+
+// Station data mapping - this should match your Jekyll station data
+const stationDatabase = {
+    '985fm': {
+        name: '98.5 FM Montréal',
+        url: 'https://17993.live.streamtheworld.com/CHMPFM_SC',
+        frequency: '98.5 FM',
+        location: 'Montreal, QC',
+        genre: 'Talk Radio',
+        description: "Montreal's premier French-language talk radio station"
+    },
+    'bpm': {
+        name: 'BPM Sport',
+        url: 'https://stream.bpmsports.ca/cklx.aac',
+        frequency: '91.9 FM',
+        location: 'Montreal, QC',
+        genre: 'Sports Talk',
+        description: "Montreal's French-language sports radio station"
+    },
+    'cjob680': {
+        name: 'CJOB 680 Winnipeg',
+        url: 'https://live.leanstream.co/CJOBAM-MP3',
+        frequency: '680 AM',
+        location: 'Winnipeg, MB',
+        genre: 'Sports/News',
+        description: "Winnipeg's sports radio covering Jets hockey and local sports"
+    },
+    'ckrm620': {
+        name: 'CKRM 620 Regina',
+        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKRMAM.mp3',
+        frequency: '620 AM',
+        location: 'Regina, SK',
+        genre: 'Sports Talk',
+        description: "Regina's sports radio home for Roughriders and local sports"
+    },
+    'sn960': {
+        name: 'Sportsnet 960 Calgary',
+        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CFACAM.mp3',
+        frequency: '960 AM',
+        location: 'Calgary, AB',
+        genre: 'Sports Talk',
+        description: "Calgary's sports radio station"
+    },
+    'tsn1050': {
+        name: 'TSN 1050 Toronto',
+        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CHUMAM.mp3',
+        frequency: '1050 AM',
+        location: 'Toronto, ON',
+        genre: 'Sports Talk',
+        description: "Toronto's sports radio home for Leafs, Raptors, TFC and Blue Jays"
+    },
+    'tsn690': {
+        name: 'TSN 690 Montreal',
+        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3',
+        frequency: '690 AM',
+        location: 'Montreal, QC',
+        genre: 'Sports Talk',
+        description: "Montreal's premier English-language sports radio station"
+    }
+};
+
+function loadStationById(stationId) {
+    const station = stationDatabase[stationId];
+    
+    if (!station) {
+        console.error('❌ Station not found for ID:', stationId);
+        return;
+    }
+    
+    // Wait for radio player to be available
+    const waitForPlayer = () => {
+        if (window.radioPlayer) {
+            console.log('🎵 Loading station from URL parameter:', station.name);
+            
+            // Load the station but don't auto-play (to avoid autoplay blocking)
+            window.radioPlayer.loadStation(station.url, station.name, station, false);
+            
+            // Show a friendly message encouraging user to click play
+            showAutoplayNotification(station.name);
+        } else {
+            console.log('⏳ Waiting for radio player to initialize...');
+            setTimeout(waitForPlayer, 100);
+        }
+    };
+    
+    waitForPlayer();
+}
+
+// Show a user-friendly notification for direct links
+function showAutoplayNotification(stationName) {
+    const notification = document.createElement('div');
+    notification.id = 'autoplay-notification';
+    notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <i class="fas fa-radio" style="color: #3b82f6; font-size: 1.2rem;"></i>
+            <div>
+                <strong>${stationName}</strong> is ready to play!
+                <br>
+                <small>Click the play button below to start listening.</small>
+            </div>
+            <button onclick="dismissAutoplayNotification()" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 1.2rem; padding: 4px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        left: 1rem;
+        right: 1rem;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+        border: 1px solid #3b82f6;
+        color: #1e40af;
+        padding: 1rem;
+        border-radius: 12px;
+        z-index: 10000;
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.3s ease;
+        max-width: 500px;
+        margin: 0 auto;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateY(0)';
+    }, 10);
+    
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+        dismissAutoplayNotification();
+    }, 5000);
+}
+
+// Function to dismiss the notification
+function dismissAutoplayNotification() {
+    const notification = document.getElementById('autoplay-notification');
+    if (notification) {
+        notification.style.opacity = '0';
+        notification.style.transform = 'translateY(-20px)';
+        setTimeout(() => {
+            if (document.body.contains(notification)) {
+                document.body.removeChild(notification);
+            }
+        }, 300);
+    }
+}
+
+// Function to generate shareable URLs
+function getShareableUrl(stationId) {
+    const baseUrl = window.location.origin + window.location.pathname;
+    return `${baseUrl}?radioId=${stationId}`;
+}
+
+// Function to copy shareable link to clipboard
+function copyStationLink(stationId) {
+    const shareUrl = getShareableUrl(stationId);
+    
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            showToast('Link copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy link:', err);
+            fallbackCopyTextToClipboard(shareUrl);
+        });
+    } else {
+        fallbackCopyTextToClipboard(shareUrl);
+    }
+}
+
+// Fallback copy function for older browsers
+function fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.top = '0';
+    textArea.style.left = '0';
+    textArea.style.position = 'fixed';
+    
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+            showToast('Link copied to clipboard!');
+        } else {
+            showToast('Failed to copy link');
+        }
+    } catch (err) {
+        console.error('Fallback copy failed:', err);
+        showToast('Copy not supported by browser');
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+// Simple toast notification
+function showToast(message, duration = 3000) {
+    // Remove any existing toast
+    const existingToast = document.getElementById('toast-notification');
+    if (existingToast) {
+        document.body.removeChild(existingToast);
+    }
+    
+    const toast = document.createElement('div');
+    toast.id = 'toast-notification';
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 6px;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Fade in
+    setTimeout(() => {
+        toast.style.opacity = '1';
+    }, 10);
+    
+    // Fade out and remove
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+            if (document.body.contains(toast)) {
+                document.body.removeChild(toast);
+            }
+        }, 300);
+    }, duration);
+}
 
 // Handle offline/online events
 window.addEventListener('offline', () => {

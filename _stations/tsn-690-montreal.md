@@ -1,6 +1,7 @@
 ---
 hidden: false
 layout: station
+id: "tsn690"
 title: "TSN 690 Montreal"
 description: "Montreal's premier sports radio station covering Canadiens, Impact, Alouettes and all Montreal sports"
 frequency: "690 AM"

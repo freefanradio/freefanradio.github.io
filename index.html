@@ -360,6 +360,9 @@ function initializeRecentStationsView() {
                 slot.innerHTML = `
                     <div class="station-info">
                         <h3 class="station-name">${station.name}</h3>
+                        <button class="share-btn" onclick="copyStationLink('${station.id || ''}'); event.stopPropagation();" title="Share station">
+                            <i class="fas fa-share"></i>
+                        </button>
                     </div>
                 `;
                 
@@ -514,6 +517,7 @@ function initializeRecentStationsView() {
         // Default featured stations for first-time users (sorted alphabetically)
         return [
             {
+                id: "cjob680",
                 name: "CJOB 680 Winnipeg",
                 url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CJOBAM.mp3",
                 frequency: "680 AM",
@@ -523,6 +527,7 @@ function initializeRecentStationsView() {
                 timeAgo: "Featured"
             },
             {
+                id: "sn960",
                 name: "Sportsnet 960 Calgary",
                 url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CFACAM.mp3",
                 frequency: "960 AM",
@@ -532,6 +537,7 @@ function initializeRecentStationsView() {
                 timeAgo: "Featured"
             },
             {
+                id: "tsn1050",
                 name: "TSN 1050 Toronto",
                 url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CJCL.mp3",
                 frequency: "1050 AM",
@@ -541,6 +547,7 @@ function initializeRecentStationsView() {
                 timeAgo: "Featured"
             },
             {
+                id: "tsn690",
                 name: "TSN 690 Montreal",
                 url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3",
                 frequency: "690 AM",

@@ -1,6 +1,7 @@
 ---
 hidden: false
 layout: station
+id: "cjob680"
 title: "CJOB 680 Winnipeg"
 description: "Winnipeg's sports radio covering Jets hockey and local sports"
 frequency: "680 AM"

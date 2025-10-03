@@ -1,6 +1,7 @@
 ---
 hidden: false
 layout: station
+id: "985fm"
 title: "98.5 FM Montréal"
 description: "Montreal's premier French-language talk radio station featuring Paul Arcand and comprehensive coverage of Quebec and Montreal news"
 frequency: "98.5 FM"
