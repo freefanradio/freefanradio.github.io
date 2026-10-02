@@ -934,7 +934,7 @@ const stationDatabase = {
     },
     'bpm': {
         name: 'BPM Sport',
-        url: 'https://stream.bpmsports.ca/cklx.aac',
+        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKLXFMAAC.aac',
         frequency: '91.9 FM',
         location: 'Montreal, QC',
         genre: 'Sports Talk',

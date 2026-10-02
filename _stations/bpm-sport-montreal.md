@@ -8,8 +8,8 @@ frequency: "91.9 FM"
 location: "Montreal, QC"
 genre: "Sports Talk"
 category: "sports"
-stream_url: "https://stream.bpmsports.ca/cklx.aac"
-website: "https://www.bpmsport.ca"
+stream_url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKLXFMAAC.aac"
+website: "https://arsenalsports.ca/fr"
 phone: "(514) 790-0919"
 schedule:
   - time: "6:00 AM - 9:00 AM"
@@ -25,7 +25,7 @@ schedule:
 contact:
   phone: "(514) 790-0919"
   email: "info@bpmsport.ca"
-  website: "https://www.bpmsport.ca"
+  website: "https://arsenalsports.ca/fr"
 ---
 
 ## About BPM Sport
