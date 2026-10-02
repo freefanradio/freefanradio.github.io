@@ -463,7 +463,15 @@ class RadioPlayer {
     getRecentStations() {
         try {
             const stored = localStorage.getItem('freefanradio_recent_stations');
-            return stored ? JSON.parse(stored) : [];
+            const list = stored ? JSON.parse(stored) : [];
+            // Refresh saved stream URLs from the station database so a station
+            // whose feed moved (e.g. BPM Sport) doesn't keep the old, dead URL.
+            let db = null;
+            try { db = stationDatabase; } catch (e) { /* not defined yet */ }
+            if (!db) return list;
+            return list.map(st => (st && db[st.id] && db[st.id].url !== st.url)
+                ? { ...st, url: db[st.id].url }
+                : st);
         } catch (error) {
             console.error('Error retrieving recent stations:', error);
             return [];
