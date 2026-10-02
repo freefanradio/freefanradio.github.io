@@ -8,7 +8,7 @@ frequency: "960 AM"
 location: "Calgary, AB"
 genre: "Sports Talk"
 category: "sports"
-stream_url: "https://radio-dai.rogersdigitalmedia.com/hls/chi/rogers/cal960.stream/48k/iMi055c8urA-175297077-9984.aac"
+stream_url: "https://rogers-hls.leanstream.co/rogers/cal960.stream/icy"
 website: "https://www.sportsnet.ca/960"
 teams:
   - "Calgary Flames"

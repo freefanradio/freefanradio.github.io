@@ -49,9 +49,9 @@ permalink: /hockey/
 ## Featured Hockey Stations
 
 <div class="stations-grid" style="margin: 2rem 0;">
-    {% include station-card.html station_id="hockey-night-in-canada-radio" %}
+    {% include station-card.html station_id="sportsnet-590-toronto" %}
 
-    {% include station-card.html station_id="tsn-hockey-network" %}
+    {% include station-card.html station_id="tsn-690-montreal" %}
 </div>
 
 ## Hockey Programming Schedule

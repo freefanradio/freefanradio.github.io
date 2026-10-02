@@ -41,7 +41,7 @@ permalink: /football/
 ## Featured Football Stations
 
 <div class="stations-grid" style="margin: 2rem 0;">
-    {% include station-card.html station_id="cfl-on-tsn-radio" %}
+    {% include station-card.html station_id="tsn-1050-toronto" %}
 
     {% assign roughrider_station = site.stations | where: "slug", "ckrm-620-regina" | first %}
     {% if roughrider_station %}

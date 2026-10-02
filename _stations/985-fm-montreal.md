@@ -8,7 +8,7 @@ frequency: "98.5 FM"
 location: "Montreal, QC"
 genre: "Talk Radio"
 category: "sports"
-stream_url: "https://17993.live.streamtheworld.com/CHMPFM_SC"
+stream_url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CHMPFMAAC.aac"
 website: "https://www.985fm.ca"
 phone: "(514) 529-3200"
 schedule:
