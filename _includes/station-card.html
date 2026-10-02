@@ -22,7 +22,7 @@ Or: {% include station-card.html station=site.stations[0] %}
             </div>
         </div>
         <div class="station-actions">
-            <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{% if include.title %}{{ include.title }}{% else %}{{ station.title }}{% endif %}">
+            <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{% if include.title %}{{ include.title }}{% else %}{{ station.title }}{% endif %}">
                 <i class="fas fa-play"></i>
                 Play Live
             </button>

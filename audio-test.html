@@ -69,7 +69,7 @@ function log(message) {
 function testDirectAudio() {
     log('🔵 Testing direct HTML5 Audio element...');
     
-    const streamUrl = 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3';
+    const streamUrl = window.FFR_STATIONS['tsn690'].url;
     const audio = new Audio();
     
     audio.addEventListener('loadstart', () => log('Audio: Load started'));
@@ -103,14 +103,7 @@ function testRadioPlayer() {
         return;
     }
     
-    const stationData = {
-        name: "TSN 690 Montreal",
-        url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3",
-        frequency: "690 AM",
-        location: "Montreal, QC",
-        genre: "Sports Talk",
-        description: "Montreal's premier sports radio station"
-    };
+    const stationData = { ...window.FFR_STATIONS['tsn690'] };
     
     log(`Loading station: ${stationData.name}`);
     log(`Stream URL: ${stationData.url}`);
@@ -136,7 +129,7 @@ function testRadioPlayer() {
 function testStreamURL() {
     log('🟡 Testing stream URL accessibility...');
     
-    const streamUrl = 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3';
+    const streamUrl = window.FFR_STATIONS['tsn690'].url;
     
     fetch(streamUrl, { method: 'HEAD' })
         .then(response => {

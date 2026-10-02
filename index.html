@@ -409,21 +409,13 @@ function initializeRecentStationsView(callback) {
                             return;
                         }
                         
-                        console.log('🚀 Loading station:', stationData.name);
-                        console.log('🔗 Stream URL:', stationData.url);
+                        console.log('🚀 Loading station:', stationData.id);
                         
                         // Add loading state to the station slot
                         this.classList.add('loading');
                         
-                        // Test if we can create an audio element first
-                        const testAudio = new Audio();
-                        testAudio.src = stationData.url;
-                        testAudio.load();
-                        
-                        console.log('✅ Audio element created successfully');
-                        
-                        // Now use the radio player
-                        window.radioPlayer.loadStation(stationData.url, stationData.name, stationData);
+                        // Stream URL is looked up from the station list by id
+                        window.radioPlayer.playStationById(stationData.id);
                         
                         // Reset loading state after a delay
                         setTimeout(() => {
@@ -466,10 +458,10 @@ function initializeRecentStationsView(callback) {
         
         // Add playing state to current station
         if (window.radioPlayer && window.radioPlayer.currentStation) {
-            const currentUrl = window.radioPlayer.currentStation.url;
+            const currentId = window.radioPlayer.currentStation.id;
             // Find the slot with matching station data
             document.querySelectorAll('.station-slot').forEach(slot => {
-                if (slot.stationData && slot.stationData.url === currentUrl) {
+                if (slot.stationData && slot.stationData.id === currentId) {
                     slot.classList.add('playing');
                 }
             });
@@ -548,49 +540,12 @@ function initializeRecentStationsView(callback) {
     });
     
     function getDefaultStations() {
-        // Default featured stations for first-time users (sorted alphabetically)
-        return [
-            {
-                id: "cjob680",
-                name: "CJOB 680 Winnipeg",
-                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CJOBAM.mp3",
-                frequency: "680 AM",
-                location: "Winnipeg, MB",
-                genre: "News/Sports",
-                description: "Winnipeg's news and sports radio",
-                timeAgo: "Featured"
-            },
-            {
-                id: "sn960",
-                name: "Sportsnet 960 Calgary",
-                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CFACAM.mp3",
-                frequency: "960 AM",
-                location: "Calgary, AB",
-                genre: "Sports Talk",
-                description: "Calgary's sports radio station",
-                timeAgo: "Featured"
-            },
-            {
-                id: "tsn1050",
-                name: "TSN 1050 Toronto",
-                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CJCL.mp3",
-                frequency: "1050 AM",
-                location: "Toronto, ON",
-                genre: "Sports Talk",
-                description: "Toronto's sports radio leader",
-                timeAgo: "Featured"
-            },
-            {
-                id: "tsn690",
-                name: "TSN 690 Montreal",
-                url: "https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3",
-                frequency: "690 AM",
-                location: "Montreal, QC",
-                genre: "Sports Talk",
-                description: "Montreal's premier sports radio station",
-                timeAgo: "Featured"
-            }
-        ];
+        // Default featured stations for first-time users (ids from _stations/)
+        const featuredIds = ['cjob680', 'sn960', 'tsn1050', 'tsn690'];
+        const stations = window.FFR_STATIONS || {};
+        return featuredIds
+            .filter(id => stations[id])
+            .map(id => ({ ...stations[id], id, timeAgo: 'Featured' }));
     }
     
     // Auto Ads - Google will automatically place ads when enabled in AdSense dashboard

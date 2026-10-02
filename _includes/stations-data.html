@@ -1,0 +1,21 @@
+{% comment %}
+Single source of truth for stations: generated from the _stations collection.
+The player looks up stream URLs here by station id; nothing else should
+hard-code a stream URL.
+{% endcomment %}
+<script>
+window.FFR_STATIONS = {
+{%- for s in site.stations %}
+  {{ s.id | jsonify }}: {
+    "id": {{ s.id | jsonify }},
+    "name": {{ s.title | jsonify }},
+    "url": {{ s.stream_url | jsonify }},
+    "frequency": {{ s.frequency | jsonify }},
+    "location": {{ s.location | jsonify }},
+    "genre": {{ s.genre | jsonify }},
+    "description": {{ s.description | jsonify }},
+    "page": {{ s.url | relative_url | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+};
+</script>

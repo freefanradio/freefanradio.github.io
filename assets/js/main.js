@@ -62,32 +62,16 @@ class RadioPlayer {
             });
         }
         
-        // Station play buttons
+        // Station play buttons: they only carry a station id; the stream URL
+        // always comes from the station list generated from _stations/.
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.play-station-btn')) {
-                const btn = e.target.closest('.play-station-btn');
-                const streamUrl = btn.dataset.stream;
-                const stationName = btn.dataset.name;
-                
-                // Collect additional station data from the card
-                const stationCard = btn.closest('.station-card');
-                const stationData = {};
-                
-                if (stationCard) {
-                    const frequencyEl = stationCard.querySelector('.frequency');
-                    const locationEl = stationCard.querySelector('.location');
-                    const genreEl = stationCard.querySelector('.genre');
-                    const descriptionEl = stationCard.querySelector('.station-info p');
-                    
-                    if (frequencyEl) stationData.frequency = frequencyEl.textContent.trim();
-                    if (locationEl) stationData.location = locationEl.textContent.trim();
-                    if (genreEl) stationData.genre = genreEl.textContent.trim();
-                    if (descriptionEl) stationData.description = descriptionEl.textContent.trim();
-                }
-                
-                if (streamUrl && stationName) {
-                    this.loadStation(streamUrl, stationName, stationData);
-                }
+            const btn = e.target.closest('.play-station-btn');
+            if (!btn) return;
+            const stationId = btn.dataset.stationId;
+            if (stationId) {
+                this.playStationById(stationId);
+            } else {
+                console.error('❌ Play button has no data-station-id');
             }
         });
         
@@ -154,6 +138,17 @@ class RadioPlayer {
         if (autoPlay) {
             this.play();
         }
+    }
+    
+    // Play a station by id, using the current stream URL from the station list
+    playStationById(stationId, autoPlay = true) {
+        const station = getStationById(stationId);
+        if (!station) {
+            console.error('❌ Station not found for ID:', stationId);
+            return null;
+        }
+        this.loadStation(station.url, station.name, station, autoPlay);
+        return station;
     }
     
     bindAudioEvents() {
@@ -350,132 +345,74 @@ class RadioPlayer {
     }
     
     // Recent Stations Management
+    // Only { id, lastPlayed } is stored. Name, stream URL, etc. are always
+    // read from the station list, so a moved feed is picked up automatically.
     saveToRecentStations(stationData) {
         try {
-            // Get existing recent stations from localStorage
-            let recentStations = this.getRecentStations();
+            const stationId = stationData && (stationData.id || resolveStationId(stationData));
+            if (!stationId || !getStationById(stationId)) {
+                console.warn('⚠️ Not saving unknown station to recents:', stationData && stationData.name);
+                return;
+            }
             
-            // Generate a unique station ID
-            let stationId = this.generateStationId(stationData);
+            const entries = this.readRecentEntries().filter(e => e.id !== stationId);
+            entries.unshift({ id: stationId, lastPlayed: new Date().toISOString() });
+            this.writeRecentEntries(entries);
             
-            // Create station object with timestamp
-            const stationEntry = {
-                id: stationId,
-                name: stationData.name || 'Unknown Station',
-                url: stationData.url,
-                frequency: stationData.frequency || 'Unknown',
-                location: stationData.location || 'Unknown',
-                genre: stationData.genre || 'Radio',
-                description: stationData.description || 'Radio station',
-                lastPlayed: new Date().toISOString()
-            };
-
-            console.log('💾 Saving station with ID:', stationId, 'Name:', stationEntry.name);
-            
-            // Remove ALL existing entries for this station (by ID, URL, AND name)
-            const originalLength = recentStations.length;
-            recentStations = recentStations.filter(station => {
-                const isDuplicate = (
-                    station.id === stationEntry.id ||
-                    station.url === stationEntry.url ||
-                    station.name === stationEntry.name
-                );
-                
-                if (isDuplicate) {
-                    console.log('🗑️ Removing duplicate station:', station.name, 'ID:', station.id);
-                }
-                
-                return !isDuplicate;
-            });
-            
-            console.log(`📊 Removed ${originalLength - recentStations.length} duplicates`);
-            
-            // Add to beginning of array (most recent first)
-            recentStations.unshift(stationEntry);
-            
-            // Keep only the last 8 stations
-            recentStations = recentStations.slice(0, this.maxRecentStations);
-            
-            // Save back to localStorage
-            localStorage.setItem('freefanradio_recent_stations', JSON.stringify(recentStations));
-            
-            // Dispatch custom event for UI updates
+            const recentStations = this.getRecentStations();
             window.dispatchEvent(new CustomEvent('recentStationsUpdated', {
-                detail: { station: stationEntry, recentStations }
+                detail: { station: getStationById(stationId), recentStations }
             }));
             
-            console.log('Saved station to recent:', stationEntry.name);
+            console.log('💾 Saved station to recent:', stationId);
         } catch (error) {
             console.error('Error saving to recent stations:', error);
         }
     }
     
-    // Generate a consistent, unique station ID
-    generateStationId(stationData) {
-        // First try to use existing ID if provided
-        if (stationData.id) {
-            return stationData.id;
-        }
-        
-        // Try to find ID from station database
-        const dbId = this.findStationId(stationData);
-        if (dbId) {
-            return dbId;
-        }
-        
-        // Generate a consistent ID based on station name
-        // This ensures the same station always gets the same ID
-        const name = (stationData.name || 'unknown').toLowerCase();
-        
-        // Create a simple hash from the name for consistency
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) {
-            const char = name.charCodeAt(i);
-            hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32-bit integer
-        }
-        
-        // Create readable ID: first word + hash + frequency if available
-        const firstWord = name.split(' ')[0].replace(/[^a-z0-9]/g, '');
-        const frequency = stationData.frequency ? stationData.frequency.replace(/[^0-9]/g, '') : '';
-        const hashSuffix = Math.abs(hash).toString(36).substring(0, 4);
-        
-        const generatedId = `${firstWord}${frequency ? '-' + frequency : ''}-${hashSuffix}`;
-        
-        console.log('🆔 Generated station ID:', generatedId, 'for:', stationData.name);
-        return generatedId;
-    }
-
-    // Helper function to find station ID
-    findStationId(stationData) {
-        // Access the global stationDatabase from the main script
-        if (typeof stationDatabase !== 'undefined') {
-            for (const [id, dbStation] of Object.entries(stationDatabase)) {
-                if (dbStation.url === stationData.url || 
-                    dbStation.name === stationData.name) {
-                    return id;
-                }
-            }
-        }
-        return null;
-    }
-    
-    getRecentStations() {
+    // Read stored entries and normalize them to [{ id, lastPlayed }].
+    // Older entries (which stored name/url) are mapped to a station id;
+    // entries for stations that no longer exist are dropped.
+    readRecentEntries() {
+        let raw = [];
         try {
             const stored = localStorage.getItem('freefanradio_recent_stations');
-            const list = stored ? JSON.parse(stored) : [];
-            // Refresh saved stream URLs from the station database so a station
-            // whose feed moved (e.g. BPM Sport) doesn't keep the old, dead URL.
-            let db = null;
-            try { db = stationDatabase; } catch (e) { /* not defined yet */ }
-            if (!db) return list;
-            return list.map(st => (st && db[st.id] && db[st.id].url !== st.url)
-                ? { ...st, url: db[st.id].url }
-                : st);
+            raw = stored ? JSON.parse(stored) : [];
         } catch (error) {
             console.error('Error retrieving recent stations:', error);
             return [];
         }
+        if (!Array.isArray(raw)) return [];
+        
+        const seen = new Set();
+        const entries = [];
+        for (const item of raw) {
+            if (!item) continue;
+            const id = (item.id && getStationById(item.id)) ? item.id : resolveStationId(item);
+            if (!id || seen.has(id)) continue;
+            seen.add(id);
+            entries.push({ id, lastPlayed: item.lastPlayed || new Date(0).toISOString() });
+        }
+        return entries.slice(0, this.maxRecentStations);
+    }
+    
+    writeRecentEntries(entries) {
+        try {
+            const clean = entries
+                .slice(0, this.maxRecentStations)
+                .map(e => ({ id: e.id, lastPlayed: e.lastPlayed }));
+            localStorage.setItem('freefanradio_recent_stations', JSON.stringify(clean));
+        } catch (error) {
+            console.error('Error saving recent stations:', error);
+        }
+    }
+    
+    // Recent stations with full, current station data
+    getRecentStations() {
+        return this.readRecentEntries().map(e => ({
+            ...getStationById(e.id),
+            lastPlayed: e.lastPlayed
+        }));
     }
     
     clearRecentStations() {
@@ -489,32 +426,7 @@ class RadioPlayer {
     
     // Get recent stations formatted for display
     getRecentStationsForDisplay() {
-        const recentStations = this.getRecentStations();
-        
-        // Additional deduplication layer - remove any duplicates that might exist
-        const seen = new Set();
-        const deduplicated = recentStations.filter(station => {
-            // Create a unique key combining ID, name, and URL
-            const key = `${station.id}|${station.name}|${station.url}`;
-            
-            if (seen.has(key) || 
-                seen.has(station.id) || 
-                seen.has(station.name) || 
-                seen.has(station.url)) {
-                console.log('🔍 Filtered duplicate in display:', station.name);
-                return false;
-            }
-            
-            seen.add(key);
-            seen.add(station.id);
-            seen.add(station.name);
-            seen.add(station.url);
-            return true;
-        });
-        
-        console.log(`📺 Displaying ${deduplicated.length} unique stations (filtered from ${recentStations.length})`);
-        
-        return deduplicated.map(station => ({
+        return this.getRecentStations().map(station => ({
             ...station,
             timeAgo: this.formatTimeAgo(new Date(station.lastPlayed))
         }));
@@ -534,46 +446,21 @@ class RadioPlayer {
         return date.toLocaleDateString();
     }
     
-    // Clean up any existing duplicates in localStorage
+    // Rewrite localStorage in the normalized id-only format
+    // (removes duplicates, old stream URLs and unknown stations)
     cleanupDuplicateStations() {
         try {
-            const recentStations = this.getRecentStations();
-            const originalLength = recentStations.length;
-            
-            const seen = new Set();
-            const cleaned = recentStations.filter(station => {
-                // Create consistent ID if missing
-                if (!station.id) {
-                    station.id = this.generateStationId(station);
-                }
-                
-                const key = `${station.id}|${station.name}|${station.url}`;
-                
-                if (seen.has(key) || 
-                    seen.has(station.id) || 
-                    seen.has(station.name) || 
-                    seen.has(station.url)) {
-                    console.log('🧹 Cleaning duplicate:', station.name);
-                    return false;
-                }
-                
-                seen.add(key);
-                seen.add(station.id);
-                seen.add(station.name);
-                seen.add(station.url);
-                return true;
-            });
-            
-            if (cleaned.length !== originalLength) {
-                console.log(`🧹 Cleaned ${originalLength - cleaned.length} duplicates from localStorage`);
-                localStorage.setItem('freefanradio_recent_stations', JSON.stringify(cleaned));
+            const stored = localStorage.getItem('freefanradio_recent_stations');
+            const entries = this.readRecentEntries();
+            const normalized = JSON.stringify(entries);
+            if (stored && stored !== normalized) {
+                this.writeRecentEntries(entries);
+                console.log('🧹 Normalized recent stations in localStorage');
                 return true;
             }
-            
-            console.log('✨ No duplicates found in localStorage');
             return false;
         } catch (error) {
-            console.error('Error cleaning duplicate stations:', error);
+            console.error('Error cleaning recent stations:', error);
             return false;
         }
     }
@@ -612,13 +499,16 @@ class RadioPlayer {
                 throw new Error('Invalid data format');
             }
             
-            // Validate station objects
-            const validStations = data.stations.filter(station => 
-                station.name && station.url && station.lastPlayed
-            );
+            // Keep only stations that exist on the site; store ids only
+            const validStations = data.stations
+                .map(station => ({
+                    id: (station.id && getStationById(station.id)) ? station.id : resolveStationId(station),
+                    lastPlayed: station.lastPlayed || new Date().toISOString()
+                }))
+                .filter(station => station.id);
             
             if (validStations.length > 0) {
-                localStorage.setItem('freefanradio_recent_stations', JSON.stringify(validStations));
+                this.writeRecentEntries(validStations);
                 console.log(`Imported ${validStations.length} recent stations`);
                 return validStations.length;
             } else {
@@ -930,68 +820,30 @@ function handleUrlParameters() {
     }
 }
 
-// Station data mapping - this should match your Jekyll station data
-const stationDatabase = {
-    '985fm': {
-        name: '98.5 FM Montréal',
-        url: 'https://17993.live.streamtheworld.com/CHMPFM_SC',
-        frequency: '98.5 FM',
-        location: 'Montreal, QC',
-        genre: 'Talk Radio',
-        description: "Montreal's premier French-language talk radio station"
-    },
-    'bpm': {
-        name: 'BPM Sport',
-        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKLXFMAAC.aac',
-        frequency: '91.9 FM',
-        location: 'Montreal, QC',
-        genre: 'Sports Talk',
-        description: "Montreal's French-language sports radio station"
-    },
-    'cjob680': {
-        name: 'CJOB 680 Winnipeg',
-        url: 'https://live.leanstream.co/CJOBAM-MP3',
-        frequency: '680 AM',
-        location: 'Winnipeg, MB',
-        genre: 'Sports/News',
-        description: "Winnipeg's sports radio covering Jets hockey and local sports"
-    },
-    'ckrm620': {
-        name: 'CKRM 620 Regina',
-        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKRMAM.mp3',
-        frequency: '620 AM',
-        location: 'Regina, SK',
-        genre: 'Sports Talk',
-        description: "Regina's sports radio home for Roughriders and local sports"
-    },
-    'sn960': {
-        name: 'Sportsnet 960 Calgary',
-        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CFACAM.mp3',
-        frequency: '960 AM',
-        location: 'Calgary, AB',
-        genre: 'Sports Talk',
-        description: "Calgary's sports radio station"
-    },
-    'tsn1050': {
-        name: 'TSN 1050 Toronto',
-        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CHUMAM.mp3',
-        frequency: '1050 AM',
-        location: 'Toronto, ON',
-        genre: 'Sports Talk',
-        description: "Toronto's sports radio home for Leafs, Raptors, TFC and Blue Jays"
-    },
-    'tsn690': {
-        name: 'TSN 690 Montreal',
-        url: 'https://playerservices.streamtheworld.com/api/livestream-redirect/CKGMAM.mp3',
-        frequency: '690 AM',
-        location: 'Montreal, QC',
-        genre: 'Sports Talk',
-        description: "Montreal's premier English-language sports radio station"
+// Station list generated by Jekyll from _stations/ (see _includes/stations-data.html)
+function getStations() {
+    return window.FFR_STATIONS || {};
+}
+
+function getStationById(stationId) {
+    const station = getStations()[stationId];
+    return station ? { ...station, id: stationId } : null;
+}
+
+// Map an old-style entry (name and/or stream URL) to a station id
+function resolveStationId(entry) {
+    if (!entry) return null;
+    for (const station of Object.values(getStations())) {
+        if ((entry.url && station.url === entry.url) ||
+            (entry.name && station.name === entry.name)) {
+            return station.id;
+        }
     }
-};
+    return null;
+}
 
 function loadStationById(stationId) {
-    const station = stationDatabase[stationId];
+    const station = getStationById(stationId);
     
     if (!station) {
         console.error('❌ Station not found for ID:', stationId);

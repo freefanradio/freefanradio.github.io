@@ -49,45 +49,9 @@ permalink: /hockey/
 ## Featured Hockey Stations
 
 <div class="stations-grid" style="margin: 2rem 0;">
-    <div class="station-card">
-        <div class="station-header">
-            <div class="station-info">
-                <h3>Hockey Night in Canada Radio</h3>
-                <p>CBC's premier hockey coverage with expert analysis and game calls</p>
-                <div class="station-meta">
-                    <span class="frequency">Various FM</span>
-                    <span class="location">National</span>
-                    <span class="genre">Hockey</span>
-                </div>
-            </div>
-            <div class="station-actions">
-                <button class="play-station-btn" data-stream="https://live-audio01.mediavibez.com/CBC-Hockey" data-name="Hockey Night in Canada Radio">
-                    <i class="fas fa-play"></i>
-                    Play Live
-                </button>
-            </div>
-        </div>
-    </div>
+    {% include station-card.html station_id="hockey-night-in-canada-radio" %}
 
-    <div class="station-card">
-        <div class="station-header">
-            <div class="station-info">
-                <h3>TSN Hockey Network</h3>
-                <p>Comprehensive NHL coverage with insider reports and trade news</p>
-                <div class="station-meta">
-                    <span class="frequency">Various AM/FM</span>
-                    <span class="location">National</span>
-                    <span class="genre">Hockey</span>
-                </div>
-            </div>
-            <div class="station-actions">
-                <button class="play-station-btn" data-stream="https://live-audio01.mediavibez.com/TSN-Hockey" data-name="TSN Hockey Network">
-                    <i class="fas fa-play"></i>
-                    Play Live
-                </button>
-            </div>
-        </div>
-    </div>
+    {% include station-card.html station_id="tsn-hockey-network" %}
 </div>
 
 ## Hockey Programming Schedule

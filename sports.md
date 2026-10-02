@@ -40,7 +40,7 @@ permalink: /sports/
                         </div>
                     </div>
                     <div class="station-actions">
-                        <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                        <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                             <i class="fas fa-play"></i>
                             Play Live
                         </button>
@@ -72,7 +72,7 @@ permalink: /sports/
                         </div>
                     </div>
                     <div class="station-actions">
-                        <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                        <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                             <i class="fas fa-play"></i>
                             Play Live
                         </button>
@@ -104,7 +104,7 @@ permalink: /sports/
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>
@@ -136,7 +136,7 @@ permalink: /sports/
                         </div>
                     </div>
                     <div class="station-actions">
-                        <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                        <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                             <i class="fas fa-play"></i>
                             Play Live
                         </button>
@@ -168,7 +168,7 @@ permalink: /sports/
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>
@@ -200,7 +200,7 @@ permalink: /sports/
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>
@@ -232,7 +232,7 @@ permalink: /sports/
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>
@@ -264,7 +264,7 @@ permalink: /sports/
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>
@@ -296,7 +296,7 @@ permalink: /sports/
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>
@@ -328,7 +328,7 @@ permalink: /sports/
                     </div>
                 </div>
                 <div class="station-actions">
-                    <button class="play-station-btn" data-stream="{{ station.stream_url }}" data-name="{{ station.title }}">
+                    <button class="play-station-btn" data-station-id="{{ station.id }}" data-name="{{ station.title }}">
                         <i class="fas fa-play"></i>
                         Play Live
                     </button>

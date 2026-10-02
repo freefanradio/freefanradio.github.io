@@ -41,25 +41,7 @@ permalink: /football/
 ## Featured Football Stations
 
 <div class="stations-grid" style="margin: 2rem 0;">
-    <div class="station-card">
-        <div class="station-header">
-            <div class="station-info">
-                <h3>CFL on TSN Radio</h3>
-                <p>Official radio network of the CFL with complete game coverage</p>
-                <div class="station-meta">
-                    <span class="frequency">Various AM/FM</span>
-                    <span class="location">National</span>
-                    <span class="genre">Football</span>
-                </div>
-            </div>
-            <div class="station-actions">
-                <button class="play-station-btn" data-stream="https://live-audio01.mediavibez.com/CFL-TSN" data-name="CFL on TSN Radio">
-                    <i class="fas fa-play"></i>
-                    Play Live
-                </button>
-            </div>
-        </div>
-    </div>
+    {% include station-card.html station_id="cfl-on-tsn-radio" %}
 
     {% assign roughrider_station = site.stations | where: "slug", "ckrm-620-regina" | first %}
     {% if roughrider_station %}
@@ -75,7 +57,7 @@ permalink: /football/
                 </div>
             </div>
             <div class="station-actions">
-                <button class="play-station-btn" data-stream="{{ roughrider_station.stream_url }}" data-name="Roughrider Radio Network">
+                <button class="play-station-btn" data-station-id="{{ roughrider_station.id }}" data-name="Roughrider Radio Network">
                     <i class="fas fa-play"></i>
                     Play Live
                 </button>
