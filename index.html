@@ -30,19 +30,9 @@ description: "Listen live to your team's radio broadcast from anywhere in Canada
             <p class="muted">Follow your teams and they'll be one tap away here, every time.</p>
             <ul class="row-list">
                 {%- for slug in featured -%}
-                {%- assign t = site.data.teams | where: "slug", slug | first -%}
-                {%- if t -%}
-                {%- assign first_id = nil -%}
-                {%- for s in t.stations -%}{%- if s.id and first_id == nil -%}{%- assign first_id = s.id -%}{%- endif -%}{%- endfor %}
-                <li>
-                    <a class="row-main" href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}"><span class="row-title">{{ t.name }}</span><span class="row-sub">{{ t.league }}</span></a>
-                    {%- if first_id %}
-                    <button type="button" class="play-circle play-station-btn" data-station-id="{{ first_id }}" data-team="{{ t.slug }}" aria-label="Play {{ t.name }}">
-                        <svg class="i-play" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
-                        <svg class="i-pause" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-                    </button>
-                    {%- endif %}
-                </li>
+                {%- assign ft = site.data.teams | where: "slug", slug | first -%}
+                {%- if ft %}
+                {% include team-row.html t=ft %}
                 {%- endif -%}
                 {%- endfor %}
             </ul>

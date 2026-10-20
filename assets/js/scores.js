@@ -194,7 +194,8 @@
     const stationName = (id) => (window.FFR_STATIONS && window.FFR_STATIONS[id] && window.FFR_STATIONS[id].name) || '';
 
     function gameCard(t, g) {
-        const sid = (t.stations || [])[0];
+        const sid = window.FFR ? window.FFR.firstStationOf(t.slug) : (t.stations || [])[0];
+        const chips = window.FFR ? window.FFR.stationChips(t.slug) : '';
         const scored = hasScore(g);
         const line = (side, dim) => '<div class="game-line' + (dim ? ' dim' : '') + '"><span>' + esc(side.name) + '</span>' +
             (scored ? '<span class="score">' + esc(side.score) + '</span>' : '') + '</div>';
@@ -205,7 +206,7 @@
             (sid ? '<button type="button" class="play-circle play-station-btn" data-station-id="' + esc(sid) + '" data-team="' + esc(t.slug) +
                 '" aria-label="Play ' + esc(t.name) + '">' + ICON_PLAY + ICON_PAUSE + '</button>' : '') +
             '</div>' +
-            (sid ? '<span class="game-sub">' + esc(stationName(sid)) + '</span>' : '<span class="game-sub">No live stream on FreeFanRadio yet</span>') +
+            (chips || (sid ? '<span class="game-sub">' + esc(stationName(sid)) + '</span>' : '<span class="game-sub">No live stream on FreeFanRadio yet</span>')) +
             '</div>';
     }
 

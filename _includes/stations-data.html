@@ -19,7 +19,8 @@ window.FFR_STATIONS = {
 window.FFR_TEAMS = {
 {%- for t in site.data.teams %}
   {%- assign ids = "" | split: "" -%}
-  {%- for s in t.stations -%}{%- if s.id -%}{%- assign ids = ids | push: s.id -%}{%- endif -%}{%- endfor %}
+  {%- assign fr = "" | split: "" -%}
+  {%- for s in t.stations -%}{%- if s.id -%}{%- assign ids = ids | push: s.id -%}{%- if s.lang == 'fr' -%}{%- assign fr = fr | push: s.id -%}{%- endif -%}{%- endif -%}{%- endfor %}
   {{ t.slug | jsonify }}: {
     "slug": {{ t.slug | jsonify }},
     "name": {{ t.name | jsonify }},
@@ -27,6 +28,7 @@ window.FFR_TEAMS = {
     "abbr": {{ t.abbr | jsonify }},
     "tsdb": {{ t.tsdb | jsonify }},
     "stations": {{ ids | jsonify }},
+    "fr": {{ fr | jsonify }},
     "page": {{ '/teams/' | append: t.slug | append: '/' | relative_url | jsonify }}
   }{% unless forloop.last %},{% endunless %}
 {%- endfor %}

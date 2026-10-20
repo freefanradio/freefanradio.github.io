@@ -188,6 +188,16 @@ code { background: var(--surface-2); padding: 2px 6px; border-radius: 4px; }
 .row-list .play-circle { width: 52px; height: 52px; }
 .row-list .play-circle svg { width: 22px; height: 22px; }
 
+/* Station picker for teams with several stations (e.g. English + French) */
+.row-list li:has(.station-switch) { flex-wrap: wrap; }
+.station-switch { display: flex; flex-wrap: wrap; gap: 8px; flex-basis: 100%; }
+.row-list .station-switch { padding-bottom: 6px; }
+.team-card:has(.station-switch) { flex-wrap: wrap; }
+.station-switch .chip { min-height: 44px; padding: 0 14px; font-size: 14px; }
+.station-switch .chip .badge { background: var(--surface-3); color: var(--text); }
+.station-switch .chip.is-playing { background: var(--text); color: var(--bg); }
+.station-switch .chip.is-playing .badge { background: var(--bg); color: var(--text); }
+
 /* Team search */
 .search-box {
     display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 16px; border-radius: var(--radius);

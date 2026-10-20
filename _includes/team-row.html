@@ -1,0 +1,32 @@
+{%- comment -%} One team row: link to its page, then one Play button, or a station picker when it has several stations. Pass t (a team from teams.yml). {%- endcomment -%}
+{%- assign t = include.t -%}
+{%- assign playable = "" | split: "" -%}
+{%- assign others = "" | split: "" -%}
+{%- for s in t.stations -%}{%- if s.id -%}{%- assign playable = playable | push: s -%}{%- else -%}{%- assign others = others | push: s.name -%}{%- endif -%}{%- endfor -%}
+<li data-search="{{ t.name | downcase }} {{ t.city | downcase }} {{ t.aka | join: ' ' | downcase }}">
+    <a class="row-main" href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}">
+        <span class="row-title">{{ t.name }}</span>
+        {%- if playable.size == 1 -%}
+        {%- assign st = site.stations | where: "station_id", playable[0].id | first %}
+        <span class="row-sub">{{ st.title }}{% if others.size > 0 %} · {{ others | join: ' · ' }}{% endif %}</span>
+        {%- elsif playable.size == 0 %}
+        <span class="row-sub">{{ others | join: ' · ' }}</span>
+        {%- elsif others.size > 0 %}
+        <span class="row-sub">Also on {{ others | join: ' · ' }}</span>
+        {%- else %}
+        <span class="row-sub">{{ t.league }}</span>
+        {%- endif %}
+    </a>
+    {%- if playable.size > 1 %}
+    <div class="station-switch" role="group" aria-label="Choose a station for {{ t.name }}">
+        {%- for s in playable -%}{%- assign st = site.stations | where: "station_id", s.id | first %}
+        <button type="button" class="chip play-station-btn" data-station-id="{{ s.id }}" data-team="{{ t.slug }}"><svg class="i-play" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>{{ st.title }}{% if s.lang == 'fr' %} <span class="badge">FR</span>{% endif %}</button>
+        {%- endfor %}
+    </div>
+    {%- elsif playable.size == 1 %}
+    <button type="button" class="play-circle play-station-btn" data-station-id="{{ playable[0].id }}" data-team="{{ t.slug }}" aria-label="Play {{ t.name }}">
+        <svg class="i-play" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+        <svg class="i-pause" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+    </button>
+    {%- endif %}
+</li>

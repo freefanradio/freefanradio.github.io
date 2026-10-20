@@ -69,10 +69,33 @@
         store.set(TEAMS_KEY, list);
     }
 
+    // A team's stations we can play; the listener's last pick for that team comes first
+    const PREF_KEY = 'ffr_team_station';
+    const playableOf = (slug) => { const t = team(slug); return t ? t.stations.filter(id => station(id)) : []; };
     const firstStationOf = (slug) => {
-        const t = team(slug);
-        return t && t.stations.find(id => station(id)) || null;
+        const ids = playableOf(slug);
+        const pref = (store.get(PREF_KEY, {}) || {})[slug];
+        return ids.includes(pref) ? pref : (ids[0] || null);
     };
+    function rememberStation(slug, id) {
+        if (!slug || !playableOf(slug).includes(id)) return;
+        const prefs = store.get(PREF_KEY, {}) || {};
+        prefs[slug] = id;
+        store.set(PREF_KEY, prefs);
+    }
+    // One button per station, shown when a team has more than one (e.g. English + French)
+    function stationChips(slug) {
+        const t = team(slug);
+        const ids = playableOf(slug);
+        if (!t || ids.length < 2) return '';
+        const fr = t.fr || [];
+        return '<div class="station-switch" role="group" aria-label="Choose a station for ' + escapeHtml(t.name) + '">' +
+            ids.map(id => '<button type="button" class="chip play-station-btn" data-station-id="' + escapeHtml(id) + '" data-team="' + escapeHtml(slug) + '">' +
+                '<svg class="i-play" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>' +
+                escapeHtml(station(id).name) + (fr.includes(id) ? ' <span class="badge">FR</span>' : '') + '</button>').join('') +
+            '</div>';
+    }
+    window.FFR = { firstStationOf, stationChips };
 
     // ---------- Small UI helpers ----------
     const $ = (sel, root) => (root || document).querySelector(sel);
@@ -147,6 +170,7 @@
             if (!s) return;
             this.stationId = id;
             this.teamSlug = team(teamSlug) ? teamSlug : null;
+            rememberStation(this.teamSlug, id);
             store.set(LAST_KEY, { id, team: this.teamSlug });
             pushRecent(id);
             this.start();
@@ -402,6 +426,7 @@
                     (s ? '<button type="button" class="play-circle play-station-btn" data-station-id="' + escapeHtml(id) +
                         '" data-team="' + escapeHtml(slug) + '" aria-label="Play ' + escapeHtml(t.name) + '">' +
                         ICON_PLAY.replace(/22/g, '30') + ICON_PAUSE.replace(/22/g, '28') + '</button>' : '') +
+                    stationChips(slug) +
                     '</div>';
             }).join('');
             const empty = $('[data-my-teams-empty]');
