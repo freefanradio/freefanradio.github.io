@@ -463,5 +463,45 @@
     "entertainment"
   ],
   "lang": "en-CA",
-  "scope": "/"
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Resume last station",
+      "short_name": "Resume",
+      "description": "Pick up the station you were listening to",
+      "url": "/?resume=1",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcut-play-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "My teams",
+      "short_name": "My teams",
+      "url": "/?from=shortcut",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcut-star-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Find a team",
+      "short_name": "Find a team",
+      "url": "/teams/",
+      "icons": [
+        {
+          "src": "/assets/icons/shortcut-search-96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "id": "/"
 }

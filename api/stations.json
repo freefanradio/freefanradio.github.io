@@ -1,0 +1,21 @@
+---
+layout: null
+sitemap: false
+permalink: /api/stations.json
+---
+{
+  "updated": {{ site.time | date_to_xmlschema | jsonify }},
+  "stations": [
+{%- assign list = site.stations | where_exp: "s", "s.hidden != true" -%}
+{%- for s in list %}
+    {"id": {{ s.station_id | jsonify }}, "name": {{ s.title | jsonify }}, "frequency": {{ s.frequency | jsonify }}, "location": {{ s.location | jsonify }}, "stream": {{ s.stream_url | jsonify }}, "page": {{ s.url | absolute_url | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+  ],
+  "teams": [
+{%- for t in site.data.teams %}
+    {%- assign ids = "" | split: "" -%}
+    {%- for s in t.stations -%}{%- if s.id -%}{%- assign ids = ids | push: s.id -%}{%- endif -%}{%- endfor %}
+    {"slug": {{ t.slug | jsonify }}, "name": {{ t.name | jsonify }}, "league": {{ t.league | jsonify }}, "city": {{ t.city | jsonify }}, "stations": {{ ids | jsonify }}, "page": {{ '/teams/' | append: t.slug | append: '/' | absolute_url | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+  ]
+}

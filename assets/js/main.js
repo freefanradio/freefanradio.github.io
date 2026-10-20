@@ -279,7 +279,7 @@
                     title: this.headline(),
                     artist: t ? s.name : 'Live radio',
                     album: 'FreeFanRadio',
-                    artwork: [{ src: '/assets/logo/ffr.png', sizes: '512x512', type: 'image/png' }]
+                    artwork: [96, 192, 256, 512].map(n => ({ src: '/assets/icons/artwork-' + n + '.png', sizes: n + 'x' + n, type: 'image/png' }))
                 });
                 try { navigator.mediaSession.playbackState = this.status === 'live' || this.status === 'loading' ? 'playing' : 'paused'; } catch (e) { /* old browsers */ }
             }
@@ -323,6 +323,48 @@
             if (!this.isOpen()) return;
             if (history.state && history.state.ffrPlayer) history.back(); // popstate hides it
             else this.hide();
+        }
+    };
+
+    // ---------- Resume screen ----------
+    // Shown when the installed app opens on the home page, or from the
+    // "Resume last station" shortcut (/?resume=1). Phones need one tap before
+    // sound can play, so that tap is the biggest button on screen.
+    const resumeScreen = {
+        el: null,
+        shouldShow() {
+            if (!player.stationId || player.status === 'live') return false;
+            const params = new URLSearchParams(location.search);
+            if (params.get('resume') === '1') return true;
+            const standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+            let shown = false;
+            try { shown = sessionStorage.getItem('ffr_resume_shown') === '1'; } catch (e) { /* ignore */ }
+            return standalone && !shown && location.pathname === '/';
+        },
+        show() {
+            if (!this.el) return;
+            try { sessionStorage.setItem('ffr_resume_shown', '1'); } catch (e) { /* ignore */ }
+            const s = station(player.stationId);
+            const t = team(player.teamSlug);
+            $('[data-resume-title]', this.el).textContent = player.headline();
+            $('[data-resume-sub]', this.el).textContent = (t ? s.name + ' · ' : '') + 'tap to listen';
+            const more = player.queue().filter(x => x.id !== player.stationId).slice(0, 2);
+            $('[data-resume-more]', this.el).innerHTML = more.map(x => {
+                const xs = station(x.id);
+                const xt = team(x.team);
+                return '<button type="button" class="fp-next-item play-station-btn" data-station-id="' + escapeHtml(x.id) + '"' +
+                    (xt ? ' data-team="' + escapeHtml(xt.slug) + '"' : '') + '><span>' + escapeHtml(xt ? xt.name : xs.name) +
+                    '</span><span>' + escapeHtml(xt ? xs.name : 'Recent') + '</span></button>';
+            }).join('');
+            this.el.hidden = false;
+            document.body.classList.add('resume-open');
+            const go = $('[data-resume-go]', this.el);
+            if (go) go.focus();
+        },
+        hide() {
+            if (!this.el || this.el.hidden) return;
+            this.el.hidden = true;
+            document.body.classList.remove('resume-open');
         }
     };
 
@@ -481,6 +523,7 @@
         const playBtn = e.target.closest('.play-station-btn');
         if (playBtn) {
             e.preventDefault();
+            if (resumeScreen.el && !resumeScreen.el.hidden) resumeScreen.hide();
             const id = playBtn.dataset.stationId;
             const slug = playBtn.dataset.team || null;
             const isCurrent = id === player.stationId && (!slug || slug === player.teamSlug);
@@ -494,6 +537,8 @@
         if (e.target.closest('[data-player-prev]')) { player.skip(-1); return; }
         if (e.target.closest('[data-player-next]')) { player.skip(1); return; }
         if (e.target.closest('[data-player-share]')) { share(); return; }
+        if (e.target.closest('[data-resume-go]')) { resumeScreen.hide(); player.resume(); fullPlayer.open(); return; }
+        if (e.target.closest('[data-resume-dismiss]')) { resumeScreen.hide(); return; }
 
         const follow = e.target.closest('[data-follow-team]');
         if (follow) {
@@ -523,6 +568,7 @@
     });
 
     document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && resumeScreen.el && !resumeScreen.el.hidden) { resumeScreen.hide(); return; }
         if (e.key === 'Escape' && fullPlayer.isOpen()) { fullPlayer.close(); return; }
         if (e.code === 'Space' && player.stationId && !e.target.closest('input, textarea, select, button, a, [contenteditable]')) {
             e.preventDefault();
@@ -540,6 +586,7 @@
     // ---------- Start ----------
     function start() {
         fullPlayer.el = $('#fullPlayer');
+        resumeScreen.el = $('#resumeScreen');
         player.init();
         initPage();
 
@@ -552,6 +599,13 @@
             player.teamSlug = team(slug) ? slug : null;
             player.setStatus('paused');
             toast('Tap play to listen to ' + player.headline());
+        }
+
+        if (resumeScreen.shouldShow()) resumeScreen.show();
+        if (params.has('resume') || params.has('from')) {
+            params.delete('resume'); params.delete('from');
+            const qs = params.toString();
+            history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
         }
 
         if ('serviceWorker' in navigator) {

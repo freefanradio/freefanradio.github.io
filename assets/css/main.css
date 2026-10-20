@@ -264,6 +264,26 @@ body.player-open { overflow: hidden; }
 .fp-next-item span:last-child { font-size: 13px; color: var(--text-3); }
 .fp-hint { font-size: 13px; color: var(--text-3); text-align: center; margin: 4px 0 0; }
 
+/* ---------- Resume screen (installed app launch) ---------- */
+.resume-screen {
+    position: fixed; inset: 0; z-index: 110; background: var(--bg);
+    padding: max(20px, env(safe-area-inset-top)) 20px calc(24px + var(--safe-b));
+    display: flex; overflow-y: auto;
+}
+.resume-screen[hidden] { display: none; }
+.resume-inner { width: 100%; max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.resume-main { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 22px; }
+.resume-main .fp-label { text-align: center; }
+.resume-big {
+    border: 0; border-radius: 28px; background: var(--red); color: #fff; padding: 32px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center;
+}
+.resume-big:hover { background: var(--red-hover); }
+.resume-play { width: 112px; height: 112px; border-radius: 50%; background: #fff; color: var(--red); display: flex; align-items: center; justify-content: center; }
+.resume-title { font-family: var(--display); font-weight: 700; font-size: clamp(36px, 11vw, 48px); line-height: 0.95; text-transform: uppercase; overflow-wrap: anywhere; }
+.resume-sub { font-size: 18px; opacity: 0.92; }
+body.resume-open { overflow: hidden; }
+
 /* ---------- Bottom tab bar (mobile) ---------- */
 .tab-bar {
     position: fixed; z-index: 55; left: 0; right: 0; bottom: 0;
