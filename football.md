@@ -57,7 +57,7 @@ permalink: /football/
                 </div>
             </div>
             <div class="station-actions">
-                <button class="play-station-btn" data-station-id="{{ roughrider_station.id }}" data-name="Roughrider Radio Network">
+                <button class="play-station-btn" data-station-id="{{ roughrider_station.station_id }}" data-name="Roughrider Radio Network">
                     <i class="fas fa-play"></i>
                     Play Live
                 </button>

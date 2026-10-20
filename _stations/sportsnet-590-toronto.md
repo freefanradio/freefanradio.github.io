@@ -1,7 +1,7 @@
 ---
 hidden: false
 layout: station
-id: "sn590"
+station_id: "sn590"
 title: "Sportsnet 590 The FAN Toronto"
 description: "Toronto's sports radio home for Maple Leafs hockey, Blue Jays baseball and NHL coverage"
 frequency: "590 AM"

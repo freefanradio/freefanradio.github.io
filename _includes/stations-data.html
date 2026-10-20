@@ -6,8 +6,8 @@ hard-code a stream URL.
 <script>
 window.FFR_STATIONS = {
 {%- for s in site.stations %}
-  {{ s.id | jsonify }}: {
-    "id": {{ s.id | jsonify }},
+  {{ s.station_id | jsonify }}: {
+    "id": {{ s.station_id | jsonify }},
     "name": {{ s.title | jsonify }},
     "url": {{ s.stream_url | jsonify }},
     "frequency": {{ s.frequency | jsonify }},
