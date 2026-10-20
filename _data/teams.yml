@@ -1,7 +1,8 @@
 # Single source of truth for team pages (/teams/<slug>/).
 # stations: use `id:` for a station in _stations/ (gets a Play button),
 # or `name:` for a station we don't stream yet. `lang: fr` marks French.
-# abbr: scoreboard code (ESPN abbreviation for NHL/NFL/NBA/MLB); tsdb: TheSportsDB team id (CFL scores).
+# abbr: scoreboard code (ESPN abbreviation for NHL/NFL/NBA/MLB/MLS); espn_id: ESPN team id when the
+# schedule needs it (MLS); tsdb: TheSportsDB team id (CFL scores).
 # Add a team = add an entry here. Update `checked:` when you re-verify.
 
 - slug: toronto-maple-leafs
@@ -206,7 +207,7 @@
   aka: [Lions, Leos]
   checked: 2026-10
   stations:
-    - id: cknw980
+    - id: cknw730
     - name: Sher-E-Punjab Radio AM 600 (Punjabi)
 
 - slug: buffalo-bills
@@ -269,3 +270,40 @@
     - id: tsn1050
     - id: sn590
   note: Raptors radio games are split between TSN 1050 and Sportsnet 590, so check which station has tonight's game.
+
+- slug: cf-montreal
+  name: CF Montréal
+  league: MLS
+  abbr: MTL
+  espn_id: 9720
+  city: Montreal
+  aka: [CF Montreal, Club de Foot Montréal, Impact, CFM, Bleu-blanc-noir]
+  checked: 2026-10
+  stations:
+    - id: tsn690
+  note: TSN 690 is CF Montréal's English radio home. French radio rights have changed over the years; check cfmontreal.com for the current French broadcaster.
+
+- slug: toronto-fc
+  name: Toronto FC
+  league: MLS
+  abbr: TOR
+  espn_id: 7318
+  city: Toronto
+  aka: [TFC, Reds]
+  checked: 2026-10
+  stations:
+    - id: tsn1050
+  note: TSN 1050 has carried Toronto FC matches, but not every match is on radio. Check torontofc.ca on match day.
+
+- slug: vancouver-whitecaps
+  name: Vancouver Whitecaps
+  league: MLS
+  abbr: VAN
+  espn_id: 9727
+  city: Vancouver
+  aka: [Whitecaps, Caps, Whitecaps FC]
+  checked: 2026-10
+  stations:
+    - id: cknw730
+    - name: Connect FM 91.5 (Punjabi, home matches)
+  note: Whitecaps home matches are also called in Punjabi on Connect FM 91.5, a first in MLS.

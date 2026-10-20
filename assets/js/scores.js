@@ -1,7 +1,7 @@
 /* FreeFanRadio scores.
  *
  * Sources (fetched from the browser, no server needed):
- *   NHL, NFL, NBA, MLB  ESPN public scoreboard + team schedule (unofficial, undocumented)
+ *   NHL, NFL, NBA, MLB, MLS  ESPN public scoreboard + team schedule (unofficial, undocumented)
  *   CFL                 TheSportsDB free API (key "123"), because ESPN's CFL feed is stale
  *
  * Scores are a bonus: every failure is silent and the score areas stay hidden.
@@ -19,7 +19,7 @@
     'use strict';
 
     const ESPN = 'https://site.api.espn.com/apis/site/v2/sports/';
-    const ESPN_PATH = { NHL: 'hockey/nhl', NFL: 'football/nfl', NBA: 'basketball/nba', MLB: 'baseball/mlb' };
+    const ESPN_PATH = { NHL: 'hockey/nhl', NFL: 'football/nfl', NBA: 'basketball/nba', MLB: 'baseball/mlb', MLS: 'soccer/usa.1' };
     const TSDB = 'https://www.thesportsdb.com/api/v1/json/123/';
     const TSDB_CFL = '4405';
     const LIVE_TTL = 60 * 1000;
@@ -161,7 +161,7 @@
         }
         const path = ESPN_PATH[t.league];
         if (!path) return { next: null, last: null };
-        const j = await getJSON(ESPN + path + '/teams/' + t.abbr.toLowerCase() + '/schedule', SCHEDULE_TTL);
+        const j = await getJSON(ESPN + path + '/teams/' + (t.espn_id || t.abbr.toLowerCase()) + '/schedule', SCHEDULE_TTL);
         const games = ((j && j.events) || []).map(ev => fromEspn(ev, t)).filter(Boolean).sort((a, b) => a.start - b.start);
         return {
             next: games.find(g => g.state !== 'post' && g.start.getTime() > now - 6 * 3600 * 1000) || null,

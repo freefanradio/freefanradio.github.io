@@ -27,6 +27,7 @@ window.FFR_TEAMS = {
     "league": {{ t.league | jsonify }},
     "abbr": {{ t.abbr | jsonify }},
     "tsdb": {{ t.tsdb | jsonify }},
+    "espn_id": {{ t.espn_id | jsonify }},
     "stations": {{ ids | jsonify }},
     "fr": {{ fr | jsonify }},
     "page": {{ '/teams/' | append: t.slug | append: '/' | relative_url | jsonify }}
