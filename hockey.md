@@ -5,11 +5,6 @@ description: "Stream Canadian hockey radio stations covering NHL, junior hockey,
 permalink: /hockey/
 ---
 
-<div class="page-intro" style="text-align: center; margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px;">
-    <h2 style="font-size: 2rem; margin-bottom: 1rem;">🏒 Canadian Hockey Radio</h2>
-    <p style="font-size: 1.1rem; opacity: 0.9;">The ultimate destination for NHL coverage, junior hockey, and Canadian hockey culture</p>
-</div>
-
 ## NHL Team Radio
 
 Can't find your team? [Search all teams](/teams/).
@@ -18,7 +13,7 @@ Can't find your team? [Search all teams](/teams/).
 
 ## Featured Hockey Stations
 
-<div class="stations-grid" style="margin: 2rem 0;">
+<div class="stations-grid">
     {% include station-card.html station_id="sportsnet-590-toronto" %}
 
     {% include station-card.html station_id="tsn-690-montreal" %}

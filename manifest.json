@@ -1,13 +1,13 @@
 {
-  "name": "FreeFanRadio.ca - Canadian Sports Radio",
+  "name": "FreeFanRadio.ca - Sports radio for Canadian fans",
   "short_name": "FreeFanRadio",
-  "description": "Stream live Canadian sports radio stations - Hockey, Football, Basketball and more",
+  "description": "Listen live to your team's radio broadcast from anywhere in Canada.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#667eea",
-  "theme_color": "#667eea",
+  "background_color": "#111214",
+  "theme_color": "#111214",
   "orientation": "any",
-   "icons": [
+  "icons": [
     {
       "src": "/assets/logo/windows11/SmallTile.scale-100.png",
       "sizes": "71x71"
@@ -457,7 +457,11 @@
       "sizes": "1024x1024"
     }
   ],
-  "categories": ["sports", "music", "entertainment"],
+  "categories": [
+    "sports",
+    "music",
+    "entertainment"
+  ],
   "lang": "en-CA",
   "scope": "/"
 }

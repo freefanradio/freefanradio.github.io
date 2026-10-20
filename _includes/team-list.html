@@ -1,8 +1,20 @@
-{%- comment -%} Pass league="NHL" to list one league's teams, linking to their team pages. {%- endcomment -%}
+{%- comment -%} Pass league="NHL" to list one league's teams: a link to each team page plus a one-tap Play button. {%- endcomment -%}
 {%- assign teams = site.data.teams | where: "league", include.league -%}
-<ul class="team-list">
+<ul class="row-list">
 {%- for t in teams %}
-    <li data-search="{{ t.name | downcase }} {{ t.city | downcase }} {{ t.aka | join: ' ' | downcase }}"><a href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}">{{ t.name }}</a>
-        <span class="team-stations">{% for s in t.stations %}{% if s.id %}{% assign st = site.stations | where: "station_id", s.id | first %}{{ st.title }}{% else %}{{ s.name }}{% endif %}{% unless forloop.last %} · {% endunless %}{% endfor %}</span></li>
+    {%- assign first_id = nil -%}
+    {%- for s in t.stations -%}{%- if s.id and first_id == nil -%}{%- assign first_id = s.id -%}{%- endif -%}{%- endfor %}
+    <li data-search="{{ t.name | downcase }} {{ t.city | downcase }} {{ t.aka | join: ' ' | downcase }}">
+        <a class="row-main" href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}">
+            <span class="row-title">{{ t.name }}</span>
+            <span class="row-sub">{% for s in t.stations %}{% if s.id %}{% assign st = site.stations | where: "station_id", s.id | first %}{{ st.title }}{% else %}{{ s.name }}{% endif %}{% unless forloop.last %} · {% endunless %}{% endfor %}</span>
+        </a>
+        {%- if first_id %}
+        <button type="button" class="play-circle play-station-btn" data-station-id="{{ first_id }}" data-team="{{ t.slug }}" aria-label="Play {{ t.name }}">
+            <svg class="i-play" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+            <svg class="i-pause" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        </button>
+        {%- endif %}
+    </li>
 {%- endfor %}
 </ul>

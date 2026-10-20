@@ -1,7 +1,7 @@
 {% comment %}
-Single source of truth for stations: generated from the _stations collection.
-The player looks up stream URLs here by station id; nothing else should
-hard-code a stream URL.
+Single source of truth for the player, generated at build time:
+- FFR_STATIONS from the _stations collection (stream URLs live only there)
+- FFR_TEAMS from _data/teams.yml (stations = ids of stations we stream)
 {% endcomment %}
 <script>
 window.FFR_STATIONS = {
@@ -12,9 +12,20 @@ window.FFR_STATIONS = {
     "url": {{ s.stream_url | jsonify }},
     "frequency": {{ s.frequency | jsonify }},
     "location": {{ s.location | jsonify }},
-    "genre": {{ s.genre | jsonify }},
-    "description": {{ s.description | jsonify }},
     "page": {{ s.url | relative_url | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+};
+window.FFR_TEAMS = {
+{%- for t in site.data.teams %}
+  {%- assign ids = "" | split: "" -%}
+  {%- for s in t.stations -%}{%- if s.id -%}{%- assign ids = ids | push: s.id -%}{%- endif -%}{%- endfor %}
+  {{ t.slug | jsonify }}: {
+    "slug": {{ t.slug | jsonify }},
+    "name": {{ t.name | jsonify }},
+    "league": {{ t.league | jsonify }},
+    "stations": {{ ids | jsonify }},
+    "page": {{ '/teams/' | append: t.slug | append: '/' | relative_url | jsonify }}
   }{% unless forloop.last %},{% endunless %}
 {%- endfor %}
 };

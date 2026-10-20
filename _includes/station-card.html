@@ -1,34 +1,26 @@
 {% comment %}
-Usage (from a page): include station-card.html with station_id set to a
-station's file name (e.g. "tsn-690-montreal"), or with station set to a
-station object. Don't write example include tags in this comment: Liquid
-still parses tags inside comment blocks, and that breaks the build.
+Station card with a big Play button. Pass station_id (file name, e.g. "tsn-690-montreal")
+or station (a station object). Optional: title (override), lang ("fr"), team (team slug,
+shown as the player headline). Don't put example include tags in this comment: Liquid
+still parses tags inside comment blocks.
 {% endcomment %}
-
-{% if include.station_id %}
-  {% assign station = site.stations | where: "slug", include.station_id | first %}
-{% elsif include.station %}
-  {% assign station = include.station %}
-{% endif %}
-
-{% if station %}
+{%- if include.station_id -%}
+  {%- assign station = site.stations | where: "slug", include.station_id | first -%}
+{%- elsif include.station -%}
+  {%- assign station = include.station -%}
+{%- endif -%}
+{%- if station -%}
 <div class="station-card">
-    <div class="station-header">
-        <div class="station-info">
-            <h3>{% if include.title %}{{ include.title }}{% else %}{{ station.title }}{% endif %}</h3>
-            <p>{{ station.description }}</p>
-            <div class="station-meta">
-                <span class="frequency">{{ station.frequency }}</span>
-                <span class="location">{{ station.location }}</span>
-                <span class="genre">{{ station.genre }}</span>
-            </div>
-        </div>
-        <div class="station-actions">
-            <button class="play-station-btn" data-station-id="{{ station.station_id }}" data-name="{% if include.title %}{{ include.title }}{% else %}{{ station.title }}{% endif %}">
-                <i class="fas fa-play"></i>
-                Play Live
-            </button>
-        </div>
+    <div class="station-card-top">
+        <h3 class="station-card-name"><a href="{{ station.url | relative_url }}">{% if include.title %}{{ include.title }}{% else %}{{ station.title }}{% endif %}</a></h3>
+        <span class="badge badge-muted">{% if include.lang == 'fr' %}FR{% else %}{{ station.frequency }}{% endif %}</span>
     </div>
+    {%- unless include.compact %}
+    <p class="station-card-desc">{{ station.description }}</p>
+    {%- endunless %}
+    <button type="button" class="btn btn-primary btn-lg btn-block play-station-btn" data-station-id="{{ station.station_id }}"{% if include.team %} data-team="{{ include.team }}"{% endif %}>
+        <svg class="i-play" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+        <span data-label>Play live</span>
+    </button>
 </div>
-{% endif %}
+{%- endif -%}

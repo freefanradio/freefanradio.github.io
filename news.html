@@ -1,32 +1,14 @@
 ---
 layout: page
 title: "News & Talk Radio Stations"
-description: "Complete listing of Canadian news and talk radio stations available for streaming on FreeFanRadio.ca"
+description: "Canadian news and talk radio stations available for streaming on FreeFanRadio.ca"
 permalink: /news/
 ---
 
 <div class="stations-grid">
     {% assign news_stations = site.stations | where: "category", "news" %}
     {% for station in news_stations %}
-    <div class="station-card">
-        <div class="station-header">
-            <div class="station-info">
-                <h3><a href="{{ station.url }}">{{ station.title }}</a></h3>
-                <p>{{ station.description }}</p>
-                <div class="station-meta">
-                    <span class="frequency">{{ station.frequency }}</span>
-                    <span class="location">{{ station.location }}</span>
-                    <span class="genre">{{ station.genre }}</span>
-                </div>
-            </div>
-            <div class="station-actions">
-                <button class="play-station-btn" data-station-id="{{ station.station_id }}" data-name="{{ station.title }}">
-                    <i class="fas fa-play"></i>
-                    Play Live
-                </button>
-            </div>
-        </div>
-    </div>
+    {% include station-card.html station=station %}
     {% endfor %}
 </div>
 
@@ -36,7 +18,7 @@ Canadian news and talk radio provides comprehensive coverage of:
 
 - **Provincial Politics** - Complete coverage of all provincial governments and politics
 - **Federal Politics** - Coverage of Parliament Hill and federal government
-- **Municipal Affairs** - Local government and city council coverage  
+- **Municipal Affairs** - Local government and city council coverage
 - **Economic News** - Business, finance, and economic analysis
 - **Current Events** - Breaking news and in-depth analysis
 - **Social Issues** - Discussion of important social and cultural topics

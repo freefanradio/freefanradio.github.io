@@ -1,8 +1,6 @@
 ---
 layout: default
 ---
-
-<!-- Structured Data for Radio Station -->
 <script type="application/ld+json">
 [
 {
@@ -14,8 +12,8 @@ layout: default
     "broadcastFrequency": {{ page.frequency | jsonify }},
     "address": {
         "@type": "PostalAddress",
-        "addressLocality": "{{ page.location | split: ', ' | first }}",
-        "addressRegion": "{{ page.location | split: ', ' | last }}",
+        "addressLocality": {{ page.location | split: ', ' | first | jsonify }},
+        "addressRegion": {{ page.location | split: ', ' | last | jsonify }},
         "addressCountry": "CA"
     },
     {% if page.phone %}"telephone": {{ page.phone | jsonify }},{% endif %}
@@ -26,102 +24,59 @@ layout: default
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-        {
-            "@type": "ListItem",
-            "position": 1,
-            "name": "Home",
-            "item": "{{ site.url }}"
-        },
-        {
-            "@type": "ListItem",
-            "position": 2,
-            "name": "Sports Radio Stations",
-            "item": "{{ site.url }}/sports/"
-        },
-        {
-            "@type": "ListItem",
-            "position": 3,
-            "name": "{{ page.title }}",
-            "item": "{{ site.url }}{{ page.url }}"
-        }
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site.url }}/"},
+        {"@type": "ListItem", "position": 2, "name": "Stations", "item": "{{ site.url }}/sports/"},
+        {"@type": "ListItem", "position": 3, "name": {{ page.title | jsonify }}, "item": "{{ site.url }}{{ page.url }}"}
     ]
 }
 ]
 </script>
 
 <article class="station-page">
-    <header class="station-header">
-        <div class="station-info">
-            <h1>{{ page.title }}</h1>
-            <p class="station-description">{{ page.description }}</p>
-            <div class="station-meta">
-                <span class="frequency">{{ page.frequency }}</span>
-                <span class="location">{{ page.location }}</span>
-                <span class="genre">{{ page.genre }}</span>
-            </div>
-        </div>
-        <div class="station-actions">
-            <button class="play-station-btn" data-station-id="{{ page.station_id }}" data-name="{{ page.title }}">
-                <i class="fas fa-play"></i>
-                Play Live
-            </button>
-        </div>
+    <header class="page-header">
+        <p class="crumbs"><a href="{{ '/sports/' | relative_url }}">Stations</a> › {{ page.location }}</p>
+        <span class="eyebrow">{{ page.frequency }} · {{ page.location }}</span>
+        <h1>{{ page.title }}</h1>
+        <p class="page-description">{{ page.description }}</p>
+        <button type="button" class="btn btn-primary btn-lg btn-block play-station-btn" data-station-id="{{ page.station_id }}">
+            <svg class="i-play" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+            <span data-label>Play live</span>
+        </button>
     </header>
-    
-    <div class="station-content">
-        <!-- Stream Disclaimer -->
-        <div style="background: #f7fafc; border-left: 4px solid #4299e1; padding: 1rem; margin: 2rem 0; border-radius: 0 8px 8px 0;">
-            <p style="margin: 0; font-size: 0.9rem; color: #2d3748;">
-                <i class="fas fa-info-circle" style="color: #4299e1; margin-right: 0.5rem;"></i>
-                <strong>Official Stream:</strong> This stream is sourced directly from {{ page.title }}'s official website. 
-                All content is owned by {{ page.title }} and their respective content providers.
-            </p>
-        </div>
-        
-        {{ content }}
 
-        {%- assign station_teams = "" | split: "" -%}
-        {%- for t in site.data.teams -%}{%- for s in t.stations -%}{%- if s.id == page.station_id -%}{%- assign station_teams = station_teams | push: t -%}{%- endif -%}{%- endfor -%}{%- endfor -%}
-        {% if station_teams.size > 0 %}
-        <section class="station-teams">
-            <h2>Teams on {{ page.title }}</h2>
-            <ul class="team-list">
-                {%- for t in station_teams %}
-                <li><a href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}">{{ t.name }}</a> <span class="team-stations">{{ t.league }}</span></li>
-                {%- endfor %}
-            </ul>
-        </section>
-        {% endif %}
-        
-        {% if page.schedule %}
-        <section class="schedule-section">
-            <h2>Programming Schedule</h2>
-            <div class="schedule-grid">
-                {% for slot in page.schedule %}
-                <div class="schedule-item">
-                    <span class="time">{{ slot.time }}</span>
-                    <span class="show">{{ slot.show }}</span>
-                </div>
-                {% endfor %}
-            </div>
-        </section>
-        {% endif %}
-        
-        {% if page.contact %}
-        <section class="contact-section">
-            <h2>Contact Information</h2>
-            <div class="contact-info">
-                {% if page.contact.phone %}
-                <p><i class="fas fa-phone"></i> {{ page.contact.phone }}</p>
-                {% endif %}
-                {% if page.contact.email %}
-                <p><i class="fas fa-envelope"></i> {{ page.contact.email }}</p>
-                {% endif %}
-                {% if page.contact.website %}
-                <p><i class="fas fa-globe"></i> <a href="{{ page.contact.website }}" target="_blank">{{ page.contact.website }}</a></p>
-                {% endif %}
-            </div>
-        </section>
-        {% endif %}
+    {%- assign station_teams = "" | split: "" -%}
+    {%- for t in site.data.teams -%}{%- for s in t.stations -%}{%- if s.id == page.station_id -%}{%- assign station_teams = station_teams | push: t -%}{%- endif -%}{%- endfor -%}{%- endfor -%}
+    {% if station_teams.size > 0 %}
+    <section class="section">
+        <h2 class="section-title">Teams on {{ page.title }}</h2>
+        <ul class="row-list">
+            {%- for t in station_teams %}
+            <li>
+                <a class="row-main" href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}"><span class="row-title">{{ t.name }}</span><span class="row-sub">{{ t.league }}</span></a>
+                <button type="button" class="play-circle play-station-btn" data-station-id="{{ page.station_id }}" data-team="{{ t.slug }}" aria-label="Play {{ t.name }} on {{ page.title }}">
+                    <svg class="i-play" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+                    <svg class="i-pause" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                </button>
+            </li>
+            {%- endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    <div class="section page-body">
+        {{ content }}
     </div>
+
+    {% if page.schedule %}
+    <section class="section">
+        <h2 class="section-title">Programming</h2>
+        <div class="schedule-grid">
+            {% for slot in page.schedule %}
+            <div class="schedule-item"><span class="time">{{ slot.time }}</span><span class="show">{{ slot.show }}</span></div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <p class="note section">This stream comes from {{ page.title }}'s official website{% if page.website %} (<a href="{{ page.website }}" rel="noopener" target="_blank">visit station site</a>){% endif %}. All content belongs to the station and its content providers.</p>
 </article>

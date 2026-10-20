@@ -2,44 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Google AdSense Account Verification -->
-    <meta name="google-adsense-account" content="ca-pub-6728538010774960">
-    
-    <!-- SEO and Social Media -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="google-adsense-account" content="{{ site.google_adsense_id }}">
     {% seo %}
-    
-    
-    
-    <!-- Additional Meta Tags -->
     {% if page.noindex %}<meta name="robots" content="noindex, nofollow">{% else %}<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">{% endif %}
-    
-    <!-- Favicon -->
+
     <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}">
-    
-    <!-- PWA Manifest -->
     <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
-    <meta name="theme-color" content="#667eea">
+    <meta name="theme-color" content="#111214">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="{{ site.title }}">
-    
-    <!-- CSS -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="FreeFanRadio">
+    <link rel="apple-touch-icon" href="{{ '/assets/logo/ffr.png' | relative_url }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&family=Inter:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
-    
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Google AdSense Auto Ads -->
+
     {% if site.google_adsense_id %}
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.google_adsense_id }}" crossorigin="anonymous"></script>
     {% endif %}
-    
-    <!-- Google Analytics -->
     {% if site.google_analytics %}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics }}"></script>
     <script>
@@ -49,138 +32,125 @@
         gtag('config', '{{ site.google_analytics }}');
     </script>
     {% endif %}
-    
-    <!-- Structured Data (JSON-LD) -->
+
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "name": "{{ site.title }}",
-        "description": "{{ site.description }}",
+        "name": {{ site.title | jsonify }},
         "url": "{{ site.url }}",
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": "{{ site.url }}/search?q={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
-        },
         "publisher": {
             "@type": "Organization",
-            "name": "{{ site.title }}",
+            "name": {{ site.title | jsonify }},
             "url": "{{ site.url }}",
-            "logo": {
-                "@type": "ImageObject",
-                "url": "{{ site.url }}/assets/logo/ffr.png"
-            }
+            "logo": {"@type": "ImageObject", "url": "{{ site.url }}/assets/logo/ffr.png"}
         }
     }
     </script>
 </head>
 <body>
     <header class="site-header">
-        <nav class="navbar">
-            <div class="nav-container">
-                <a href="{{ '/' | relative_url }}" class="nav-brand">
-                    <img src="{{ '/assets/logo/ffr.svg' | relative_url }}" alt="{{ site.title }} Logo" class="nav-logo">
-                    {{ site.title }}
-                </a>
-                
-                <button class="nav-toggle" aria-label="Toggle navigation">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                
-                <ul class="nav-menu">
-                    {% for item in site.navigation %}
-                    <li class="nav-item">
-                        <a href="{{ item.url | relative_url }}" class="nav-link {% if page.url == item.url %}active{% endif %}">
-                            {{ item.title }}
-                        </a>
-                    </li>
+        <div class="header-inner">
+            <a href="{{ '/' | relative_url }}" class="brand" aria-label="FreeFanRadio home">
+                <span class="brand-mark">
+                    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2l1.6 3.2 1.9-.9-.6 4.2 2.6-2.4.6 1.6 3-.6-1 3.2 1.4.8-4.6 3.8.6 1.8-4.5-.8V20h-1v-5.1l-4.5.8.6-1.8-4.6-3.8 1.4-.8-1-3.2 3 .6.6-1.6 2.6 2.4-.6-4.2 1.9.9z"/></svg>
+                </span>
+                <span class="brand-name">FreeFanRadio</span>
+            </a>
+            <nav aria-label="Main">
+                <ul class="header-nav">
+                    {% for item in site.navigation limit: 5 %}
+                    <li><a href="{{ item.url | relative_url }}" data-nav="{{ item.url }}"{% if page.url == item.url %} class="active"{% endif %}>{{ item.title }}</a></li>
                     {% endfor %}
                 </ul>
-            </div>
-        </nav>
+            </nav>
+            <a href="{{ '/teams/' | relative_url }}" class="icon-btn header-search" aria-label="Find your team">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            </a>
+        </div>
     </header>
 
-    <main class="main-content">
+    <main class="main-content" id="main">
         {{ content }}
     </main>
 
-    <!-- Audio Player -->
-    <div id="audioPlayer" class="audio-player">
-        <div class="player-container">
-            <div class="player-info">
-                <span id="stationName">Select a station</span>
-                <span id="nowPlaying">Choose from the stations above</span>
-                <button id="shareBtn" class="share-btn" onclick="shareCurrentStation()" title="Share current station" disabled>
-                    <i class="fas fa-share"></i>
+    <footer class="site-footer">
+        <ul class="footer-links">
+            {% for item in site.navigation %}
+            <li><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
+            {% endfor %}
+        </ul>
+        <p>All streams are publicly available and belong to their respective owners. <a href="{{ '/about/' | relative_url }}">Legal disclaimer</a></p>
+        <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}</p>
+    </footer>
+
+    <!-- Mini player: sits above the tab bar; the body reserves its height so nothing is covered -->
+    <div class="mini-player" id="miniPlayer" role="region" aria-label="Player">
+        <button type="button" class="mini-open" data-player-open aria-label="Open player">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span class="mini-text">
+                <span class="mini-title" data-player-title>Select a station</span>
+                <span class="mini-status" data-player-status></span>
+            </span>
+        </button>
+        <button type="button" class="toggle-btn" data-player-toggle aria-label="Play or pause">
+            <svg class="i-play" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+            <svg class="i-pause" width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+        </button>
+    </div>
+
+    <!-- Full-screen "drive mode" player -->
+    <div class="full-player" id="fullPlayer" role="dialog" aria-modal="true" aria-label="Now playing">
+        <div class="fp-inner">
+            <div class="fp-top">
+                <button type="button" class="icon-btn" data-player-close aria-label="Close player">
+                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9l7 7 7-7"/></svg>
+                </button>
+                <span class="fp-label">NOW PLAYING</span>
+                <button type="button" class="icon-btn" data-player-share aria-label="Share this station">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 002 2h10a2 2 0 002-2v-6"/></svg>
                 </button>
             </div>
-            <!-- Player Ad - Auto Ads will place ads here -->
-            <div class="player-ad-container">
-                <div id="player-ad-space">
-                    <!-- Auto Ads will automatically place ads here when enabled -->
-                </div>
+            <div class="fp-now">
+                <span class="fp-badge"><span class="live-dot" aria-hidden="true"></span><span data-player-badge>Paused</span></span>
+                <h2 class="fp-title" data-player-headline>Station</h2>
+                <p class="fp-station" data-player-sub></p>
             </div>
-            <div class="player-controls">
-                <button id="playPauseBtn" class="play-btn" disabled>
-                    <i class="fas fa-play"></i>
+            <div class="fp-controls">
+                <button type="button" class="fp-skip" data-player-prev aria-label="Previous station">
+                    <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h2v14H6zM20 5v14L9 12z"/></svg>
                 </button>
-                <div class="volume-control">
-                    <i class="fas fa-volume-down"></i>
-                    <input type="range" id="volumeSlider" min="0" max="100" value="50">
-                    <i class="fas fa-volume-up"></i>
+                <button type="button" class="toggle-btn" data-player-toggle aria-label="Play or pause">
+                    <svg class="i-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
+                    <svg class="i-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                </button>
+                <button type="button" class="fp-skip" data-player-next aria-label="Next station">
+                    <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg>
+                </button>
+            </div>
+            <div>
+                <div class="fp-next" data-player-next-wrap hidden>
+                    <span class="eyebrow">Up next</span>
+                    <div class="fp-next-list" data-player-next-list></div>
                 </div>
+                <p class="fp-hint">Play and pause also work from your lock screen, headphones and car display.</p>
             </div>
         </div>
     </div>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>{{ site.title }}</h3>
-                    <p>{{ site.description }}</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        {% for item in site.navigation %}
-                        <li><a href="{{ item.url | relative_url }}">{{ item.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Follow Us</h4>
-                    <div class="social-links">
-                        {% if site.social.twitter %}
-                        <a href="https://twitter.com/{{ site.social.twitter }}" target="_blank">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        {% endif %}
-                        {% if site.social.facebook %}
-                        <a href="https://facebook.com/{{ site.social.facebook }}" target="_blank">
-                            <i class="fab fa-facebook"></i>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
-                <p style="font-size: 0.9rem; color: #a0aec0; margin-top: 0.5rem;">
-                    Disclaimer: All streams are publicly available and belong to their respective owners. 
-                    <a href="{{ '/about/' | relative_url }}" style="color: #4299e1;">View full legal disclaimer</a>
-                </p>
-            </div>
-        </div>
-    </footer>
+    <!-- Bottom tab bar (phones) -->
+    <nav class="tab-bar" aria-label="Quick navigation">
+        <a href="{{ '/' | relative_url }}" data-nav="/"{% if page.url == '/' %} class="active"{% endif %}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z"/></svg>Home
+        </a>
+        <a href="{{ '/teams/' | relative_url }}" data-nav="/teams/"{% if page.url contains '/teams/' %} class="active"{% endif %}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5M16 4.8a3.5 3.5 0 010 6.4M18.5 14.8c1.5.9 2.6 2.6 3 5.2"/></svg>Teams
+        </a>
+        <a href="{{ '/sports/' | relative_url }}" data-nav="/sports/"{% if page.url == '/sports/' or page.url contains '/stations/' %} class="active"{% endif %}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8l10-5"/><circle cx="16" cy="14" r="2.5"/><path d="M6 12h4M6 16h4"/></svg>Stations
+        </a>
+    </nav>
 
-    <!-- JavaScript -->
     {% include stations-data.html %}
     <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
 </body>

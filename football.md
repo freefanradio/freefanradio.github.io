@@ -5,11 +5,6 @@ description: "Canadian football radio covering CFL, NFL, and university football
 permalink: /football/
 ---
 
-<div class="page-intro" style="text-align: center; margin-bottom: 3rem; padding: 2rem; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border-radius: 12px;">
-    <h2 style="font-size: 2rem; margin-bottom: 1rem;">🏈 Canadian Football Radio</h2>
-    <p style="font-size: 1.1rem; opacity: 0.9;">Complete coverage of CFL, NFL, and university football from coast to coast</p>
-</div>
-
 ## CFL Team Radio
 
 {% include team-list.html league="CFL" %}
@@ -22,31 +17,10 @@ permalink: /football/
 
 ## Featured Football Stations
 
-<div class="stations-grid" style="margin: 2rem 0;">
+<div class="stations-grid">
     {% include station-card.html station_id="tsn-1050-toronto" %}
 
-    {% assign roughrider_station = site.stations | where: "slug", "ckrm-620-regina" | first %}
-    {% if roughrider_station %}
-    <div class="station-card">
-        <div class="station-header">
-            <div class="station-info">
-                <h3>Roughrider Radio Network</h3>
-                <p>{{ roughrider_station.description }}</p>
-                <div class="station-meta">
-                    <span class="frequency">{{ roughrider_station.frequency }}</span>
-                    <span class="location">Saskatchewan</span>
-                    <span class="genre">CFL</span>
-                </div>
-            </div>
-            <div class="station-actions">
-                <button class="play-station-btn" data-station-id="{{ roughrider_station.station_id }}" data-name="Roughrider Radio Network">
-                    <i class="fas fa-play"></i>
-                    Play Live
-                </button>
-            </div>
-        </div>
-    </div>
-    {% endif %}
+    {% include station-card.html station_id="ckrm-620-regina" title="Roughrider Radio Network" %}
 </div>
 
 ## CFL Season Schedule
