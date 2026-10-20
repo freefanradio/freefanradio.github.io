@@ -115,6 +115,7 @@
                 <span class="fp-badge"><span class="live-dot" aria-hidden="true"></span><span data-player-badge>Paused</span></span>
                 <h2 class="fp-title" data-player-headline>Station</h2>
                 <p class="fp-station" data-player-sub></p>
+                <div class="fp-score" data-player-score hidden></div>
             </div>
             <div class="fp-controls">
                 <button type="button" class="fp-skip" data-player-prev aria-label="Previous station">
@@ -173,5 +174,6 @@
 
     {% include stations-data.html %}
     <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/scores.js' | relative_url }}"></script>
 </body>
 </html>

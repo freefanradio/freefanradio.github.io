@@ -205,6 +205,33 @@ code { background: var(--surface-2); padding: 2px 6px; border-radius: 4px; }
 .schedule-item .time { color: var(--text-3); font-size: 14px; }
 .schedule-item .show { font-weight: 600; text-align: right; }
 
+/* ---------- Scores ---------- */
+[data-tonight]:not([hidden]) + .section-first { margin-top: 28px; }
+.small-title { font-size: 20px; margin-top: 20px; }
+.game-card { background: var(--surface); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.game-card.is-live { box-shadow: inset 0 0 0 2px var(--red); }
+.game-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.game-badge { display: inline-flex; align-items: center; gap: 6px; min-height: 26px; padding: 0 10px; border-radius: 13px; background: var(--surface-3); font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.is-live .game-badge, .game-badge.is-live { background: var(--red); }
+.is-live .game-badge::before, .game-badge.is-live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fff; }
+.game-body { display: flex; align-items: center; gap: 14px; }
+.game-lines { text-decoration: none; color: inherit; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.game-line { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.1; }
+.game-line .score { font-size: 34px; }
+.game-line.dim { color: var(--text-3); }
+.game-sub { font-size: 14px; color: var(--text-2); }
+.game-card .play-circle { width: 72px; height: 72px; }
+.matchup { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center; text-align: center; }
+.matchup-team { display: flex; flex-direction: column; gap: 2px; }
+.matchup-abbr { font-family: var(--display); font-weight: 700; font-size: 30px; line-height: 1; }
+.matchup-score { font-family: var(--display); font-weight: 700; font-size: 48px; line-height: 1; }
+.matchup-mid { display: flex; flex-direction: column; gap: 2px; }
+.matchup-time { font-family: var(--display); font-weight: 700; font-size: 26px; line-height: 1.1; }
+.matchup .dim { color: var(--text-3); }
+.fp-score { width: 100%; max-width: 420px; margin-top: 6px; background: var(--surface); border-radius: 18px; padding: 14px 18px; }
+.fp-score[hidden] { display: none; }
+.fp-score .matchup-score { font-size: 56px; }
+
 /* ---------- Mini player ---------- */
 .mini-player {
     position: fixed; z-index: 60; left: 8px; right: 8px;

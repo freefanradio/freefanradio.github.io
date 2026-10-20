@@ -38,6 +38,8 @@ layout: default
         </button>
     </header>
 
+    <section class="section" data-team-games="{{ team.slug }}" hidden></section>
+
     {%- assign playable = '' | split: '' -%}
     {%- assign other = '' | split: '' -%}
     {%- for s in team.stations -%}

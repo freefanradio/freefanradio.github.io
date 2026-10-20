@@ -283,6 +283,7 @@
                 });
                 try { navigator.mediaSession.playbackState = this.status === 'live' || this.status === 'loading' ? 'playing' : 'paused'; } catch (e) { /* old browsers */ }
             }
+            document.dispatchEvent(new CustomEvent('ffr:player'));
         },
 
         // Reflect the current state on every Play button on the page
@@ -458,6 +459,7 @@
         renderFollowButtons();
         applyTeamSearch();
         player.renderButtons();
+        document.dispatchEvent(new CustomEvent('ffr:page'));
     }
 
     // ---------- SPA navigation (keeps audio playing between pages) ----------
@@ -548,6 +550,7 @@
             renderFollowButtons();
             renderHome();
             player.render();
+            document.dispatchEvent(new CustomEvent('ffr:page'));
             toast(on ? 'Added to your teams on the home screen' : 'Removed from your teams');
             return;
         }

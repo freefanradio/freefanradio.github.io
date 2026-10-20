@@ -1,11 +1,13 @@
 # Single source of truth for team pages (/teams/<slug>/).
 # stations: use `id:` for a station in _stations/ (gets a Play button),
 # or `name:` for a station we don't stream yet. `lang: fr` marks French.
+# abbr: scoreboard code (ESPN abbreviation for NHL/NFL/NBA/MLB); tsdb: TheSportsDB team id (CFL scores).
 # Add a team = add an entry here. Update `checked:` when you re-verify.
 
 - slug: toronto-maple-leafs
   name: Toronto Maple Leafs
   league: NHL
+  abbr: TOR
   city: Toronto
   aka: [Leafs]
   checked: 2026-10
@@ -17,6 +19,7 @@
 - slug: montreal-canadiens
   name: Montreal Canadiens
   league: NHL
+  abbr: MTL
   city: Montreal
   aka: [Habs, Canadiens de Montréal, CH, Tricolore]
   checked: 2026-10
@@ -28,6 +31,7 @@
 - slug: ottawa-senators
   name: Ottawa Senators
   league: NHL
+  abbr: OTT
   city: Ottawa
   aka: [Sens, Sénateurs]
   checked: 2026-10
@@ -39,6 +43,7 @@
 - slug: winnipeg-jets
   name: Winnipeg Jets
   league: NHL
+  abbr: WPG
   city: Winnipeg
   aka: [Jets]
   checked: 2026-10
@@ -48,6 +53,7 @@
 - slug: calgary-flames
   name: Calgary Flames
   league: NHL
+  abbr: CGY
   city: Calgary
   aka: [Flames]
   checked: 2026-10
@@ -57,6 +63,7 @@
 - slug: edmonton-oilers
   name: Edmonton Oilers
   league: NHL
+  abbr: EDM
   city: Edmonton
   aka: [Oilers, Oil]
   checked: 2026-10
@@ -66,6 +73,7 @@
 - slug: vancouver-canucks
   name: Vancouver Canucks
   league: NHL
+  abbr: VAN
   city: Vancouver
   aka: [Canucks, Nucks]
   checked: 2026-10
@@ -76,6 +84,7 @@
 - slug: buffalo-sabres
   name: Buffalo Sabres
   league: NHL
+  abbr: BUF
   city: Buffalo
   aka: [Sabres]
   checked: 2026-10
@@ -86,6 +95,7 @@
 - slug: detroit-red-wings
   name: Detroit Red Wings
   league: NHL
+  abbr: DET
   city: Detroit
   aka: [Wings, Red Wings]
   checked: 2026-10
@@ -96,6 +106,8 @@
 - slug: toronto-argonauts
   name: Toronto Argonauts
   league: CFL
+  abbr: TOR
+  tsdb: 135005
   city: Toronto
   aka: [Argos]
   checked: 2026-10
@@ -105,6 +117,8 @@
 - slug: hamilton-tiger-cats
   name: Hamilton Tiger-Cats
   league: CFL
+  abbr: HAM
+  tsdb: 135002
   city: Hamilton
   aka: [Ticats, Tiger Cats]
   checked: 2026-10
@@ -115,6 +129,8 @@
 - slug: ottawa-redblacks
   name: Ottawa Redblacks
   league: CFL
+  abbr: OTT
+  tsdb: 135004
   city: Ottawa
   aka: [Redblacks, Rouge et Noir]
   checked: 2026-10
@@ -126,6 +142,8 @@
 - slug: montreal-alouettes
   name: Montreal Alouettes
   league: CFL
+  abbr: MTL
+  tsdb: 135003
   city: Montreal
   aka: [Als, Alouettes de Montréal]
   checked: 2026-10
@@ -138,6 +156,8 @@
 - slug: winnipeg-blue-bombers
   name: Winnipeg Blue Bombers
   league: CFL
+  abbr: WPG
+  tsdb: 135010
   city: Winnipeg
   aka: [Bombers, Blue Bombers]
   checked: 2026-10
@@ -147,6 +167,8 @@
 - slug: saskatchewan-roughriders
   name: Saskatchewan Roughriders
   league: CFL
+  abbr: SSK
+  tsdb: 135009
   city: Regina
   aka: [Riders, Rider Nation]
   checked: 2026-10
@@ -156,6 +178,8 @@
 - slug: calgary-stampeders
   name: Calgary Stampeders
   league: CFL
+  abbr: CGY
+  tsdb: 135007
   city: Calgary
   aka: [Stamps, Stampeders]
   checked: 2026-10
@@ -165,6 +189,8 @@
 - slug: edmonton-elks
   name: Edmonton Elks
   league: CFL
+  abbr: EDM
+  tsdb: 135008
   city: Edmonton
   aka: [Elks]
   checked: 2026-10
@@ -174,6 +200,8 @@
 - slug: bc-lions
   name: BC Lions
   league: CFL
+  abbr: BC
+  tsdb: 135006
   city: Vancouver
   aka: [Lions, Leos]
   checked: 2026-10
@@ -184,6 +212,7 @@
 - slug: buffalo-bills
   name: Buffalo Bills
   league: NFL
+  abbr: BUF
   city: Buffalo
   aka: [Bills, Bills Mafia]
   checked: 2026-10
@@ -197,6 +226,7 @@
 - slug: detroit-lions
   name: Detroit Lions
   league: NFL
+  abbr: DET
   city: Detroit
   aka: [Lions]
   checked: 2026-10
@@ -207,6 +237,7 @@
 - slug: seattle-seahawks
   name: Seattle Seahawks
   league: NFL
+  abbr: SEA
   city: Seattle
   aka: [Hawks, Seahawks, 12s]
   checked: 2026-10
@@ -219,6 +250,7 @@
 - slug: toronto-blue-jays
   name: Toronto Blue Jays
   league: MLB
+  abbr: TOR
   city: Toronto
   aka: [Jays, Blue Jays]
   checked: 2026-10
@@ -229,6 +261,7 @@
 - slug: toronto-raptors
   name: Toronto Raptors
   league: NBA
+  abbr: TOR
   city: Toronto
   aka: [Raps, Raptors, We The North]
   checked: 2026-10

@@ -12,6 +12,16 @@ description: "Listen live to your team's radio broadcast from anywhere in Canada
         <h1 class="visually-hidden">Free sports radio streams for Canadian fans</h1>
     </header>
 
+    <!-- Tonight: today's games for followed teams, filled in by scores.js -->
+    <section class="section section-first" data-tonight hidden>
+        <h2 class="section-title home-title">Tonight</h2>
+        <div class="team-cards" data-tonight-cards></div>
+        <div data-tonight-earlier hidden>
+            <h3 class="section-title small-title">Earlier today</h3>
+            <ul class="row-list" data-tonight-earlier-list></ul>
+        </div>
+    </section>
+
     <!-- Your teams: filled in by main.js from the teams this browser follows -->
     <section class="section section-first">
         <h2 class="section-title home-title">Your teams</h2>

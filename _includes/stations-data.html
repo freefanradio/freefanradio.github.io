@@ -24,6 +24,8 @@ window.FFR_TEAMS = {
     "slug": {{ t.slug | jsonify }},
     "name": {{ t.name | jsonify }},
     "league": {{ t.league | jsonify }},
+    "abbr": {{ t.abbr | jsonify }},
+    "tsdb": {{ t.tsdb | jsonify }},
     "stations": {{ ids | jsonify }},
     "page": {{ '/teams/' | append: t.slug | append: '/' | relative_url | jsonify }}
   }{% unless forloop.last %},{% endunless %}
