@@ -7,13 +7,15 @@
     {% seo %}
     {% if page.noindex %}<meta name="robots" content="noindex, nofollow">{% else %}<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large">{% endif %}
 
-    <link rel="icon" type="image/x-icon" href="{{ '/assets/favicon.ico' | relative_url }}">
+    <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="48x48">
+    <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | relative_url }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/icons/favicon-32.png' | relative_url }}">
     <link rel="manifest" href="{{ '/manifest.json' | relative_url }}">
     <meta name="theme-color" content="#111214">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="FreeFanRadio">
-    <link rel="apple-touch-icon" href="{{ '/assets/logo/ffr.png' | relative_url }}">
+    <link rel="apple-touch-icon" href="{{ '/assets/icons/apple-touch-icon-180.png' | relative_url }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
