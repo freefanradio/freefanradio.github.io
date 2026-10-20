@@ -1,0 +1,238 @@
+# Single source of truth for team pages (/teams/<slug>/).
+# stations: use `id:` for a station in _stations/ (gets a Play button),
+# or `name:` for a station we don't stream yet. `lang: fr` marks French.
+# Add a team = add an entry here. Update `checked:` when you re-verify.
+
+- slug: toronto-maple-leafs
+  name: Toronto Maple Leafs
+  league: NHL
+  city: Toronto
+  aka: [Leafs]
+  checked: 2026-10
+  stations:
+    - id: tsn1050
+    - id: sn590
+  note: Leafs radio rights are split between TSN 1050 and Sportsnet 590, so check which station has tonight's game.
+
+- slug: montreal-canadiens
+  name: Montreal Canadiens
+  league: NHL
+  city: Montreal
+  aka: [Habs, Canadiens de Montréal, CH, Tricolore]
+  checked: 2026-10
+  stations:
+    - id: tsn690
+    - id: 985fm
+      lang: fr
+
+- slug: ottawa-senators
+  name: Ottawa Senators
+  league: NHL
+  city: Ottawa
+  aka: [Sens, Sénateurs]
+  checked: 2026-10
+  stations:
+    - id: tsn1200
+    - id: ckof1047
+      lang: fr
+
+- slug: winnipeg-jets
+  name: Winnipeg Jets
+  league: NHL
+  city: Winnipeg
+  aka: [Jets]
+  checked: 2026-10
+  stations:
+    - id: cjob680
+
+- slug: calgary-flames
+  name: Calgary Flames
+  league: NHL
+  city: Calgary
+  aka: [Flames]
+  checked: 2026-10
+  stations:
+    - id: qr770
+
+- slug: edmonton-oilers
+  name: Edmonton Oilers
+  league: NHL
+  city: Edmonton
+  aka: [Oilers, Oil]
+  checked: 2026-10
+  stations:
+    - id: ched880
+
+- slug: vancouver-canucks
+  name: Vancouver Canucks
+  league: NHL
+  city: Vancouver
+  aka: [Canucks, Nucks]
+  checked: 2026-10
+  stations:
+    - name: KiSS Radio Vancouver
+  note: Canucks radio moved stations for 2026-27. Confirm on canucks.com if the game isn't on.
+
+- slug: buffalo-sabres
+  name: Buffalo Sabres
+  league: NHL
+  city: Buffalo
+  aka: [Sabres]
+  checked: 2026-10
+  stations:
+    - name: WGR 550 Buffalo (flagship)
+  note: In Niagara and the Golden Horseshoe you can often pick up WGR on the AM dial. Online, games are on the Sabres app and the Audacy app.
+
+- slug: detroit-red-wings
+  name: Detroit Red Wings
+  league: NHL
+  city: Detroit
+  aka: [Wings, Red Wings]
+  checked: 2026-10
+  stations:
+    - name: 97.1 The Ticket Detroit (flagship)
+  note: 97.1 The Ticket's FM signal reaches Windsor and much of Essex County.
+
+- slug: toronto-argonauts
+  name: Toronto Argonauts
+  league: CFL
+  city: Toronto
+  aka: [Argos]
+  checked: 2026-10
+  stations:
+    - id: tsn1050
+
+- slug: hamilton-tiger-cats
+  name: Hamilton Tiger-Cats
+  league: CFL
+  city: Hamilton
+  aka: [Ticats, Tiger Cats]
+  checked: 2026-10
+  stations:
+    - name: Ticats Audio Network
+  note: Tiger-Cats games are carried by the team's own Ticats Audio Network; listen through ticats.ca.
+
+- slug: ottawa-redblacks
+  name: Ottawa Redblacks
+  league: CFL
+  city: Ottawa
+  aka: [Redblacks, Rouge et Noir]
+  checked: 2026-10
+  stations:
+    - id: tsn1200
+    - id: ckof1047
+      lang: fr
+
+- slug: montreal-alouettes
+  name: Montreal Alouettes
+  league: CFL
+  city: Montreal
+  aka: [Als, Alouettes de Montréal]
+  checked: 2026-10
+  stations:
+    - id: tsn690
+    - id: cjpx995
+      lang: fr
+  note: French broadcasts moved from 98.5 FM to 99.5 Montréal for the 2026 season.
+
+- slug: winnipeg-blue-bombers
+  name: Winnipeg Blue Bombers
+  league: CFL
+  city: Winnipeg
+  aka: [Bombers, Blue Bombers]
+  checked: 2026-10
+  stations:
+    - id: cjob680
+
+- slug: saskatchewan-roughriders
+  name: Saskatchewan Roughriders
+  league: CFL
+  city: Regina
+  aka: [Riders, Rider Nation]
+  checked: 2026-10
+  stations:
+    - id: ckrm620
+
+- slug: calgary-stampeders
+  name: Calgary Stampeders
+  league: CFL
+  city: Calgary
+  aka: [Stamps, Stampeders]
+  checked: 2026-10
+  stations:
+    - id: qr770
+
+- slug: edmonton-elks
+  name: Edmonton Elks
+  league: CFL
+  city: Edmonton
+  aka: [Elks]
+  checked: 2026-10
+  stations:
+    - id: ched880
+
+- slug: bc-lions
+  name: BC Lions
+  league: CFL
+  city: Vancouver
+  aka: [Lions, Leos]
+  checked: 2026-10
+  stations:
+    - id: cknw980
+    - name: Sher-E-Punjab Radio AM 600 (Punjabi)
+
+- slug: buffalo-bills
+  name: Buffalo Bills
+  league: NFL
+  city: Buffalo
+  aka: [Bills, Bills Mafia]
+  checked: 2026-10
+  stations:
+    - id: tsn1050
+    - id: tsn690
+    - id: tsn1200
+    - name: 97 Rock Buffalo (flagship)
+  note: The Bills Radio Network has Canadian affiliates in Toronto, Montreal and Ottawa. NFL play-by-play isn't always allowed on online streams; if the stream switches to other programming, the AM signal still carries the game.
+
+- slug: detroit-lions
+  name: Detroit Lions
+  league: NFL
+  city: Detroit
+  aka: [Lions]
+  checked: 2026-10
+  stations:
+    - name: 97.1 The Ticket Detroit (flagship)
+  note: 97.1 The Ticket's FM signal reaches Windsor and much of Essex County. NFL play-by-play isn't always allowed on online streams.
+
+- slug: seattle-seahawks
+  name: Seattle Seahawks
+  league: NFL
+  city: Seattle
+  aka: [Hawks, Seahawks, 12s]
+  checked: 2026-10
+  stations:
+    - id: sn960
+    - name: Sportsnet 650 Vancouver
+    - name: Seattle Sports 710 (Seattle)
+  note: The Seahawks list Calgary and Vancouver affiliates, but Canadian radio rights have been shifting. Confirm on seahawks.com if the game isn't on.
+
+- slug: toronto-blue-jays
+  name: Toronto Blue Jays
+  league: MLB
+  city: Toronto
+  aka: [Jays, Blue Jays]
+  checked: 2026-10
+  stations:
+    - id: sn590
+  note: Sportsnet 590 The FAN is the flagship of the Blue Jays Radio Network.
+
+- slug: toronto-raptors
+  name: Toronto Raptors
+  league: NBA
+  city: Toronto
+  aka: [Raps, Raptors, We The North]
+  checked: 2026-10
+  stations:
+    - id: tsn1050
+    - id: sn590
+  note: Raptors radio games are split between TSN 1050 and Sportsnet 590, so check which station has tonight's game.

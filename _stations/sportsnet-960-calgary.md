@@ -3,7 +3,7 @@ hidden: false
 layout: station
 station_id: "sn960"
 title: "Sportsnet 960 Calgary"
-description: "Calgary's home for Flames hockey and comprehensive sports coverage"
+description: "Calgary sports talk radio, and a Calgary home for Seattle Seahawks games"
 frequency: "960 AM"
 location: "Calgary, AB"
 genre: "Sports Talk"

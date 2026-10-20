@@ -3,7 +3,7 @@ hidden: false
 layout: station
 station_id: "tsn690"
 title: "TSN 690 Montreal"
-description: "Montreal's premier sports radio station covering Canadiens, Impact, Alouettes and all Montreal sports"
+description: "Montreal's premier sports radio station covering the Canadiens, Alouettes, Bills and all Montreal sports"
 frequency: "690 AM"
 location: "Montreal, QC"
 genre: "Sports Talk"

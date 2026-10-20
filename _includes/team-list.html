@@ -1,0 +1,8 @@
+{%- comment -%} Pass league="NHL" to list one league's teams, linking to their team pages. {%- endcomment -%}
+{%- assign teams = site.data.teams | where: "league", include.league -%}
+<ul class="team-list">
+{%- for t in teams %}
+    <li data-search="{{ t.name | downcase }} {{ t.city | downcase }} {{ t.aka | join: ' ' | downcase }}"><a href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}">{{ t.name }}</a>
+        <span class="team-stations">{% for s in t.stations %}{% if s.id %}{% assign st = site.stations | where: "station_id", s.id | first %}{{ st.title }}{% else %}{{ s.name }}{% endif %}{% unless forloop.last %} · {% endunless %}{% endfor %}</span></li>
+{%- endfor %}
+</ul>

@@ -1,0 +1,43 @@
+---
+layout: page
+title: "Find Your Team"
+description: "Find where to listen to your team's games on the radio in Canada: NHL, CFL, NFL and MLB teams, with live streams and French broadcasts."
+permalink: /teams/
+---
+
+<div class="team-search">
+    <label for="teamSearch" class="visually-hidden">Search teams</label>
+    <input id="teamSearch" type="search" placeholder="Type a team, city or nickname (e.g. Habs, Bills)" autocomplete="off">
+    <p id="teamSearchEmpty" class="team-hint" hidden>No team found. More teams are coming; tell us which one you want.</p>
+</div>
+
+{%- assign leagues = site.data.teams | map: "league" | uniq -%}
+{% for league in leagues %}
+<section class="team-league" id="{{ league | downcase }}">
+    <h2>{{ league }}</h2>
+    {% include team-list.html league=league %}
+</section>
+{% endfor %}
+
+<script>
+(function () {
+    var input = document.getElementById('teamSearch');
+    if (!input) return;
+    var norm = function (s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); };
+    input.addEventListener('input', function () {
+        var q = norm(input.value.trim());
+        var any = false;
+        document.querySelectorAll('.team-league').forEach(function (sec) {
+            var shown = 0;
+            sec.querySelectorAll('li[data-search]').forEach(function (li) {
+                var hit = !q || norm(li.dataset.search).indexOf(q) !== -1;
+                li.hidden = !hit;
+                if (hit) shown++;
+            });
+            sec.hidden = shown === 0;
+            if (shown) any = true;
+        });
+        document.getElementById('teamSearchEmpty').hidden = any;
+    });
+})();
+</script>

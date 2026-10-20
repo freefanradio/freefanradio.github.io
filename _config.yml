@@ -22,6 +22,8 @@ collections:
 navigation:
   - title: Home
     url: /
+  - title: Teams
+    url: /teams/
   - title: Stations
     url: /sports/
   - title: Hockey

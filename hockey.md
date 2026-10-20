@@ -10,28 +10,11 @@ permalink: /hockey/
     <p style="font-size: 1.1rem; opacity: 0.9;">The ultimate destination for NHL coverage, junior hockey, and Canadian hockey culture</p>
 </div>
 
-## NHL Team Coverage
+## NHL Team Radio
 
-### Eastern Conference
+Can't find your team? [Search all teams](/teams/).
 
-**Atlantic Division**
-- **Toronto Maple Leafs** - TSN 1050, Sportsnet 590
-- **Montreal Canadiens** - TSN 690, 98.5 FM
-- **Boston Bruins** - Available on select Canadian stations
-- **Ottawa Senators** - TSN 1200 Ottawa
-
-**Metropolitan Division**  
-- Coverage available for Canadian interest games
-
-### Western Conference
-
-**Central Division**
-- **Winnipeg Jets** - CJOB 680, TSN 1290
-
-**Pacific Division**
-- **Calgary Flames** - Sportsnet 960 Calgary
-- **Edmonton Oilers** - 630 CHED
-- **Vancouver Canucks** - Sportsnet 650 Vancouver
+{% include team-list.html league="NHL" %}
 
 ## Featured Hockey Stations
 

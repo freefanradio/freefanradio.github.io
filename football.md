@@ -10,20 +10,15 @@ permalink: /football/
     <p style="font-size: 1.1rem; opacity: 0.9;">Complete coverage of CFL, NFL, and university football from coast to coast</p>
 </div>
 
-## CFL Team Coverage
+## CFL Team Radio
 
-### East Division
-- **Toronto Argonauts** - TSN 1050, Sportsnet 590
-- **Montreal Alouettes** - TSN 690, RDS
-- **Ottawa Redblacks** - TSN 1200 Ottawa
-- **Hamilton Tiger-Cats** - CHML 900
+{% include team-list.html league="CFL" %}
 
-### West Division
-- **Winnipeg Blue Bombers** - CJOB 680, TSN 1290
-- **Saskatchewan Roughriders** - CKRM 620 Regina
-- **Calgary Stampeders** - Sportsnet 960 Calgary
-- **Edmonton Elks** - 630 CHED
-- **BC Lions** - Sportsnet 650 Vancouver
+## NFL Team Radio in Canada
+
+{% include team-list.html league="NFL" %}
+
+[Search all teams](/teams/)
 
 ## Featured Football Stations
 

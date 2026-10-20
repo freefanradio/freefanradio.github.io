@@ -1,0 +1,79 @@
+---
+layout: default
+---
+{%- assign team = page.team -%}
+{%- assign league_url = '/teams/#' | append: team.league | downcase -%}
+<script type="application/ld+json">
+[
+{
+    "@context": "https://schema.org",
+    "@type": "SportsTeam",
+    "name": {{ team.name | jsonify }},
+    "sport": {% case team.league %}{% when 'NHL' %}"Ice hockey"{% when 'MLB' %}"Baseball"{% when 'NBA' %}"Basketball"{% when 'MLS' %}"Soccer"{% else %}"Football"{% endcase %},
+    "memberOf": {"@type": "SportsOrganization", "name": {{ team.league | jsonify }}},
+    "url": "{{ site.url }}{{ page.url }}"
+},
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "{{ site.url }}/"},
+        {"@type": "ListItem", "position": 2, "name": "Teams", "item": "{{ site.url }}/teams/"},
+        {"@type": "ListItem", "position": 3, "name": {{ team.name | jsonify }}, "item": "{{ site.url }}{{ page.url }}"}
+    ]
+}
+]
+</script>
+
+<article class="page-content team-page">
+    <header class="page-header">
+        <p class="team-breadcrumb"><a href="{{ '/teams/' | relative_url }}">Teams</a> › <a href="{{ league_url | relative_url }}">{{ team.league }}</a></p>
+        <h1>{{ team.name }} radio in Canada</h1>
+        <p class="page-description">Where to listen to {{ team.name }} games on the radio, live, from anywhere in Canada.</p>
+    </header>
+
+    <div class="page-body">
+        {%- assign playable = '' | split: '' -%}
+        {%- assign other = '' | split: '' -%}
+        {%- for s in team.stations -%}
+            {%- if s.id -%}{%- assign playable = playable | push: s -%}{%- else -%}{%- assign other = other | push: s -%}{%- endif -%}
+        {%- endfor -%}
+
+        {% if playable.size > 0 %}
+        <h2>Listen live here</h2>
+        <div class="stations-grid">
+            {%- for s in playable -%}
+                {%- assign st = site.stations | where: "station_id", s.id | first -%}
+                {%- if st -%}
+                    {%- if s.lang == 'fr' -%}{%- assign card_title = st.title | append: ' (en français)' -%}{%- else -%}{%- assign card_title = nil -%}{%- endif -%}
+                    {% include station-card.html station=st title=card_title %}
+                {%- endif -%}
+            {%- endfor -%}
+        </div>
+        {% endif %}
+
+        {% if other.size > 0 %}
+        <h2>{% if playable.size > 0 %}Other stations{% else %}Stations{% endif %}</h2>
+        <ul class="team-other-stations">
+            {%- for s in other %}
+            <li>{{ s.name }}{% if s.lang == 'fr' %} <span class="team-lang">en français</span>{% endif %}</li>
+            {%- endfor %}
+        </ul>
+        {% if playable.size == 0 %}<p class="team-hint">We don't stream these stations on FreeFanRadio yet. Search the station name to find its official live stream.</p>{% endif %}
+        {% endif %}
+
+        {% if team.note %}<p class="team-note">{{ team.note }}</p>{% endif %}
+
+        <p class="team-checked">Last checked: {{ team.checked | append: '-01' | date: '%B %Y' }}. Radio rights change; tell us if something's wrong.</p>
+
+        {%- assign same_league = site.data.teams | where: "league", team.league -%}
+        {% if same_league.size > 1 %}
+        <h2>Other {{ team.league }} teams</h2>
+        <ul class="team-list">
+            {%- for t in same_league %}{% if t.slug != team.slug %}
+            <li><a href="{{ '/teams/' | append: t.slug | append: '/' | relative_url }}">{{ t.name }}</a></li>
+            {%- endif %}{% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</article>
