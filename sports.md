@@ -341,19 +341,6 @@ permalink: /sports/
 </div>
 {% endif %}
 
-<!-- Google Ad -->
-<div class="ad-container">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="{{ site.google_adsense_id }}"
-         data-ad-slot="1111111111"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-
 ## About Radio Stations in Canada
 
 Canadian sports radio stations offer comprehensive coverage of:

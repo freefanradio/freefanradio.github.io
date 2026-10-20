@@ -25,19 +25,6 @@ permalink: /football/
 - **Edmonton Elks** - 630 CHED
 - **BC Lions** - Sportsnet 650 Vancouver
 
-<!-- Google Ad -->
-<div class="ad-container">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="{{ site.google_adsense_id }}"
-         data-ad-slot="3333333333"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-
 ## Featured Football Stations
 
 <div class="stations-grid" style="margin: 2rem 0;">

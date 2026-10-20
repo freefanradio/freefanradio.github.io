@@ -33,19 +33,6 @@ permalink: /hockey/
 - **Edmonton Oilers** - 630 CHED
 - **Vancouver Canucks** - Sportsnet 650 Vancouver
 
-<!-- Google Ad -->
-<div class="ad-container">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="{{ site.google_adsense_id }}"
-         data-ad-slot="2222222222"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-
 ## Featured Hockey Stations
 
 <div class="stations-grid" style="margin: 2rem 0;">

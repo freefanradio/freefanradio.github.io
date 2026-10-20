@@ -8,20 +8,19 @@ layout: default
 {
     "@context": "https://schema.org",
     "@type": "RadioStation",
-    "name": "{{ page.title }}",
-    "description": "{{ page.description }}",
+    "name": {{ page.title | jsonify }},
+    "description": {{ page.description | jsonify }},
     "url": "{{ site.url }}{{ page.url }}",
-    "broadcastFrequency": "{{ page.frequency }}",
+    "broadcastFrequency": {{ page.frequency | jsonify }},
     "address": {
         "@type": "PostalAddress",
         "addressLocality": "{{ page.location | split: ', ' | first }}",
         "addressRegion": "{{ page.location | split: ', ' | last }}",
         "addressCountry": "CA"
     },
-    "genre": "{{ page.genre }}",
-    "telephone": "{{ page.phone }}",
-    "sameAs": "{{ page.website }}",
-    "broadcastServiceTier": "{{ page.category }}"
+    "genre": {{ page.genre | jsonify }},
+    {% if page.phone %}"telephone": {{ page.phone | jsonify }},{% endif %}
+    "sameAs": {{ page.website | jsonify }}
 },
 {
     "@context": "https://schema.org",
@@ -68,19 +67,6 @@ layout: default
             </button>
         </div>
     </header>
-    
-    <!-- Google Ad - Station Page -->
-    <div class="ad-container" style="margin: 2rem auto; text-align: center;">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="{{ site.google_adsense_id }}"
-             data-ad-slot="REPLACE_WITH_YOUR_STATION_AD_SLOT_ID"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
     
     <div class="station-content">
         <!-- Stream Disclaimer -->

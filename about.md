@@ -54,19 +54,6 @@ To provide free, high-quality access to Canadian sports radio stations, connecti
 - Local market coverage
 - Regional programming
 
-<!-- Google Ad -->
-<div class="ad-container">
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="{{ site.google_adsense_id }}"
-         data-ad-slot="4444444444"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
-    <script>
-         (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-</div>
-
 ### Our Technology
 
 FreeFanRadio.ca is built using modern web technologies to ensure the best possible experience:

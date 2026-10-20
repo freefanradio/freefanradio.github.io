@@ -10,7 +10,6 @@ highlighter: rouge
 permalink: pretty
 plugins:
   - jekyll-feed
-  - jekyll-sitemap
   - jekyll-seo-tag
 
 # Collections
@@ -44,8 +43,14 @@ social:
 
 # SEO
 google_analytics: G-NRZ1504M1K  # Your Google Analytics ID
-google_site_verification: # Add your Google Search Console verification code here
+# Paste the content= value from Search Console's HTML-tag method:
+# webmaster_verifications:
+#   google: "PASTE_CODE_HERE"
 author: FreeFanRadio.ca Team
+logo: /assets/logo/ffr.png
+image: /assets/logo/ffr.png
+twitter:
+  username: freefanradio
 locale: en_CA
 timezone: America/Toronto
 

@@ -4,6 +4,4 @@ Allow: /
 Sitemap: https://freefanradio.ca/sitemap.xml
 
 # Disallow crawling of certain files
-Disallow: /assets/js/
 Disallow: /sw.js
-Disallow: /_site/

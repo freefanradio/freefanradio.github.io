@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Home"
+title: "Free Sports Radio Streams for Canadian Fans"
 description: "The Canadian hub for legal sports radio streams and podcasts. Your recent radio stations at your fingertips."
 ---
 
@@ -279,9 +279,13 @@ html, body {
     }
 }
 
+.banner-ad { display: none !important; }
+.station-name a { color: inherit; text-decoration: none; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 </style>
 
 <div class="home-container">
+    <h1 class="visually-hidden">Free sports radio streams for Canadian fans</h1>
     <!-- Top Banner Ad - Auto Ads will place ads here -->
     <div class="ad-container banner-ad">
         <div id="top-ad-space">
@@ -292,7 +296,11 @@ html, body {
     <!-- Stations Container -->
     <div class="stations-container">
         <div class="stations-grid" id="stationsGrid">
-            <!-- 8 slots will be populated by JavaScript -->
+            {%- comment -%} Server-rendered for crawlers and no-JS; JS re-renders with recents. {%- endcomment -%}
+            {%- assign home_stations = site.stations | where_exp: "s", "s.hidden != true" | sort: "title" -%}
+            {%- for s in home_stations limit: 8 %}
+            <div class="station-slot"><div class="station-info"><h3 class="station-name"><a href="{{ s.url | relative_url }}">{{ s.title }}</a></h3></div></div>
+            {%- endfor %}
         </div>
     </div>
 </div>
@@ -541,10 +549,10 @@ function initializeRecentStationsView(callback) {
     
     function getDefaultStations() {
         // Default featured stations for first-time users (ids from _stations/)
-        const featuredIds = ['cjob680', 'sn960', 'tsn1050', 'tsn690'];
+        // First-time visitors see every station (matches the server-rendered grid)
         const stations = window.FFR_STATIONS || {};
-        return featuredIds
-            .filter(id => stations[id])
+        return Object.keys(stations)
+            .slice(0, 8)
             .map(id => ({ ...stations[id], id, timeAgo: 'Featured' }));
     }
     
