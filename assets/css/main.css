@@ -173,6 +173,7 @@ code { background: var(--surface-2); padding: 2px 6px; border-radius: 4px; }
     display: flex; align-items: center; justify-content: space-between;
 }
 .browse-all:hover { background: var(--surface-2); color: var(--text); }
+.browse-all-tight { margin-top: 12px; }
 
 /* Station cards */
 .stations-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); margin: 12px 0; }
