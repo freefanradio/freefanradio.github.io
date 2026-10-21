@@ -6,7 +6,8 @@
  *
  * Scores are a bonus: every failure is silent and the score areas stay hidden.
  * Feeds refresh about once a minute only while a relevant game is live or about
- * to start and the page is visible; otherwise every 10 minutes at most.
+ * to start, and only while the page is visible or the radio is playing (lock
+ * screen / car); otherwise every 10 minutes at most.
  *
  * Hooks: main.js fires `ffr:page` after each page render and `ffr:player`
  * after each player update; this file listens and fills:
@@ -22,7 +23,8 @@
     const ESPN_PATH = { NHL: 'hockey/nhl', NFL: 'football/nfl', NBA: 'basketball/nba', MLB: 'baseball/mlb', MLS: 'soccer/usa.1' };
     const TSDB = 'https://www.thesportsdb.com/api/v1/json/123/';
     const TSDB_CFL = '4405';
-    const LIVE_TTL = 60 * 1000;
+    const POLL_EVERY = 60 * 1000;
+    const LIVE_TTL = 45 * 1000; // shorter than POLL_EVERY so each poll gets fresh data
     const SLOW_TTL = 10 * 60 * 1000;
     const SCHEDULE_TTL = 30 * 60 * 1000;
 
@@ -283,11 +285,17 @@
             panel.hidden = !relevant;
             if (relevant) panel.innerHTML = matchup(g);
         }
-        if (!relevant || g.state !== 'in') return;
+        // Live or just finished: show the score line in the app, on the lock screen and in the car
+        if (!relevant || g.state === 'pre') return;
         const line = scoreLine(g);
         if (p.status === 'live') $$('[data-player-status]').forEach(el => { el.textContent = line; });
-        if ('mediaSession' in navigator && navigator.mediaSession.metadata) {
-            try { navigator.mediaSession.metadata.artist = line; } catch (e) { /* read-only in some browsers */ }
+        const ms = 'mediaSession' in navigator ? navigator.mediaSession : null;
+        if (ms && ms.metadata && window.MediaMetadata && ms.metadata.artist !== line) {
+            // Assign a new object: some phones and car systems ignore edits to the existing one
+            const old = ms.metadata;
+            try {
+                ms.metadata = new MediaMetadata({ title: old.title, artist: line, album: old.album, artwork: Array.from(old.artwork || []) });
+            } catch (e) { /* metadata is optional */ }
         }
     }
 
@@ -309,8 +317,11 @@
         if (slug !== checkedSlug) { checkedSlug = slug; playerGame = null; update(); }
         applyPlayerScore();
     });
+    // Keep refreshing while the page is on screen, or while the radio is playing
+    // with the phone locked or in the car (the lock screen and car display show the score).
+    const listening = () => !!(window.radioPlayer && (window.radioPlayer.status === 'live' || window.radioPlayer.status === 'loading'));
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') update(); });
-    setInterval(() => { if (document.visibilityState === 'visible') update(); }, LIVE_TTL);
+    setInterval(() => { if (document.visibilityState === 'visible' || listening()) update(); }, POLL_EVERY);
 
     update();
 })();
