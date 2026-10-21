@@ -49,18 +49,8 @@ description: "Listen live to your team's radio broadcast from anywhere in Canada
         <div class="chips" data-recent></div>
     </section>
 
-    <section class="section">
-        <h2 class="section-title">All stations</h2>
-        <ul class="row-list">
-            {%- for s in home_stations %}
-            <li>
-                <a class="row-main" href="{{ s.url | relative_url }}"><span class="row-title">{{ s.title }}</span><span class="row-sub">{{ s.frequency }} · {{ s.location }}</span></a>
-                <button type="button" class="play-circle play-station-btn" data-station-id="{{ s.station_id }}" aria-label="Play {{ s.title }}">
-                    <svg class="i-play" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></svg>
-                    <svg class="i-pause" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
-                </button>
-            </li>
-            {%- endfor %}
-        </ul>
-    </section>
+    <a class="browse-all" href="{{ '/sports/' | relative_url }}">
+        <span>Browse all {{ home_stations.size }} stations</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
 </div>
