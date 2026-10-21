@@ -1,6 +1,6 @@
 // Minimal network-first service worker: makes the site installable and keeps
 // the last-seen pages available offline. Audio streams are never cached.
-const CACHE = 'ffr-v2';
+const CACHE = 'ffr-v3';
 
 self.addEventListener('install', () => self.skipWaiting());
 
