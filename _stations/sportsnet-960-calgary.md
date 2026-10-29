@@ -1,5 +1,6 @@
 ---
-hidden: false
+# Station closed by Rogers on July 7, 2026; kept hidden so old links still resolve.
+hidden: true
 layout: station
 station_id: "sn960"
 title: "Sportsnet 960 Calgary"

@@ -243,10 +243,8 @@
   aka: [Hawks, Seahawks, 12s]
   checked: 2026-10
   stations:
-    - id: sn960
-    - name: Sportsnet 650 Vancouver
     - name: Seattle Sports 710 (Seattle)
-  note: The Seahawks list Calgary and Vancouver affiliates, but Canadian radio rights have been shifting. Confirm on seahawks.com if the game isn't on.
+  note: Rogers closed the Seahawks' Canadian affiliates, Sportsnet 960 Calgary and Sportsnet 650 Vancouver, in July 2026. Check seahawks.com for current radio options.
 
 - slug: toronto-blue-jays
   name: Toronto Blue Jays

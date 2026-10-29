@@ -26,7 +26,7 @@ FreeFanRadio.ca is a comprehensive GitHub Pages website that provides free strea
 ### Stations Featured
 - TSN 690 Montreal
 - TSN 1050 Toronto  
-- Sportsnet 960 Calgary
+- QR 770 Calgary
 - CKRM 620 Regina
 - CJOB 680 Winnipeg
 - And many more...

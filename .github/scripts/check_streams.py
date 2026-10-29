@@ -34,13 +34,29 @@ def location():
         return "unknown"
 
 
+CURL_ERRORS = {
+    6: "domain not found (DNS) — the stream address may have been retired",
+    7: "connection refused — the server is down or no longer serves this stream",
+    28: "timed out — the server accepted nothing within the time limit",
+    35: "TLS/SSL handshake failed",
+    52: "server closed the connection without replying",
+    56: "connection reset while receiving data",
+    60: "SSL certificate problem",
+}
+
+
+def explain(exit_code, err):
+    reason = CURL_ERRORS.get(exit_code, f"curl error {exit_code}")
+    return f"{reason} ({err.strip()})" if err.strip() else reason
+
+
 def check(url):
     with tempfile.NamedTemporaryFile() as tmp:
         p = subprocess.run(
             ["curl", "-sL", "-A", UA, "--max-time", str(LISTEN_SECONDS), "-o", tmp.name,
-             "-w", "%{http_code}|%{content_type}|%{size_download}|%{url_effective}", url],
+             "-w", "%{http_code}|%{content_type}|%{size_download}|%{url_effective}|%{errormsg}", url],
             capture_output=True, text=True)
-        code, ctype, size, final = (p.stdout.split("|") + ["", "", "0", ""])[:4]
+        code, ctype, size, final, err = (p.stdout.split("|", 4) + ["", "", "0", "", ""])[:5]
         size = int(float(size or 0))
         head = open(tmp.name, "rb").read(512)
     ctype = ctype.lower()
@@ -49,7 +65,10 @@ def check(url):
         or ctype == "" and size > MIN_AUDIO_BYTES
     if code not in ("200", "206"):
         status = "BLOCKED" if code in ("401", "403", "451") else "DOWN"
-        detail = f"HTTP {code or 'no response'}"
+        if code in ("", "000"):
+            detail = f"no response: {explain(p.returncode, err)}"
+        else:
+            detail = f"HTTP {code}"
     elif is_playlist:
         status, detail = "OK", "HLS playlist served"
     elif not looks_audio:
