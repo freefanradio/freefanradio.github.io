@@ -1,0 +1,24 @@
+name: US Stream Check
+
+# Plays a few seconds of every station stream from GitHub's US-hosted runners
+# to detect geo-blocking. A failed run (red X + GitHub email) means at least
+# one stream wasn't playable from the US — see the run summary for which.
+on:
+  schedule:
+    - cron: "17 16 * * *"   # ~noon Toronto time: regular programming
+    - cron: "47 23 * * *"   # ~7:45pm Toronto time: during most NHL/CFL/MLB games
+  workflow_dispatch:         # "Run workflow" button in the Actions tab
+  pull_request:
+    paths: ["_stations/**", ".github/scripts/check_streams.py"]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check streams
+        run: python3 .github/scripts/check_streams.py
