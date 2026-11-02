@@ -246,6 +246,52 @@
     - name: Seattle Sports 710 (Seattle)
   note: Rogers closed the Seahawks' Canadian affiliates, Sportsnet 960 Calgary and Sportsnet 650 Vancouver, in July 2026. Check seahawks.com for current radio options.
 
+- slug: arizona-cardinals
+  name: Arizona Cardinals
+  league: NFL
+  abbr: ARI
+  city: Phoenix
+  aka: [Cards, Cardinals, Big Red]
+  checked: 2026-11
+  stations:
+    - id: azsports987
+    - id: ktar620
+  note: Arizona Sports 98.7 and KTAR 620 both carried the live Cardinals call when we tested from Canada. NFL play-by-play isn't always allowed on online streams.
+
+- slug: cleveland-browns
+  name: Cleveland Browns
+  league: NFL
+  abbr: CLE
+  city: Cleveland
+  aka: [Browns, Dawg Pound]
+  checked: 2026-11
+  stations:
+    - id: wone975
+  note: The Cleveland flagship streams play an "NFL restrictions" message outside their area, but Akron affiliate WONE 97.5 carried the live game when we tested from Canada.
+
+- slug: minnesota-vikings
+  name: Minnesota Vikings
+  league: NFL
+  abbr: MIN
+  city: Minneapolis
+  aka: [Vikings, Vikes, Skol]
+  checked: 2026-11
+  stations:
+    - id: kplo945
+    - id: krox1057
+  note: The Minneapolis flagship stream is blocked outside the US, but these Vikings Radio Network affiliates carried the live game when we tested from Canada.
+
+- slug: tennessee-titans
+  name: Tennessee Titans
+  league: NFL
+  abbr: TEN
+  city: Nashville
+  aka: [Titans, Titan Up]
+  checked: 2026-11
+  stations:
+    - id: wgow1150
+  note: WGOW carried the live Titans call when we tested from Canada, but its stream is sometimes blocked outside the US. If it doesn't play, try again closer to kickoff.
+
 - slug: toronto-blue-jays
   name: Toronto Blue Jays
   league: MLB
@@ -305,3 +351,15 @@
     - id: cknw730
     - name: Connect FM 91.5 (Punjabi, home matches)
   note: Whitecaps home matches are also called in Punjabi on Connect FM 91.5, a first in MLS.
+
+- slug: seattle-sounders
+  name: Seattle Sounders FC
+  league: MLS
+  abbr: SEA
+  espn_id: 9726
+  city: Seattle
+  aka: [Sounders, Rave Green]
+  checked: 2026-11
+  stations:
+    - id: kjr950
+  note: KJR 950 carried the live Sounders call when we tested from Canada. KJR is an iHeart station, and iHeart blocks some play-by-play outside its area, so availability can change by match.
